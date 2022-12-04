@@ -2,25 +2,47 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+    <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Account
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item">
+            About
+          </a>
+          <a class="navbar-item">
+            Jobs
+          </a>
+          <a class="navbar-item">
+            Contact
+          </a>
+          <hr class="navbar-divider">
+        <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
+           <a id="submit-logout" class="navbar-item">Logout</a>
         </form>
-    </li>
+        </div>
+      </div>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" asp-area="Identity" asp-page="/Account/Register">
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light" asp-area="Identity" asp-page="/Account/Login">
+            Log in
+          </a>
+        </div>
+      </div>
 }
-</ul>
+<script>
+    var submitFormLink = document.querySelector('#submit-logout');
+    var form = document.querySelector("#logout-form")
+    submitFormLink.addEventListener('click', () => {
+        form.submit();
+    })
+</script>

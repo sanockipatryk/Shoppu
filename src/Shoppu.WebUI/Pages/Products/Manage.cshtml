@@ -1,0 +1,96 @@
+﻿@page
+@model Shoppu.WebUI.Pages.Products.ManageModel
+@using System.Web
+@{
+  var location = new Uri($"{Request.Scheme}://{Request.Host}");
+  var url = location.AbsoluteUri;
+}
+<div class="container">
+
+  @* @foreach (var product in Model.Products)
+    {
+    <div class="columns has-background-white-ter">
+    <div class="column is-3">@product.Name</div>
+    <div class="column is-5">@product.Description</div>
+    <div class="column is-1">@product.Price$</div>
+    <div class="column is-2"><a class="button" asp-page="CreateVariant" asp-route-id="@product.Id">Create variant</a>
+    </div>
+    </div>
+    } *@
+  <table class="table is-fullwidth is-bordered has-text-centered manage-product-table">
+    <thead>
+      <tr>
+        <th class="has-text-centered">Display?</th>
+        <th class="has-text-centered">Name</th>
+        <th class="has-text-centered"><abbr title="Product type">Type</abbr></th>
+        <th class="has-text-centered">Price($)</th>
+        <th class="has-text-centered" style="width: 5%"></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var product in Model.Products)
+      {
+        <tr class="product-row">
+          <form method="post" asp-page-handler="ChangeProductVisibility">
+            <td><button class="button is-success">Visible</button></td>
+          </form>
+          <td>@product.Name</td>
+          <td>@product.ProductCategory.Name</td>
+          <td>@product.Price.ToString("0.00$")</td>
+
+          <td><a class="button" asp-page="CreateVariant" asp-route-id="@product.Id">Create variant</a></td>
+        </tr>
+        @if (product.Variants.Count() > 0)
+        {
+          <tr class="has-background-success-light has-text-centered">
+            <th></th>
+            <th>Main image</th>
+            <th>Color</th>
+            <th>Size: Quantity</th>
+            <th>test</th>
+          </tr>
+          @foreach (var variant in product.Variants)
+          {
+            <tr class=" has-text-centered">
+              <td>Variant1</td>
+              <td>
+                @if (variant.Images.Count() > 0)
+                {
+                  <img width="100" src="@url\@variant.Images[0].ImageSource" />
+                }
+                else
+                {
+                  <p>No image</p>
+                }
+              </td>
+              <td>@variant.Variant.Name</td>
+              <td>
+                @foreach (var size in variant.Sizes)
+                {
+                  <p><span>@size.Size.Name:</span><span>
+                      @size.Quantity</span></p>
+                }
+              </td>
+
+              <td class="">
+                <a class="button is-info" asp-page="CreateVariantSizes" asp-route-productId="@product.Id"
+            asp-route-variantId="@variant.Id">Edit variant</a>
+                <a class="button is-info mt-1" asp-page="CreateVariantSizes" asp-route-productId="@product.Id"
+            asp-route-variantId="@variant.Id">Specify sizes</a>
+              </td>
+            </tr>
+          }
+        }
+        else
+        {
+          <tr class="has-background-grey-lighter">
+            <td colspan="5">Product has no variants</td>
+          </tr>
+        }
+      }
+      <a class="button" asp-page="Create">Add new</a>
+
+    </tbody>
+  </table>
+</div>

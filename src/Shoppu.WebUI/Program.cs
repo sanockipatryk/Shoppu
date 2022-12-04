@@ -4,8 +4,8 @@ using MediatR;
 using Shoppu.Infrastructure;
 using Shoppu.Domain.Entities;
 using Shoppu.Infrastructure.Persistence;
-using Shoppu.Application.Queries.Products;
 using Shoppu.Application.Common.Interfaces;
+using Shoppu.Application.Products.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddScoped<ApplicationDbContextInitializer>();
 
-builder.Services.AddMediatR(typeof(GetProductListQuery).Assembly);
+builder.Services.AddMediatR(typeof(GetProductsListQuery).Assembly);
 
 builder.Services.AddAuthorization();
 

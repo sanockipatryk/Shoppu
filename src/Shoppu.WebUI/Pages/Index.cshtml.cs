@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shoppu.Application.Queries.Products;
+using Shoppu.Application.Products.Queries;
 using Shoppu.Domain.Entities;
 
 namespace Shoppu.WebUI.Pages
@@ -23,7 +22,7 @@ namespace Shoppu.WebUI.Pages
 
         public async Task OnGet()
         {
-            Products = await _mediator.Send(new GetProductListQuery());
+            Products = await _mediator.Send(new GetProductsListQuery());
         }
     }
 }

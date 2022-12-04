@@ -1,0 +1,68 @@
+﻿@page "~/CreateSizesForVariant/{productId:int}/{variantId:int}"
+@model Shoppu.WebUI.Pages.Products.CreateVariantSizesModel
+@{
+	int index = 0;
+}
+
+<div class="container">
+	<form method="post">
+		<input type="hidden" asp-for="@Model.ProductId" />
+		<input type="hidden" asp-for="@Model.VariantId" />
+		<div class="columns is-multiline">
+			@foreach (var size in @Model.ProductVariantSizes)
+			{
+				<div data-sizeId="@size.SizeId" class="column is-3 px-6 size-form-field">
+					<input name="ProductVariantSizes[@index].SizeName" type="hidden" asp-for="@size.SizeName" />
+					<input name="ProductVariantSizes[@index].SizeId" type="hidden" asp-for="@size.SizeId" />
+					<div class="has-text-centered">
+						<p class="title mb-2">
+							@size.SizeName
+						</p>
+						<label class="checkbox pt-3">
+							<p>@Html.DisplayNameFor(model =>
+							model.ProductVariantSizes.FirstOrDefault().AddSizeAsVariantOption)</p>
+							<input data-sizeId="@size.SizeId" class="add-size-checkbox"
+							name="ProductVariantSizes[@index].AddSizeAsVariantOption" type="checkbox"
+							asp-for="@size.AddSizeAsVariantOption" />
+
+						</label>
+						<div class="field pt-3">
+							<label class="label" asp-for="@size.Quantity"></label>
+							<div class="control">
+								<input @(size.AddSizeAsVariantOption ? null : "disabled")
+								name="ProductVariantSizes[@index].Quantity" class="input quantity-input" type="number"
+								step="1" asp-for="@size.Quantity" placeholder="Enter available quantity">
+								<span name="ProductVariantSizes[@index].Quantity"
+								asp-validation-for="@Model.ProductVariantSizes[index].Quantity"
+								class="has-text-danger"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				index++;
+			}
+		</div>
+		<button type="submit" class="button is-primary">Add sizes to variant</button>
+	</form>
+</div>
+@section Scripts {
+<script>
+	var $sizeFormFieldsAddSizeCheckboxes = $('.add-size-checkbox');
+
+	$($sizeFormFieldsAddSizeCheckboxes).each((i, checkbox) => {
+		$(checkbox).on('change', (e) => {
+			var checkboxSizeId = $(checkbox).attr("data-sizeId")
+			if (checkbox.checked) {
+				console.log($(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`));
+				$(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`).removeAttr("disabled");
+			}
+			else {
+				$(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`).attr("disabled", "");
+
+			}
+		})
+	})
+
+
+</script>
+}

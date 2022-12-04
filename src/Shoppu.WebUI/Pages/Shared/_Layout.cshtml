@@ -1,93 +1,133 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Shoppu.WebUI</title>
-@*    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/bulma/css/bulma.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Shoppu.WebUI.styles.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Shoppu.WebUI</title>
+	@* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/lib/bulma/css/bulma.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Shoppu.WebUI.styles.css" asp-append-version="true" />
+	<script src="https://kit.fontawesome.com/3ff53c5c37.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <header>
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-    </a>
 
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
+<body class="is-flex is-flex-direction-column">
+	<header>
+		<nav class="navbar is-flex is-flex-direction-column" role="navigation" aria-label="main navigation">
+			<div class="navbar-brand is-justify-content-space-between py-4">
+				<a class="navbar-item" href="https://bulma.io">
+					<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+				</a>
+				<a class="navbar-item" href="https://bulma.io">
+					<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+				</a>
+				<partial name="_LoginPartial" />
 
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
-      <a class="navbar-item">
-        Home
-      </a>
+				<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+					data-target="navbarBasicExample2">
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</a>
+			</div>
+			<div id="navbarBasicExample" class="navbar-menu">
+				<div class="navbar-start">
+					<a class="navbar-item" asp-area="" asp-page="/Index">
+						Home
+					</a>
+					@if (User.IsInRole("Admin"))
+					{
+						<a class="navbar-item" asp-page="/Products/Manage">
+							Manage products
+						</a>
+					}
+					<div class="navbar-item has-dropdown is-hoverable has-products-main-menu">
+						<a class="navbar-link">
+							Women
+						</a>
 
-      <a class="navbar-item">
-        Documentation
-      </a>
+						<div class="navbar-dropdown products-main-menu">
+							<a class="navbar-item">
+								Women1
+							</a>
+							<a class="navbar-item">
+								Women12
+							</a>
+							<a class="navbar-item">
+								Women13
+							</a>
+							<hr class="navbar-divider">
+							<a class="navbar-item">
+								Report an issue
+							</a>
+						</div>
+					</div>
+					<div class="navbar-item has-dropdown is-hoverable has-products-main-menu">
+						<a class="navbar-link">
+							Men
+						</a>
+						<div class="navbar-dropdown products-main-menu">
+							<a class="navbar-item">
+								Men1
+							</a>
+							<a class="navbar-item">
+								Men2
+							</a>
+							<a class="navbar-item">
+								Men3
+							</a>
+							<hr class="navbar-divider">
+							<a class="navbar-item">
+								Report an issue
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<section class="section py-3 px-0 app-section">
+		@RenderBody()
+	</section>
+	<footer class="footer py-0 is-relative">
+		<div class="content has-text-centered">
+			<p>
+				<strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is
+				licensed
+				<a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+				is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+			</p>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
 
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-
-        <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
-          </a>
-          <a class="navbar-item">
-            Jobs
-          </a>
-          <a class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Report an issue
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary" asp-area="Identity" asp-page="/Account/Register">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light" asp-area="Identity" asp-page="/Account/Login">
-            Log in
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Shoppu.WebUI - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
+<script>
+	$(document).ready(function () {
+		// Check for click events on the navbar burger icon
+		$(".navbar-burger").click(function () {
+			// Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+			$(".navbar-burger").toggleClass("is-active");
+			$(".navbar-menu").toggleClass("is-active");
+		});
+	});
+
+	var prevScrollpos = window.pageYOffset;
+	window.onscroll = function () {
+		var currentScrollPos = window.pageYOffset;
+		console.log(currentScrollPos)
+		if (currentScrollPos > 100) {
+			if ((prevScrollpos > currentScrollPos)) {
+				document.querySelector(".navbar").style.top = "0";
+			} else {
+				document.querySelector(".navbar").style.top = "-140px";
+			}
+			prevScrollpos = currentScrollPos;
+		}
+	}
+</script>

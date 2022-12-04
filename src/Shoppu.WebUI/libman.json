@@ -6,7 +6,8 @@
       "library": "bulma@0.9.4",
       "destination": "wwwroot/lib/bulma/",
       "files": [
-        "css/bulma.css"
+        "css/bulma.css",
+        "css/bulma.css.map"
       ]
     }
   ]

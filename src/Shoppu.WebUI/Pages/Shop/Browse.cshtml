@@ -1,0 +1,123 @@
+@page "/{gender}/{query}/{categoryName}"
+@* @page "/Browse/{gender?}/{categoryName?}/{subCategoryName?}/{test?}" *@
+@model Shoppu.WebUI.Pages.Shop.BrowseModel
+@{
+    ViewData["Title"] = "Browse";
+    var location = new Uri($"{Request.Scheme}://{Request.Host}");
+    var url = location.AbsoluteUri;
+}
+
+<div class="columns">
+    <div class="column is-2 side-menu">
+        @await Component.InvokeAsync("BrowseSideMenu", Model.CategoryId)
+        </aside>
+    </div>
+
+    <div class="column is-10 px-6">
+
+        <div class="columns is-multiline">
+            @foreach (var product in Model.BrowseProducts.Products)
+            {
+                <div class="column is-3 p-1 mb-6">
+                    <div data-productId="@product.ProductId" class="images">
+                        <a asp-page="Browse" asp-route-categoryName="@product.VariantId">
+                            <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
+                        </a>
+                        <img data-variantId="@product.VariantId" hidden class="thumbnail2"
+                        src="@url\@product.ImagePaths[1]" />
+                    </div>
+                    <div>
+                        <p class="title is-6">@product.ProductName</p>
+                        <p class="subtitle is-7">@product.Price$</p>
+                    </div>
+                </div>
+            }
+            @foreach (var product in Model.BrowseProducts.Products)
+            {
+                <div class="column is-3 p-1">
+                    <div data-productId="@product.ProductId" class="images">
+                        <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
+                        <img data-variantId="@product.VariantId" hidden class="thumbnail2"
+                        src="@url\@product.ImagePaths[1]" />
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+<script>
+    var $thumbnails = $('img.thumbnail');
+    var thumbnails = document.querySelectorAll('img.thumbnail');
+
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('mouseenter', (e) => {
+            var variantId = thumbnail.getAttribute('data-variantId');
+            @* var $image1 = $(`img.thumbnail[data-productId="${productId}"]`); *@
+            var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
+            @* console.log(productId)
+                    console.log($($image1))
+                    console.log($image2) *@
+
+            var tempSrc = thumbnail.getAttribute('src');
+            thumbnail.setAttribute('src', image2.getAttribute('src'));
+            image2.setAttribute('src', tempSrc);
+
+        })
+        thumbnail.addEventListener('mouseleave', (e) => {
+            var variantId = thumbnail.getAttribute('data-variantId');
+            @* var $image1 = $(`img.thumbnail[data-productId="${productId}"]`); *@
+            var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
+            @* console.log(productId)
+                    console.log($($image1))
+                    console.log($image2) *@
+
+            var tempSrc = thumbnail.getAttribute('src');
+            thumbnail.setAttribute('src', image2.getAttribute('src'));
+            image2.setAttribute('src', tempSrc);
+
+        })
+    })
+    @*
+            $($thumbnails).each((i, img) => {
+            $(img).on("mouseenter", (e) => {
+            var productId = $(e.currentTarget).attr("data-productId");
+            var $image1 = $(`img.thumbnail[data-productId="${productId}"]`);
+            var $image2 = $(`img.thumbnail2[data-productId="${productId}"]`);
+            console.log(productId)
+            console.log($($image1))
+            console.log($image2)
+
+            var tempSrc = $($image1).attr('src');
+            $($image1).attr('src', $($image2).attr('src'));
+            $($image2).attr('src', tempSrc);
+
+            console.log(productId)
+            $(img).attr("hidden", "");
+            $(`img.thumbnail[data-productId="${productId}"`).attr('src', "");
+            $(`img.thumbnail2[data-productId="${productId}"`).removeAttr('hidden');
+            })
+            $(img).on("mouseleave", (e) => {
+            var productId = $(e.currentTarget).attr("data-productId");
+            var $image1 = $(`img.thumbnail[data-productId="${productId}"]`);
+            var $image2 = $(`img.thumbnail2[data-productId="${productId}"]`);
+            console.log($image1)
+            console.log($image2)
+
+            var tempSrc = $($image1).attr('src');
+            $($image1).attr('src', $($image2).attr('src'));
+            $($image2).attr('src', tempSrc);
+
+            console.log(productId)
+            $(img).attr("hidden", "");
+            $(`img.thumbnail[data-productId="${productId}"`).attr('src', "");
+            $(`img.thumbnail2[data-productId="${productId}"`).removeAttr('hidden');
+            })
+        *@
+
+</script>
+}

@@ -80,6 +80,61 @@ namespace Shoppu.Infrastructure.Persistence
 
             //default data
 
+
+            if (!_context.ProductCategories.Any())
+            {
+                var clothes = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Clothes"
+                });
+
+                var accessories = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Underwear and accessiories"
+                });
+
+                await _context.SaveChangesAsync();
+
+
+                var tShirts = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "T-Shirts",
+                    ParentCategoryId = clothes.Entity.Id,
+                    
+                });
+                var pants = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Pants",
+                    ParentCategoryId = clothes.Entity.Id,
+                });
+
+                var shoes = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Shoes",
+                    ParentCategoryId = accessories.Entity.Id,
+                });
+                var socks = _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Socks",
+                    ParentCategoryId = accessories.Entity.Id,
+                });
+
+                await _context.SaveChangesAsync();
+
+                _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Shorts",
+                    ParentCategoryId = pants.Entity.Id,
+                });
+                _context.ProductCategories.Add(new ProductCategory
+                {
+                    Name = "Jogger",
+                    ParentCategoryId = pants.Entity.Id,
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
             if (!_context.Variants.Any())
             {
                 string[] variants = { "White", "Red", "Blue", "Black" };
@@ -92,38 +147,120 @@ namespace Shoppu.Infrastructure.Persistence
                 }
             }
 
-            if (!_context.Variants.Any())
+            if (!_context.Sizes.Any())
             {
-                string[] sizes = { "S", "M", "L", "XL" };
-                foreach (var size in sizes)
+                string[] sizesShirts = { "S", "M", "L", "XL" };
+                string[] sizesPants = { "38", "40", "42", "44" };
+                var tShirts = _context.ProductCategories.FirstOrDefault(p => p.Name == "T-Shirts");
+                foreach (var size in sizesShirts)
                 {
                     _context.Sizes.Add(new Size
                     {
-                        Name = size
+                        Name = size,
+                        ProductCategoryId = tShirts.Id
+                    });
+                }
+
+                var shorts = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shorts");
+                var joggers = _context.ProductCategories.FirstOrDefault(p => p.Name == "Jogger");
+                foreach (var size in sizesPants)
+                {
+                    _context.Sizes.Add(new Size
+                    {
+                        Name = size,
+                        ProductCategoryId = shorts.Id
+                    });
+                }
+                foreach (var size in sizesPants)
+                {
+                    _context.Sizes.Add(new Size
+                    {
+                        Name = size,
+                        ProductCategoryId = joggers.Id
+                    });
+                }
+
+                string[] sizesShoes = { "36", "37", "38", "39", "40", "41", "42", "43" };
+                string[] sizesSocks = { "35-38", "39-42", "43-46" };
+                var shoes = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shoes");
+                var socks = _context.ProductCategories.FirstOrDefault(p => p.Name == "Socks");
+                foreach (var size in sizesShoes)
+                {
+                    _context.Sizes.Add(new Size
+                    {
+                        Name = size,
+                        ProductCategoryId = shoes.Id
+                    });
+                }
+                foreach (var size in sizesSocks)
+                {
+                    _context.Sizes.Add(new Size
+                    {
+                        Name = size,
+                        ProductCategoryId = socks.Id
                     });
                 }
             }
 
-            if (!_context.ProductTypes.Any())
-            {
-                var shoe = _context.ProductTypes.Add(new ProductType
-                {
-                    Name = "Shoe",
-                });
-
-            }
-
-            await _context.SaveChangesAsync();
-
             if (!_context.Products.Any())
             {
-                var shoe = _context.ProductTypes.FirstOrDefault(p => p.Name == "Shoe");
+                var tShirts = _context.ProductCategories.FirstOrDefault(p => p.Name == "T-Shirts");
+                var shorts = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shorts");
+                var joggers = _context.ProductCategories.FirstOrDefault(p => p.Name == "Jogger");
+
+                var shoes = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shoes");
+                var socks = _context.ProductCategories.FirstOrDefault(p => p.Name == "Socks");
+
+                _context.Products.Add(new Product
+                {
+                    Name = "Puma",
+                    Description = "Puma shirt",
+                    Price = 34.99m,
+                    ProductCategoryId = tShirts.Id,
+                });
+                _context.Products.Add(new Product
+                {
+                    Name = "Gucci shirto",
+                    Description = "Its all gucci",
+                    Price = 74.99m,
+                    ProductCategoryId = tShirts.Id,
+                });
+
+                _context.Products.Add(new Product
+                {
+                    Name = "Shorty",
+                    Description = "Shorty pants",
+                    Price = 19.99m,
+                    ProductCategoryId = shorts.Id,
+                });
+                _context.Products.Add(new Product
+                {
+                    Name = "Joggu",
+                    Description = "Joggy pants",
+                    Price = 54.99m,
+                    ProductCategoryId = joggers.Id,
+                });
+
                 _context.Products.Add(new Product
                 {
                     Name = "Yeezes",
                     Description = "Nice shoes",
                     Price = 39.99m,
-                    ProductTypeId = shoe.Id,
+                    ProductCategoryId = shoes.Id,
+                });
+                _context.Products.Add(new Product
+                {
+                    Name = "Vans",
+                    Description = "Vans shoes",
+                    Price = 24.99m,
+                    ProductCategoryId = shoes.Id,
+                });
+                _context.Products.Add(new Product
+                {
+                    Name = "Socky",
+                    Description = "Socks 3-pack",
+                    Price = 14.99m,
+                    ProductCategoryId = socks.Id,
                 });
             }
 

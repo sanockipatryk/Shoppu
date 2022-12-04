@@ -383,26 +383,34 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsShown")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(14,2)");
 
-                    b.Property<int>("ProductTypeId")
+                    b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductTypeId");
+                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Shoppu.Domain.Entities.ProductType", b =>
+            modelBuilder.Entity("Shoppu.Domain.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -414,9 +422,14 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ProductTypes");
+                    b.HasIndex("ParentCategoryId");
+
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariant", b =>
@@ -426,10 +439,6 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -446,6 +455,28 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                     b.ToTable("ProductVariants");
                 });
 
+            modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ImageSource")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.ToTable("ProductVariantImages");
+                });
+
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantSize", b =>
                 {
                     b.Property<int>("Id")
@@ -454,7 +485,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("ProductVariantId")
+                    b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -463,16 +494,11 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                     b.Property<int>("SizeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VariantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductVariantId");
 
                     b.HasIndex("SizeId");
-
-                    b.HasIndex("VariantId");
 
                     b.ToTable("ProductVariantSizes");
                 });
@@ -489,7 +515,12 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProductCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Sizes");
                 });
@@ -635,13 +666,22 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Shoppu.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("Shoppu.Domain.Entities.ProductType", "ProductType")
+                    b.HasOne("Shoppu.Domain.Entities.ProductCategory", "ProductCategory")
                         .WithMany("Products")
-                        .HasForeignKey("ProductTypeId")
+                        .HasForeignKey("ProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductType");
+                    b.Navigation("ProductCategory");
+                });
+
+            modelBuilder.Entity("Shoppu.Domain.Entities.ProductCategory", b =>
+                {
+                    b.HasOne("Shoppu.Domain.Entities.ProductCategory", "ParentCategory")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariant", b =>
@@ -663,11 +703,24 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                     b.Navigation("Variant");
                 });
 
+            modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantImage", b =>
+                {
+                    b.HasOne("Shoppu.Domain.Entities.ProductVariant", "ProductVariant")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductVariant");
+                });
+
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantSize", b =>
                 {
-                    b.HasOne("Shoppu.Domain.Entities.ProductVariant", null)
+                    b.HasOne("Shoppu.Domain.Entities.ProductVariant", "ProductVariant")
                         .WithMany("Sizes")
-                        .HasForeignKey("ProductVariantId");
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Shoppu.Domain.Entities.Size", "Size")
                         .WithMany()
@@ -675,15 +728,20 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shoppu.Domain.Entities.Variant", "Variant")
-                        .WithMany()
-                        .HasForeignKey("VariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("ProductVariant");
 
                     b.Navigation("Size");
+                });
 
-                    b.Navigation("Variant");
+            modelBuilder.Entity("Shoppu.Domain.Entities.Size", b =>
+                {
+                    b.HasOne("Shoppu.Domain.Entities.ProductCategory", "ProductCategory")
+                        .WithMany("Sizes")
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductCategory");
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ApplicationUser", b =>
@@ -706,13 +764,19 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                     b.Navigation("Variants");
                 });
 
-            modelBuilder.Entity("Shoppu.Domain.Entities.ProductType", b =>
+            modelBuilder.Entity("Shoppu.Domain.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("Sizes");
+
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariant", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Sizes");
                 });
 #pragma warning restore 612, 618

@@ -1,0 +1,93 @@
+﻿@page "{id:int}"
+@model Shoppu.WebUI.Pages.Products.CreateVariantModel
+@using Shoppu.WebUI.Extensions
+@{
+}
+<img id="sampleImage" class="m-3 create-variant-upload-image" height="200" style="height: 500px">
+<div class="container">
+	<div class="has-text-centered">
+		<p class="title is-4 mb-5">Add new variant</p>
+	</div>
+	<form method="post" enctype="multipart/form-data">
+		<input type="hidden" asp-for="@Model.ProductVariant.ProductId" value="@Model.Product.Id"/>
+		<div class="columns has-text-centered">
+			<div class="field column is-2">
+				<div class="control">
+					<div class="select">
+						<select asp-for="@Model.ProductVariant.VariantId"
+							asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId, "Select variant")">
+						</select>
+						<span asp-validation-for="@Model.ProductVariant.VariantId" class="has-text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div id="variantPhotosInput" class="file has-name column is-fullwidth pl-5 mx-0">
+				<label class="file-label">
+					<input class="file-input" type="file" accept="image/png, image/jpeg, image/webp, image/jpg" multiple name="Product image">
+					<span class="file-cta">
+						<span class="file-icon">
+							<i class="fas fa-upload"></i>
+						</span>
+						<span class="file-label">
+							Choose files...
+						</span>
+					</span>
+					<span class="file-name">
+						No images attached...
+					</span>
+				</label>
+			</div>
+			<div class="column is-2">
+				<button class="button is-primary" type="submit">Add variant</button>
+			</div>
+		</div>
+	</form>
+	<div>
+		<p id="imagesLoadedInfo" class="title is-4 mb-5">No images loaded...</p>
+		<div id="imagesContainer" class="has-text-centered">
+		</div>
+	</div>
+</div>
+@section Scripts
+{
+<script>
+	var sampleImage = document.querySelector('#sampleImage');
+	sampleImage.remove();
+	const fileInput = document.querySelector('#variantPhotosInput input[type=file]');
+	var $imagesLoadedInfo = $('#imagesLoadedInfo');
+	fileInput.onchange = (e) => {
+		const fileName = document.querySelector('#variantPhotosInput .file-name');
+		if (fileInput.files.length === 0) {
+			fileName.textContent = "No images attached..."
+		}
+		else if (fileInput.files.length === 1) {
+			fileName.textContent = fileInput.files[0].name;
+			$imagesLoadedInfo.text("Loaded image:")
+		}
+		else if (fileInput.files.length > 1) {
+			fileName.textContent = `${fileInput.files.length} files...`
+			$imagesLoadedInfo.text(`Loaded ${fileInput.files.length} images:`)
+		}
+		onFileSelected(e)
+	}
+
+	function onFileSelected(event) {
+		$('#imagesContainer').empty();
+		var index = 0;
+		var files = [...event.target.files];
+
+		files.forEach(file => {
+			var reader = new FileReader();
+			var $newImage = $(sampleImage).clone();
+			$newImage.attr('id', `image-${index}`);
+			$newImage.title = file.name;
+			$('#imagesContainer').append($newImage);
+			reader.onload = function (event) {
+				$newImage.attr('src', event.target.result)
+			};
+			reader.readAsDataURL(file);
+			index++;
+		});
+	}
+</script>
+}

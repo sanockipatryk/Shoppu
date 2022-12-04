@@ -7,9 +7,9 @@ namespace Shoppu.Domain.Entities
         public int Id { get; set; }
         public int Quantity { get; set; }
 
-        [ForeignKey(nameof(Variant))]
-        public int VariantId { get; set; }
-        public Variant Variant { get; set; }
+        [ForeignKey(nameof(ProductVariant))]
+        public int ProductVariantId { get; set; }
+        public ProductVariant ProductVariant { get; set; }
 
         [ForeignKey(nameof(Size))]
         public int SizeId { get; set; }

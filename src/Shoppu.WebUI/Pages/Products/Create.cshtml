@@ -1,0 +1,149 @@
+﻿@page
+@model Shoppu.WebUI.Pages.Products.CreateModel
+@using Shoppu.Domain.Enums
+@{
+	void generateCategories(List<ProductCategory> categories, int currentLevel)
+	{
+		<ul class="@(currentLevel == 0 ? "menu-list" : "my-0 collapsed")">
+			@foreach (var cat in categories)
+			{
+				var hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).Count() > 0;
+				<li>
+					@if (hasSubcategories)
+					{
+						<button id="collapse-@(cat.Id)"
+				class="button button-collapse is-white has-text-info @(currentLevel == 0? "px-0" : "")">
+							@cat.Name <i class="fa fa-caret-down ml-1"></i>
+						</button>
+						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).ToList(),
+									currentLevel + 1);
+					}
+					else
+					{
+						<button data-productCategoryId="@cat.Id" class="button is-white productCategory">@cat.Name</button>
+					}
+				</li>
+			}
+		</ul>
+	}
+}
+<div class="container">
+	<form id="productForm" method="post">
+		<input id="productCategoryIdInput" type="hidden" asp-for="@Model.Product.ProductCategoryId" />
+		<div class="columns">
+			<div class="column">
+				<div class="field">
+					<label class="label" asp-for="@Model.Product.Name"></label>
+					<div class="control">
+						<input class="input" type="text" asp-for="@Model.Product.Name"
+							placeholder="Enter @nameof(Model.Product.Name).ToLower()">
+						<span asp-validation-for="@Model.Product.Name" class="has-text-danger"></span>
+					</div>
+				</div>
+				<div class="field">
+					<label class="label" asp-for="@Model.Product.Description"></label>
+					<div class="control">
+						<textarea class="textarea has-fixed-size" rows="4" asp-for="@Model.Product.Description"
+							placeholder="Enter @nameof(Model.Product.Description).ToLower()"></textarea>
+						<span asp-validation-for="@Model.Product.Description" class="has-text-danger"></span>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="field column is-4">
+						<label class="label" asp-for="@Model.Product.Price"></label>
+						<div class="control">
+							<input class="input" type="number" step="0.01" min="0.01" asp-for="@Model.Product.Price"
+								placeholder="Enter @nameof(Model.Product.Price).ToLower() in $">
+							<span asp-validation-for="@Model.Product.Price" class="has-text-danger"></span>
+						</div>
+					</div>
+					<div class="field column">
+						<label class="label" asp-for="@Model.Product.Gender"></label>
+						<div class="control">
+							<div class="select">
+								<select asp-for="@Model.Product.Gender"
+									asp-items="Html.GetEnumSelectList<ProductGender>()">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+						<span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span>
+					</div>
+				</div>
+				<button id="submitProductButton" type="submit" class="button is-success">Submit</button>
+			</div>
+			<div class="column">
+				<aside class="menu">
+					<p class="title is-4 pb-0 mb-2">Category selection</p>
+					@{
+						int level = 0;
+						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == null).ToList(), level);
+					}
+				</aside>
+				<span asp-validation-for="@Model.Product.ProductCategoryId" class="has-text-danger"></span>
+			</div>
+		</div>
+	</form>
+</div>
+@section Scripts {
+<script>
+	var $submitProductButton = $('#submitProductButton');
+	var $clickableCategories = $('.button.productCategory');
+
+	// if category selected - expand categories leading to selected category and mark it as active
+	var selectedCategoryId = "@Model.Product.ProductCategoryId";
+	if (selectedCategoryId.length > 0) {
+		var ulsThatContainSelectedCategory = $(`ul.collapsed:has(.button.productCategory[data-productCategoryId="${selectedCategoryId}"])`);
+		$(ulsThatContainSelectedCategory).each((i, el) => {
+			$(el).removeClass('collapsed')
+		})
+		setCategoryActive($(`.button.productCategory[data-productCategoryId= "${selectedCategoryId}"]`))
+
+	}
+
+	$clickableCategories.each((i, category) => {
+		$(category).on('click', e => {
+			e.preventDefault();
+			var $currentlyActiveCategory = $('.button.productCategory.is-active')[0];
+			if ($currentlyActiveCategory !== undefined) {
+				setCategoryInActive($currentlyActiveCategory)
+				if (category !== $currentlyActiveCategory) {
+					setCategoryActive(category)
+				}
+			}
+			else {
+				setCategoryActive(category)
+			}
+		})
+	});
+
+	function setCategoryActive($element) {
+		$($element).addClass("is-active").addClass('is-primary')
+	}
+	function setCategoryInActive($element) {
+		$($element).removeClass("is-active").removeClass('is-primary')
+	}
+
+	var PostBackURL = '@Url.Content("~/Products/Create")';
+
+	$submitProductButton.on('click', async (e) => {
+		selectedCategoryId = $('.productCategory.is-active').attr('data-productCategoryId');
+		if (selectedCategoryId !== undefined)
+			$('#productCategoryIdInput').val(parseInt(selectedCategoryId));
+		else
+			$('#productCategoryIdInput').val(null);
+		$('#productForm').submit();
+	});
+
+	$buttonsCollapse = $('button.button-collapse');
+	$buttonsCollapse.each((i, button) => {
+		$(button).on('click', e => {
+			e.preventDefault();
+			var id = $(button).attr('id');
+			$(button).children('i').toggleClass('fa-caret-down');
+			$(button).children('i').toggleClass('fa-caret-up');
+			$(`#${id}+ul`).toggleClass('collapsed');
+		})
+	})
+</script>
+}
