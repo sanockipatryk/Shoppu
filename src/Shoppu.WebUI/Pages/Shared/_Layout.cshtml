@@ -43,7 +43,8 @@
 						</a>
 					}
 					<div class="navbar-item has-dropdown is-hoverable has-products-main-menu">
-						<a class="navbar-link">
+						<a class="navbar-link" asp-area="" asp-page="/Shop/Browse" asp-route-gender="Female"
+							asp-route-query="All" asp-route-categoryName="Clothes">
 							Women
 						</a>
 
@@ -64,7 +65,8 @@
 						</div>
 					</div>
 					<div class="navbar-item has-dropdown is-hoverable has-products-main-menu">
-						<a class="navbar-link">
+						<a class="navbar-link" asp-area="" asp-page="/Shop/Browse" asp-route-gender="Male"
+							asp-route-query="All" asp-route-categoryName="Clothes">
 							Men
 						</a>
 						<div class="navbar-dropdown products-main-menu">
@@ -120,7 +122,6 @@
 	var prevScrollpos = window.pageYOffset;
 	window.onscroll = function () {
 		var currentScrollPos = window.pageYOffset;
-		console.log(currentScrollPos)
 		if (currentScrollPos > 100) {
 			if ((prevScrollpos > currentScrollPos)) {
 				document.querySelector(".navbar").style.top = "0";

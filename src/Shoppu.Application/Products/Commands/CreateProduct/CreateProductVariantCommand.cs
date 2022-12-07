@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using System.Globalization;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shoppu.Application.Common.Interfaces;
 using Shoppu.Domain.Entities;
+using Shoppu.Domain.Extensions;
 using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Commands.CreateProduct
@@ -18,20 +20,49 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
 
         public async Task<ProductVariant> Handle(CreateProductVariantCommand request, CancellationToken cancellationToken)
         {
-            var productVariant = new ProductVariant
+            var productFromDb = await _context.Products
+                .Where(p => p.Id == request.ProductVariant.ProductId)
+                .Select(p => new Product
+                {
+                    Id = p.Id,
+                    BaseSlug = p.BaseSlug
+                })
+                .FirstOrDefaultAsync();
+
+            if (productFromDb != null)
             {
-                ProductId = request.ProductVariant.ProductId,
-                VariantId = request.ProductVariant.VariantId,
-            };
-            var productVariantFromDb = await _context.ProductVariants.AddAsync(productVariant);
-            await _context.SaveChangesAsync(cancellationToken);
+                var newVariantSlug = productFromDb.BaseSlug;
 
-            var createdProductVariant = await _context.ProductVariants
-                .Include(p => p.Product)
-                .ThenInclude(pr => pr.ProductCategory)
-                .FirstOrDefaultAsync(p => p.Id == productVariantFromDb.Entity.Id);
+                do
+                {
+                    string newSlug = newVariantSlug;
+                    newSlug = newSlug.AppendRandomDigits(3);
+                    if (!await _context.ProductVariants.AnyAsync(pv => pv.Slug.Equals(newSlug)))
+                    {
+                        newVariantSlug = newSlug;
+                        break;
+                    }
+                } while (true);
 
-            return createdProductVariant;
+                var productVariant = new ProductVariant
+                {
+                    ProductId = request.ProductVariant.ProductId,
+                    VariantId = request.ProductVariant.VariantId,
+                    Name = request.ProductVariant.Name,
+                    Price = request.ProductVariant.Price != null ? Decimal.Parse(request.ProductVariant.Price, CultureInfo.InvariantCulture) : null,
+                    Slug = newVariantSlug,
+                };
+                var productVariantFromDb = await _context.ProductVariants.AddAsync(productVariant);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var createdProductVariant = await _context.ProductVariants
+                    .Include(p => p.Product)
+                    .ThenInclude(pr => pr.ProductCategory)
+                    .FirstOrDefaultAsync(p => p.Id == productVariantFromDb.Entity.Id);
+
+                return createdProductVariant;
+            }
+            return null;
         }
     }
 }

@@ -15,13 +15,14 @@ namespace Shoppu.Domain.Entities
 
         [Column(TypeName = "decimal(14,2)")]
         public decimal Price { get; set; }
-        public bool IsShown { get; set; }
+        public bool IsAccessible { get; set; }
+        public string BaseSlug { get; set; }
 
         [ForeignKey(nameof(ProductCategory))]
         public int ProductCategoryId { get; set; }
         public ProductCategory? ProductCategory { get; set; }
 
         public List<ProductVariant>? Variants { get; set; }
-        
+
     }
 }

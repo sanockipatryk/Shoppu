@@ -5,6 +5,10 @@ namespace Shoppu.Domain.Entities
     public class ProductVariant
     {
         public int Id { get; set; }
+        public string? Name { get; set; }
+        public decimal? Price { get; set; }
+        public string Slug { get; set; }
+
 
         [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }

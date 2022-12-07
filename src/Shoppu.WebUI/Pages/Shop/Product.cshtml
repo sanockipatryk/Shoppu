@@ -1,0 +1,227 @@
+@page "/Shop/{slug}"
+@model Shoppu.WebUI.Pages.Shop.Product
+@{
+	ViewData["Title"] = "Product";
+	var location = new Uri($"{Request.Scheme}://{Request.Host}");
+	var url = location.AbsoluteUri;
+}
+
+
+<div class="container px-6 product-container">
+	<div class="columns mt-5 main-columns">
+		<div class="column is-6 p-0">
+			<div class="columns is-wrapped images-columns">
+				<div class="column is-2 px-0 py-0 is-relative images-list-wrapper">
+					<button class="button is-hidden scroll-button up-button"><i class="fa fa-chevron-up"></i></button>
+					<button class="button is-hidden scroll-button down-button">
+						<i class="fa fa-chevron-down"></i>
+					</button>
+					<div class="images-list-container">
+						@{
+							int index = 0;
+						}
+						@foreach (var imgPath in Model.ShopProduct.ImagePaths)
+						{
+								<img data-imageNumber="@index" class="@(index == 0 ? "selected" : null)" src="@url@imgPath" />
+							index++;
+						}
+					</div>
+				</div>
+				<div class="column is-10 py-0 main-image is-relative">
+					<button class="button is-hidden scroll-button left-button"><i class="fa fa-chevron-left"></i></button>
+					<button class="button is-hidden scroll-button right-button"><i class="fa fa-chevron-right"></i></button>
+					<img src="@url@Model.ShopProduct.ImagePaths[0]" />
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column is-10 is-offset-2 product-information-container">
+				<div class="card product-information">
+					<header class="card-header p-0">
+						<p class="card-header-title p-0">
+							Card header
+						</p>
+						<button class="card-header-icon px-0" aria-label="more options">
+							<span class="ml-auto justify-content-end">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+							</span>
+						</button>
+					</header>
+					<div class="card-content p-0" style="overflow:hidden">
+						<div class="content py-5">
+							Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="column is-offset-2 is-4 product-data">
+			<div class="product-data-wrapper">
+				<p class="subtitle is-dark @(Model.ShopProduct?.VariantName != null ? "is-7 mb-0" : "is-5")">
+					@Model.ShopProduct.ProductName
+				</p>
+				@if (Model.ShopProduct?.VariantName != null)
+				{
+						<p class="subtitle is-dark is-5">@Model.ShopProduct?.VariantName</p>
+
+				}
+				<p class="title is-4 mt-3">@Model.ShopProduct?.Price USD</p>
+				<p class="subtitle is-6 mt-4 mb-2">
+					<span class="is-grey">Color</span> -
+					@Model.ShopProduct.ProductVariants.FirstOrDefault(pv =>
+					pv.IsSelected).ColorName.ToLower()
+				</p>
+				<div class="is-flex">
+					@foreach (var variant in Model.ShopProduct.ProductVariants)
+					{
+							<a asp-page="Product" asp-route-slug="@variant.VariantSlug"
+					   class="color-option mr-1 @(variant.IsSelected ? "selected" : null)"
+					   title="@variant.ColorName.ToLower()" style="background-color: @variant.HEXColor;">
+								<span></span>
+							@* span with css adds a border outside *@
+							</a>
+					}
+				</div>
+
+				<form method="post">
+					<div class="control">
+						<label class="label mt-5 mb-3 has-text-weight-normal is-grey"
+							   @* asp-for="@Model.ProductVariant.VariantId " *@>size</label>
+						<div class="select is-fullwidth">
+							<select @* asp-for="@Model.ProductVariant.VariantId" *@
+									@* asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId, "Select variant")"> *@>
+								@foreach (var size in Model.ShopProduct.Sizes)
+								{
+										<!option @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name @(size.Quantity > 0 ? null : "(out of size)")</!option>
+								}
+							</select>
+							@* <span asp-validation-for="@Model.ProductVariant.VariantId" class="has-text-danger"></span> *@
+						</div>
+					</div>
+					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i class="fa fa-shopping-bag mr-1"></i>Add to cart</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="py-6">
+	</div>
+</div>
+@section Scripts {
+<script language="javascript" type="text/javascript">
+	$(window).on('load', function () {
+		var $mainImageDiv = $('.main-image');
+		var $mainImage = $('.main-image img');
+		var $imagesListWrapper = $('.images-list-wrapper');
+		var $imagesListContainer = $('.images-list-container');
+		var $productInformationsContainer = $('.product-information-container');
+
+		$mainImageDiv.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2)))
+		$productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2)))
+
+		var $upButton = $('.up-button');
+		var $downButton = $('.down-button');
+		var $leftButton = $('.left-button');
+		var $rightButton = $('.right-button');
+
+		function isScrollable(element) { return element.offsetHeight < element.scrollHeight };
+
+		if (isScrollable($imagesListContainer[0])) {
+			$downButton.removeClass('is-hidden')
+		}
+
+		$imagesListContainer.children('img').each((i, img) => {
+			$(img).on('click', (e) => {
+				var $alreadySelectedImage = $('img.selected')[0];
+				if ($(img).hasClass('selected')) { }
+				else {
+					if ($alreadySelectedImage !== img) {
+						$($alreadySelectedImage).removeClass('selected')
+					}
+					$(img).addClass('selected');
+					$($mainImage).attr('src', $(img).attr('src'));
+					scrollToSelectedImage();
+				}
+			})
+		})
+
+		$upButton.on('click', e => {
+			var element = $imagesListContainer[0];
+			if (element.scrollTop > 0) {
+				var newScrollTop = element.scrollTop -= element.offsetHeight - 100;
+				element.scrollTop = newScrollTop;
+				if (newScrollTop <= 0) {
+					$upButton.addClass('is-hidden')
+				}
+				if ($downButton.hasClass('is-hidden')) {
+					$downButton.removeClass('is-hidden');
+				}
+			}
+		})
+
+		$downButton.on('click', e => {
+			var element = $imagesListContainer[0];
+			if (element.offsetHeight < element.scrollHeight) {
+
+				if (element.scrollTop < element.scrollHeight - element.offsetHeight) {
+					var newScrollTop = element.scrollTop += element.offsetHeight - 100;
+					element.scrollTop = newScrollTop;
+					if (newScrollTop > element.scrollHeight - element.offsetHeight) {
+						$downButton.addClass('is-hidden')
+					}
+					if ($upButton.hasClass('is-hidden')) {
+						$upButton.removeClass('is-hidden');
+					}
+				}
+			}
+		})
+
+		$mainImageDiv.on('mouseenter', (e) => {
+			if($leftButton.hasClass('is-hidden'))
+				$leftButton.removeClass('is-hidden')
+
+			 if($rightButton.hasClass('is-hidden'))
+				$rightButton.removeClass('is-hidden')
+		})
+
+		$mainImageDiv.on('mouseleave', (e) => {
+			if(!$leftButton.hasClass('is-hidden'))
+				$leftButton.addClass('is-hidden')
+
+			 if(!$rightButton.hasClass('is-hidden'))
+				$rightButton.addClass('is-hidden')
+		})
+
+		$leftButton.on('click', (e) => {
+			var $currentImage = $('img.selected');
+			var currentImageIndex = parseInt($currentImage.attr('data-imageNumber'))
+			if(currentImageIndex === 0)
+			{
+			 $('.images-list-container img:last-of-type()')[0].click();
+			}
+			else {
+				$(`.images-list-container img[data-imageNumber="${currentImageIndex - 1}"]`)[0].click();
+			}
+				scrollToSelectedImage();
+		})
+
+		$rightButton.on('click', (e) => {
+			var $currentImage = $('img.selected');
+			var currentImageIndex = parseInt($currentImage.attr('data-imageNumber'))
+			if(currentImageIndex === parseInt($('.images-list-container img:last-of-type()').attr('data-imageNumber')))
+			{
+			 $('.images-list-container img:first-of-type()')[0].click();
+			}
+			else {
+				$(`.images-list-container img[data-imageNumber="${currentImageIndex + 1}"]`)[0].click();
+
+			}
+				scrollToSelectedImage();
+		})
+
+		function scrollToSelectedImage()
+		{
+			$('.images-list-container img.selected')[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+		}
+	})
+</script>
+}

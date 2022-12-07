@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string UrlName { get; set; }
 
         public int? ParentCategoryId { get; set; }
         public ProductCategory? ParentCategory { get; set; }

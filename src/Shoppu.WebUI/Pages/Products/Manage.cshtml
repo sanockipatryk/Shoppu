@@ -21,6 +21,7 @@
     <thead>
       <tr>
         <th class="has-text-centered">Display?</th>
+        <th class="has-text-centered">Gender?</th>
         <th class="has-text-centered">Name</th>
         <th class="has-text-centered"><abbr title="Product type">Type</abbr></th>
         <th class="has-text-centered">Price($)</th>
@@ -35,6 +36,7 @@
           <form method="post" asp-page-handler="ChangeProductVisibility">
             <td><button class="button is-success">Visible</button></td>
           </form>
+          <td>@product.Gender</td>
           <td>@product.Name</td>
           <td>@product.ProductCategory.Name</td>
           <td>@product.Price.ToString("0.00$")</td>
@@ -45,6 +47,7 @@
         {
           <tr class="has-background-success-light has-text-centered">
             <th></th>
+            <th></th>
             <th>Main image</th>
             <th>Color</th>
             <th>Size: Quantity</th>
@@ -53,6 +56,7 @@
           @foreach (var variant in product.Variants)
           {
             <tr class=" has-text-centered">
+              <td>Variant1</td>
               <td>Variant1</td>
               <td>
                 @if (variant.Images.Count() > 0)

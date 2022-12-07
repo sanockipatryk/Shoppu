@@ -18,6 +18,7 @@ namespace Shoppu.Domain.ViewModels
         public string VariantName { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public string Slug { get; set; }
         public decimal Price { get; set; }
         public List<string> ImagePaths { get; set; }
 

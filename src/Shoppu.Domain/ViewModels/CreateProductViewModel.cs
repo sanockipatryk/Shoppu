@@ -23,7 +23,7 @@ namespace Shoppu.Domain.ViewModels
 
         [Required(ErrorMessage = "Add a price for the product.")]
         public string Price { get; set; }
-        public bool IsShown { get; set; } = false;
+        public bool IsAccessible { get; set; } = false;
 
         [Required(ErrorMessage = "Select the product category.")]
         public int? ProductCategoryId { get; set; }

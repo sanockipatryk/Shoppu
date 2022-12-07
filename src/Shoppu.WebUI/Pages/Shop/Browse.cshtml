@@ -1,4 +1,4 @@
-@page "/{gender}/{query}/{categoryName}"
+@page "/{gender}/{query=All}/{categoryName=Clothes}"
 @* @page "/Browse/{gender?}/{categoryName?}/{subCategoryName?}/{test?}" *@
 @model Shoppu.WebUI.Pages.Shop.BrowseModel
 @{
@@ -20,7 +20,7 @@
             {
                 <div class="column is-3 p-1 mb-6">
                     <div data-productId="@product.ProductId" class="images">
-                        <a asp-page="Browse" asp-route-categoryName="@product.VariantId">
+                        <a asp-page="Product" asp-route-slug="@product.Slug">
                             <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
                         </a>
                         <img data-variantId="@product.VariantId" hidden class="thumbnail2"

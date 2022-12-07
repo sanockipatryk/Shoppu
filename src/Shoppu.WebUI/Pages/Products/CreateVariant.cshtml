@@ -9,11 +9,28 @@
 		<p class="title is-4 mb-5">Add new variant</p>
 	</div>
 	<form method="post" enctype="multipart/form-data">
-		<input type="hidden" asp-for="@Model.ProductVariant.ProductId" value="@Model.Product.Id"/>
-		<div class="columns has-text-centered">
-			<div class="field column is-2">
+		<input type="hidden" asp-for="@Model.ProductVariant.ProductId" value="@Model.Product.Id" />
+		<div class="columns">
+			<div class="field column">
+				<label class="label" asp-for="@Model.ProductVariant.Name"></label>
 				<div class="control">
-					<div class="select">
+					<input class="input" type="text" asp-for="@Model.ProductVariant.Name"
+						placeholder="Specific name (optional)">
+					<span asp-validation-for="@Model.ProductVariant.Name" class="has-text-danger"></span>
+				</div>
+			</div>
+			<div class="field column is-3 has-text-centered">
+				<label class="label" asp-for="@Model.ProductVariant.Price "></label>
+				<div class="control">
+					<input class="input" type="number" step="0.01" min="0" asp-for="@Model.ProductVariant.Price"
+						placeholder="Specific price (optional)">
+					<span asp-validation-for="@Model.ProductVariant.Price" class="has-text-danger"></span>
+				</div>
+			</div>
+			<div class="field column is-2 has-text-right">
+				<div class="control">
+					<label class="label" asp-for="@Model.ProductVariant.VariantId "></label>
+					<div class="select is-fullwidth">
 						<select asp-for="@Model.ProductVariant.VariantId"
 							asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId, "Select variant")">
 						</select>
@@ -21,9 +38,12 @@
 					</div>
 				</div>
 			</div>
-			<div id="variantPhotosInput" class="file has-name column is-fullwidth pl-5 mx-0">
+		</div>
+		<div class="columns">
+			<div id="variantPhotosInput" class="column is-fullwidth file has-name">
 				<label class="file-label">
-					<input class="file-input" type="file" accept="image/png, image/jpeg, image/webp, image/jpg" multiple name="Product image">
+					<input class="file-input" type="file" accept="image/png, image/jpeg, image/webp, image/jpg" multiple
+						name="Product image">
 					<span class="file-cta">
 						<span class="file-icon">
 							<i class="fas fa-upload"></i>
@@ -38,7 +58,7 @@
 				</label>
 			</div>
 			<div class="column is-2">
-				<button class="button is-primary" type="submit">Add variant</button>
+				<button class="button is-primary is-fullwidth" type="submit">Add variant</button>
 			</div>
 		</div>
 	</form>

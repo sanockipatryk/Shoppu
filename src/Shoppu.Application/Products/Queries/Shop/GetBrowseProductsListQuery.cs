@@ -46,21 +46,22 @@ namespace Shoppu.Application.Products.Queries.Shop
             var variants = await _context.ProductVariants
                 .Where(pv => belongingCategoriesIds.Contains(pv.Product.ProductCategory.Id))
                 .Select(pv => new ProductVariant
-            {
-                Id = pv.Id,
-                Product = new Product
                 {
-                    Id = pv.Product.Id,
-                    Name = pv.Product.Name,
-                    ProductCategory = new ProductCategory
+                    Id = pv.Id,
+                    Product = new Product
                     {
-                        Id = pv.Product.ProductCategory.Id,
-                        Name = pv.Product.ProductCategory.Name,
+                        Id = pv.Product.Id,
+                        Name = pv.Product.Name,
+                        ProductCategory = new ProductCategory
+                        {
+                            Id = pv.Product.ProductCategory.Id,
+                            Name = pv.Product.ProductCategory.Name,
+                        },
+                        Price = pv.Product.Price,
                     },
-                    Price = pv.Product.Price,
-                },
-                Images = pv.Images,
-            }).ToListAsync();
+                    Slug = pv.Slug,
+                    Images = pv.Images,
+                }).ToListAsync();
 
             var browseProducts = new BrowseProductViewModel();
             browseProducts.Products = new List<BrowseProductItemViewModel>();
@@ -81,6 +82,7 @@ namespace Shoppu.Application.Products.Queries.Shop
                     VariantName = variant.Id.ToString(),
                     CategoryId = variant.Product.ProductCategory.Id,
                     CategoryName = variant.Product.ProductCategory.Name,
+                    Slug = variant.Slug,
                     Price = variant.Product.Price,
                     ImagePaths = ImagePaths
                 });
