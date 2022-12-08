@@ -13,10 +13,10 @@ namespace Shoppu.Domain.ViewModels
     public class CreateProductViewModel
     {
         [Required(ErrorMessage = "Add a name for the product.")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Name should be between 5 to 50 characters long.")]
+        [StringLength(200, MinimumLength = 1, ErrorMessage = "Name should be between 5 to 50 characters long.")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Add a description for the product.")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Description should be between 5 to 150 characters long.")]
+        [StringLength(1000, MinimumLength = 5, ErrorMessage = "Description should be between 5 to 500 characters long.")]
         public string Description { get; set; }
         [Required(ErrorMessage = "Select a gender that the product targets.")]
         public ProductGender? Gender { get; set; }

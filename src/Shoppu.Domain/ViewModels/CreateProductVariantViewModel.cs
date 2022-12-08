@@ -8,6 +8,7 @@ namespace Shoppu.Domain.ViewModels
 
         [Required(ErrorMessage = "Choose a variant for this product.")]
         [Display(Name = "Select variant color")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Select variant color")]
         public int VariantId { get; set; }
 
         [StringLength(50, MinimumLength = 5, ErrorMessage = "Name should be between 5 to 50 characters long.")]

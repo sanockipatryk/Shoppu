@@ -41,7 +41,11 @@ namespace Shoppu.WebUI.Pages.Products
 
         public async Task<IActionResult> OnPost()
         {
-            if (ModelState.IsValid)
+            if (Request.Form.Files.Count == 0)
+            {
+                ViewData["imagesError"] = "Add at least one image.";
+            }
+            if (ModelState.IsValid && Request.Form.Files.Count > 0)
             {
                 var newVariant = await _mediator.Send(new CreateProductVariantCommand(ProductVariant));
 
@@ -54,14 +58,11 @@ namespace Shoppu.WebUI.Pages.Products
                     newVariant.Product.Name,
                     newVariant.Id.ToString()
                     );
-                if (imagePaths != null)
-                {
-                    var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(newVariant.Id, imagePaths));
 
-                    if (addImagesResult)
-                        return RedirectToPage("Manage");
-                }
+                var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(newVariant.Id, imagePaths));
 
+                if (addImagesResult)
+                    return RedirectToPage("Manage");
             }
             Product = await _mediator.Send(new GetProductQuery(ProductVariant.ProductId));
             if (Product.Name != null)

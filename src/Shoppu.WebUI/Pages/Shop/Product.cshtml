@@ -7,11 +7,11 @@
 }
 
 
-<div class="container px-6 product-container">
-	<div class="columns mt-5 main-columns">
-		<div class="column is-6 p-0">
+<div class="container product-container px-6">
+	<div class="columns mt-5 main-columns is-multiline">
+		<div class="column is-12 is-8-desktop is-6-fullhd p-0">
 			<div class="columns is-wrapped images-columns">
-				<div class="column is-2 px-0 py-0 is-relative images-list-wrapper">
+				<div class="column is-hidden-mobile is-hidden-tablet-only is-block-desktop is-2 px-0 py-0 is-relative images-list-wrapper">
 					<button class="button is-hidden scroll-button up-button"><i class="fa fa-chevron-up"></i></button>
 					<button class="button is-hidden scroll-button down-button">
 						<i class="fa fa-chevron-down"></i>
@@ -27,36 +27,36 @@
 						}
 					</div>
 				</div>
-				<div class="column is-10 py-0 main-image is-relative">
+				<div class="column is-12-mobile is-7 is-10-desktop py-0 main-image is-relative">
 					<button class="button is-hidden scroll-button left-button"><i class="fa fa-chevron-left"></i></button>
 					<button class="button is-hidden scroll-button right-button"><i class="fa fa-chevron-right"></i></button>
 					<img src="@url@Model.ShopProduct.ImagePaths[0]" />
 				</div>
 			</div>
-			<div class="columns">
-				<div class="column is-10 is-offset-2 product-information-container">
+			<div class="columns product-information-columns">
+				<div class="column is-10-mobile mobile is-7 is-10-desktop is-offset-2-desktop is-9-widescreen is-10-fullhd product-information-container">
 				<div class="card product-information">
-					<header class="card-header p-0">
+					<header name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-header p-0">
 						<p class="card-header-title p-0">
-							Card header
+							@Html.DisplayNameFor(model => model.ShopProduct.ProductDescription)
 						</p>
-						<button class="card-header-icon px-0" aria-label="more options">
+						<button class="card-header-icon px-0 pb-5" aria-label="more options">
 							<span class="ml-auto justify-content-end">
 								<i class="fas fa-angle-down" aria-hidden="true"></i>
 							</span>
 						</button>
 					</header>
-					<div class="card-content p-0" style="overflow:hidden">
-						<div class="content py-5">
-							Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+					<div name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-content p-0">
+						<div class="content pt-2 pb-5 collapsed">
+							<p class="information">@Model.ShopProduct.ProductDescription</p>
 						</div>
 					</div>
 				</div>
 			</div>
 			</div>
 		</div>
-		<div class="column is-offset-2 is-4 product-data">
-			<div class="product-data-wrapper">
+		<div class="column is-8-mobile is-offset-2-mobile is-6 is-offset-3 is-4-desktop is-offset-0-desktop is-offset-2-fullhd product-data">
+			<div class="product-data-wrapper has-text-centered-mobile">
 				<p class="subtitle is-dark @(Model.ShopProduct?.VariantName != null ? "is-7 mb-0" : "is-5")">
 					@Model.ShopProduct.ProductName
 				</p>
@@ -71,11 +71,11 @@
 					@Model.ShopProduct.ProductVariants.FirstOrDefault(pv =>
 					pv.IsSelected).ColorName.ToLower()
 				</p>
-				<div class="is-flex">
+				<div class="is-flex is-flex-wrap-wrap">
 					@foreach (var variant in Model.ShopProduct.ProductVariants)
 					{
 							<a asp-page="Product" asp-route-slug="@variant.VariantSlug"
-					   class="color-option mr-1 @(variant.IsSelected ? "selected" : null)"
+					   class="color-option mr-1 mt-1 @(variant.IsSelected ? "selected" : null)"
 					   title="@variant.ColorName.ToLower()" style="background-color: @variant.HEXColor;">
 								<span></span>
 							@* span with css adds a border outside *@
@@ -98,7 +98,7 @@
 							@* <span asp-validation-for="@Model.ProductVariant.VariantId" class="has-text-danger"></span> *@
 						</div>
 					</div>
-					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i class="fa fa-shopping-bag mr-1"></i>Add to cart</button>
+					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i class="fas fa-shopping-cart mr-1"></i>Add to cart</button>
 				</form>
 			</div>
 		</div>
@@ -115,13 +115,16 @@
 		var $imagesListContainer = $('.images-list-container');
 		var $productInformationsContainer = $('.product-information-container');
 
-		$mainImageDiv.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2)))
-		$productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2)))
+		@* $mainImageDiv.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
+		@* $productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
 
 		var $upButton = $('.up-button');
 		var $downButton = $('.down-button');
 		var $leftButton = $('.left-button');
 		var $rightButton = $('.right-button');
+
+		var $productInformationsHeaders = $('.card.product-information header.card-header');
+		var $productInformationsContents = $('.card.product-information .card-content .content');
 
 		function isScrollable(element) { return element.offsetHeight < element.scrollHeight };
 
@@ -175,21 +178,25 @@
 			}
 		})
 
-		$mainImageDiv.on('mouseenter', (e) => {
-			if($leftButton.hasClass('is-hidden'))
-				$leftButton.removeClass('is-hidden')
+		if($('.images-list-container img').length > 1) {
+			$mainImageDiv.on('mouseenter', (e) => {
+				if($leftButton.hasClass('is-hidden'))
+					$leftButton.removeClass('is-hidden')
 
-			 if($rightButton.hasClass('is-hidden'))
-				$rightButton.removeClass('is-hidden')
-		})
+				if($rightButton.hasClass('is-hidden'))
+					$rightButton.removeClass('is-hidden')
+			})
+		}
 
-		$mainImageDiv.on('mouseleave', (e) => {
-			if(!$leftButton.hasClass('is-hidden'))
-				$leftButton.addClass('is-hidden')
+		if($('.images-list-container img').length > 1) {
+			$mainImageDiv.on('mouseleave', (e) => {
+				if(!$leftButton.hasClass('is-hidden'))
+					$leftButton.addClass('is-hidden')
 
-			 if(!$rightButton.hasClass('is-hidden'))
-				$rightButton.addClass('is-hidden')
-		})
+				if(!$rightButton.hasClass('is-hidden'))
+					$rightButton.addClass('is-hidden')
+			})
+		}
 
 		$leftButton.on('click', (e) => {
 			var $currentImage = $('img.selected');
@@ -222,6 +229,32 @@
 		{
 			$('.images-list-container img.selected')[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
 		}
+
+		$productInformationsContents.each((i, content) => {
+			$(content).css('margin-top', `-${$(content).height() + 100}px`);
+		})
+
+		$productInformationsHeaders.each((i, header) => {
+			$(header).on('click', (e) => {
+				var informationName = $(header).attr('name');
+				var $headerIcon = $(`.card-header[name="${informationName}"] .card-header-icon i`);
+				var $informationContent = $(`.card-content[name="${informationName}"] .content`);
+				$informationContent.css('transition', `0.4s`);
+				if($informationContent.hasClass('collapsed')){
+					$informationContent.removeClass('collapsed');
+					$informationContent.css('margin-top', `0`);
+					if(!$headerIcon.hasClass('rotated'))
+						$headerIcon.addClass('rotated')
+				}
+				else {
+					$informationContent.addClass('collapsed');
+					$informationContent.css('margin-top', `-${$informationContent.height() + 100}px`)
+					if($headerIcon.hasClass('rotated'))
+						$headerIcon.removeClass('rotated')
+				}
+			})
+		})
+
 	})
 </script>
 }

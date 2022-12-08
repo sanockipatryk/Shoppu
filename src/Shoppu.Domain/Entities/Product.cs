@@ -7,9 +7,9 @@ namespace Shoppu.Domain.Entities
     public class Product
     {
         public int Id { get; set; }
-        [StringLength(50, MinimumLength = 5)]
+        [StringLength(200, MinimumLength = 1)]
         public string Name { get; set; }
-        [StringLength(50, MinimumLength = 5)]
+        [StringLength(1000, MinimumLength = 5)]
         public string Description { get; set; }
         public ProductGender Gender { get; set; }
 

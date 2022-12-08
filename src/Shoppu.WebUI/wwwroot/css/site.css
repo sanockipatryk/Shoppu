@@ -21,6 +21,17 @@ nav.navbar {
 	height: 140px;
 	transition: 0.5s;
 }
+
+nav.navbar .navbar-item.site-name {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+footer#page-footer {
+	white-space: unset;
+}
+
 section.app-section {
 	margin-top: 140px;
 }
@@ -240,9 +251,119 @@ button.scroll-button:focus:not(:active) {
 	cursor: pointer;
 }
 
+.card.product-information header.card-header .card-header-icon i.rotated {
+	transform: rotate(180deg);
+}
+
+.card.product-information div.card-content {
+	overflow: hidden;
+	border-bottom: 1px solid black;
+	border-radius: 0;
+}
+
+.card.product-information p.information {
+	background-color: transparent;
+	font-family: inherit;
+	white-space: pre;
+}
+
 a.is-grey,
 p.is-grey,
 span.is-grey,
 label.is-grey {
 	color: #777;
+}
+
+@media (max-width: 1407px) {
+	.product-information-container {
+		padding-right: 20px !important;
+	}
+
+	.images-columns button.scroll-button.right-button {
+		right: 82px;
+	}
+}
+
+/* UNDER DESKTOP WIDTH */
+@media (max-width: 1215px) {
+	.container.product-container {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.product-information-container {
+		padding-right: 28px !important;
+	}
+
+	.images-columns button.scroll-button.right-button {
+		right: 30px;
+	}
+}
+
+/* UNDER TABLET WIDTH */
+@media (max-width: 1023px) {
+	.columns.images-columns {
+		height: auto;
+		max-height: unset;
+	}
+
+	.product-information-container {
+		padding-right: 12px !important;
+	}
+
+	.main-image,
+	.product-information-container {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.images-columns button.scroll-button.right-button {
+		right: 13px;
+	}
+
+	.product-data .product-data-wrapper {
+		position: unset;
+		top: unset;
+		transform: unset;
+		padding-top: 20px;
+	}
+}
+
+/* UNDER MOBILE WIDTH */
+@media (max-width: 768px) {
+	.columns.images-columns {
+		height: auto;
+		max-height: unset;
+		width: 100%;
+	}
+	.columns.main-columns,
+	.columns.images-columns,
+	.columns.product-information-columns {
+		padding-left: 0;
+		padding-right: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.images-columns .main-image {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.images-columns button.scroll-button.left-button {
+		left: 0;
+	}
+
+	.images-columns button.scroll-button.right-button {
+		right: 0;
+	}
+
+	.container.product-container {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.product-data .product-data-wrapper {
+		min-width: unset;
+	}
 }

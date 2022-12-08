@@ -30,6 +30,7 @@ namespace Shoppu.Application.Products.Queries.Shop
                 {
                     Id = pv.Product.Id,
                     Name = pv.Product.Name,
+                    Description = pv.Product.Description,
                     ProductCategory = new ProductCategory
                     {
                         Id = pv.Product.ProductCategory.Id,
@@ -72,6 +73,7 @@ namespace Shoppu.Application.Products.Queries.Shop
 
             shopProduct.ProductId = productData.Product.Id;
             shopProduct.ProductName = productData.Product.Name;
+            shopProduct.ProductDescription = productData.Product.Description;
             shopProduct.VariantId = productData.Id;
             shopProduct.VariantName = productData.Name;
             shopProduct.Price = productData.Product.Price;

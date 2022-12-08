@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Shoppu.Domain.Entities;
 namespace Shoppu.Domain.ViewModels
 {
@@ -5,6 +6,8 @@ namespace Shoppu.Domain.ViewModels
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        [Display(Name = "Description")]
+        public string ProductDescription { get; set; }
         public int VariantId { get; set; }
         public string VariantName { get; set; }
         public decimal Price { get; set; }

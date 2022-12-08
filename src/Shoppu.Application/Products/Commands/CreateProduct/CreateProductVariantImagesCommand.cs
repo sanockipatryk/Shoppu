@@ -16,7 +16,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
 
         public async Task<bool> Handle(CreateProductVariantImagesCommand request, CancellationToken cancellationToken)
         {
-            if (request?.ImagePaths.Count() > 0)
+            if (request.ImagePaths.Count() > 0)
             {
                 foreach (var imagePath in request.ImagePaths)
                 {

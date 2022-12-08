@@ -56,6 +56,11 @@
 						No images attached...
 					</span>
 				</label>
+				@if (ViewData["imagesError"] != null)
+				{
+					<span class="has-text-danger">@ViewData["imagesError"]</span>
+
+				}
 			</div>
 			<div class="column is-2">
 				<button class="button is-primary is-fullwidth" type="submit">Add variant</button>

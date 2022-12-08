@@ -1,6 +1,6 @@
 ﻿@page
 @model Shoppu.WebUI.Pages.Products.CreateModel
-@using Shoppu.Domain.Enums
+@using Shoppu.Domain.Entities
 @{
 	void generateCategories(List<ProductCategory> categories, int currentLevel)
 	{
@@ -43,7 +43,7 @@
 				<div class="field">
 					<label class="label" asp-for="@Model.Product.Description"></label>
 					<div class="control">
-						<textarea class="textarea has-fixed-size" rows="4" asp-for="@Model.Product.Description"
+						<textarea class="textarea has-fixed-size" rows="6" asp-for="@Model.Product.Description"
 							placeholder="Enter @nameof(Model.Product.Description).ToLower()"></textarea>
 						<span asp-validation-for="@Model.Product.Description" class="has-text-danger"></span>
 					</div>

@@ -8,39 +8,27 @@
 }
 
 <div class="columns">
-    <div class="column is-2 side-menu">
+    <div class="is-hidden-mobile is-hidden-tablet-only column is-6-mobile is-4 is-3-desktop is-2-widescreen side-menu">
         @await Component.InvokeAsync("BrowseSideMenu", Model.CategoryId)
         </aside>
     </div>
 
-    <div class="column is-10 px-6">
+    <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen px-6">
 
-        <div class="columns is-multiline">
+        <div class="columns is-multiline is-flex">
             @foreach (var product in Model.BrowseProducts.Products)
             {
-                <div class="column is-3 p-1 mb-6">
+                <div class="column is-3-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-6">
                     <div data-productId="@product.ProductId" class="images">
                         <a asp-page="Product" asp-route-slug="@product.Slug">
                             <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
                         </a>
                         <img data-variantId="@product.VariantId" hidden class="thumbnail2"
-                        src="@url\@product.ImagePaths[1]" />
+                        src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
                     </div>
                     <div>
                         <p class="title is-6">@product.ProductName</p>
                         <p class="subtitle is-7">@product.Price$</p>
-                    </div>
-                </div>
-            }
-            @foreach (var product in Model.BrowseProducts.Products)
-            {
-                <div class="column is-3 p-1">
-                    <div data-productId="@product.ProductId" class="images">
-                        <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
-                        <img data-variantId="@product.VariantId" hidden class="thumbnail2"
-                        src="@url\@product.ImagePaths[1]" />
-                    </div>
-                    <div>
                     </div>
                 </div>
             }
@@ -57,11 +45,7 @@
     thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('mouseenter', (e) => {
             var variantId = thumbnail.getAttribute('data-variantId');
-            @* var $image1 = $(`img.thumbnail[data-productId="${productId}"]`); *@
             var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
-            @* console.log(productId)
-                    console.log($($image1))
-                    console.log($image2) *@
 
             var tempSrc = thumbnail.getAttribute('src');
             thumbnail.setAttribute('src', image2.getAttribute('src'));
@@ -70,11 +54,7 @@
         })
         thumbnail.addEventListener('mouseleave', (e) => {
             var variantId = thumbnail.getAttribute('data-variantId');
-            @* var $image1 = $(`img.thumbnail[data-productId="${productId}"]`); *@
             var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
-            @* console.log(productId)
-                    console.log($($image1))
-                    console.log($image2) *@
 
             var tempSrc = thumbnail.getAttribute('src');
             thumbnail.setAttribute('src', image2.getAttribute('src'));
