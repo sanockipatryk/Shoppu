@@ -21,13 +21,6 @@ namespace Shoppu.WebUI.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int categoryId)
         {
             var SideMenuData = await _mediator.Send(new GetBrowseProductsSideMenuCategoriesQuery(categoryId));
-            // var user = await _userManager.GetUserAsync(HttpContext.User);
-            // Cart cart = null;
-
-            // if(user is not null)
-            // {
-            //     cart = await _mediator.Send(new GetCart.Query(user.Id));
-            // }
 
             return View(SideMenuData);
         }

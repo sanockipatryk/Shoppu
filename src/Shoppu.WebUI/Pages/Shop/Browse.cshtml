@@ -7,10 +7,9 @@
     var url = location.AbsoluteUri;
 }
 
-<div class="columns">
-    <div class="is-hidden-mobile is-hidden-tablet-only column is-6-mobile is-4 is-3-desktop is-2-widescreen side-menu">
+<div class="columns is-multiline mx-0">
+    <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen side-menu">
         @await Component.InvokeAsync("BrowseSideMenu", Model.CategoryId)
-        </aside>
     </div>
 
     <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen px-6">
@@ -18,7 +17,7 @@
         <div class="columns is-multiline is-flex">
             @foreach (var product in Model.BrowseProducts.Products)
             {
-                <div class="column is-3-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-6">
+                <div class="column is-6-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-6">
                     <div data-productId="@product.ProductId" class="images">
                         <a asp-page="Product" asp-route-slug="@product.Slug">
                             <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />

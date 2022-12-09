@@ -15,88 +15,61 @@
 <body class="is-flex is-flex-direction-column">
 	<header>
 		<nav class="navbar is-flex is-flex-direction-column" role="navigation" aria-label="main navigation">
-			<div class="navbar-top is-flex is-justify-content-space-between is-relative py-4">
+			<div class="navbar-top is-flex is-justify-content-space-between is-relative pt-5">
 				<p class="is-hidden-mobile-only is-hidden-tablet-only"></p>
 				<a class="navbar-item site-name py-0" asp-area="" asp-page="Index">
 					<p class="m-0 title p-0 is-3">SHOPPU</p>
 				</a>
 				<partial name="_LoginPartial" />
 
-				<a role=" button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+				<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
 					data-target="navbarBasicExample">
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
 				</a>
 			</div>
-			<div id="navbarBasicExample" class="navbar-menu">
-				<div class="navbar-start">
-					<a class="navbar-item" asp-area="" asp-page="/Index">
-						Home
-					</a>
-					@if (User.IsInRole("Admin"))
-					{
-						<a class="navbar-item" asp-page="/Products/Manage">
-							Manage products
-						</a>
-					}
-					@* <div class="dropdown">
-						<div class="dropdown-trigger">
-						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-						<span>Click me</span>
-						<span class="icon is-small">
-						<i class="fas fa-angle-down" aria-hidden="true"></i>
-						</span>
-						</button>
-						</div>
-						<div class="dropdown is-active">
-						<div class="dropdown-trigger">
-						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu2">
-						<span>Content</span>
-						<span class="icon is-small">
-						<i class="fas fa-angle-down" aria-hidden="true"></i>
-						</span>
-						</button>
-						</div>
-						<div class="dropdown-menu" id="dropdown-menu2" role="menu">
-						<div class="dropdown-content">
-						<div class="dropdown-item">
-						<p>You can insert <strong>any type of content</strong> within the dropdown menu.
-						</p>
-						</div>
-						<hr class="dropdown-divider">
-						<div class="dropdown-item">
-						<p>You simply need to use a <code>&lt;div&gt;</code> instead.</p>
-						</div>
-						<hr class="dropdown-divider">
-						<a href="#" class="dropdown-item">
-						This is a link
-						</a>
-						</div>
-						</div>
-						</div> *@
-					<div class="navbar-item has-dropdown is-hoverable has-products-main-menu">
-						<a class="navbar-link" asp-area="" asp-page="/Shop/Browse" asp-route-gender="Male"
-							asp-route-query="All" asp-route-categoryName="Clothes">
-							Men
-						</a>
-						<div class="navbar-dropdown products-main-menu">
-							<a class="navbar-item">
-								Men1
-							</a>
-							<a class="navbar-item">
-								Men2
-							</a>
-							<a class="navbar-item">
-								Men3
-							</a>
-							<hr class="navbar-divider">
-							<a class="navbar-item">
-								Report an issue
+			<div id="navbarBasicExample" class="navbar-menu" style="">
+				<div class="is-flex is-justify-content-end navbar-menu-item">
+					<div class="menu-item-box">
+						<div class="is-flex is-align-items-center link-wrapper">
+							<a class="navbar-item px-4" asp-area="" asp-page="/Index">
+								Latest
 							</a>
 						</div>
 					</div>
 				</div>
+				@* @if (User.IsInRole("Admin"))
+					{
+					<a class="navbar-item" asp-page="/Products/Manage">
+					Manage products
+					</a>
+					} *@
+				@await Component.InvokeAsync("NavbarMenu")
+				@*
+					<div
+					class="navbar-item is-flex is-flex-grow-1 has-dropdown is-hoverable has-products-main-menu
+					navbar-menu-item side-item">
+					<a class="navbar-item px-5" asp-area="" asp-page="/Shop/Browse" asp-route-gender="Man"
+					asp-route-query="All" asp-route-categoryName="Clothes">
+					Men
+					</a>
+					<div class="navbar-dropdown products-main-menu">
+					<a class="navbar-item">
+					Men1
+					</a>
+					<a class="navbar-item">
+					Men2
+					</a>
+					<a class="navbar-item">
+					Men3
+					</a>
+					<hr class="navbar-divider">
+					<a class="navbar-item">
+					Report an issue
+					</a>
+					</div>
+					</div> *@
 			</div>
 		</nav>
 	</header>
@@ -129,14 +102,21 @@
 			$(".navbar-menu").toggleClass("is-active");
 		});
 	});
+
+	var $sideMenu = $('.side-menu aside');
+
 	var prevScrollpos = window.pageYOffset;
 	window.onscroll = function () {
 		var currentScrollPos = window.pageYOffset;
 		if (currentScrollPos > 100) {
 			if ((prevScrollpos > currentScrollPos)) {
 				document.querySelector(".navbar").style.top = "0";
+				if (!$sideMenu.hasClass('pull-up'))
+					$sideMenu.addClass('pull-up')
 			} else {
 				document.querySelector(".navbar").style.top = "-140px";
+				if ($sideMenu.hasClass('pull-up'))
+					$sideMenu.removeClass('pull-up')
 			}
 			prevScrollpos = currentScrollPos;
 		}

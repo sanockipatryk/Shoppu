@@ -1,0 +1,56 @@
+@model Shoppu.Domain.ViewModels.NavbarMenuDataViewModel
+@using Shoppu.Domain.Entities
+
+
+@{
+    async Task generateMenu(string gender)
+    {
+        <div class="dropdown navbar-item is-flex p-0 is-hoverable has-products-main-menu navbar-menu-item">
+    <div class="menu-item-box">
+        <div class="is-flex is-align-items-center link-wrapper">
+        <a class="navbar-item text px-4" aria-haspopup="true" aria-controls="dropdown-menu2" asp-area="" asp-page="/Shop/Browse"
+            asp-route-gender="@gender" asp-route-query="All" asp-route-categoryName="Clothes">
+            <span>@gender</span>
+        </a>
+        </div>
+    </div>
+    <div id="dropdown-menu2" role="menu" class="dropdown-menu products-main-menu">
+        <div class="dropdown-content pb-6">
+            <div class="container columns mx-auto pt-3">
+        @foreach (var mainCategory in Model.MainCategoriesWithTheirSubcategories)
+        {
+            <div class="column is-3 mx-3">
+                <a class="is-6 is-uppercase is-grey" asp-area="" asp-page="/Shop/Browse" asp-route-gender="@gender"
+        asp-route-categoryName="@mainCategory.UrlName">@mainCategory.Name</a>
+                <div class="is-flex is-flex-direction-column mt-4">
+                    @foreach (var subcategory in @mainCategory.SubCategories)
+                    {
+                        <div class="my-1">
+                        <a class="is-text nav-menu-sublink" asp-area="" asp-page="/Shop/Browse" asp-route-gender="@gender"
+            asp-route-categoryName="@subcategory.UrlName">@subcategory.Name</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+                    </div>
+        </div>
+    </div>
+</div>
+    }
+}
+
+@{
+    await generateMenu("Woman");
+    await generateMenu("Man");
+}
+
+<script>
+    @* document.addEventListener('DOMContentLoaded', () => {
+        var $dropdownTrigger = $('.dropdown-woman');
+
+        $dropdownTrigger.on('click', (e) => {
+        $dropdownTrigger.toggleClass('is-active')
+        })
+        }) *@
+</script>

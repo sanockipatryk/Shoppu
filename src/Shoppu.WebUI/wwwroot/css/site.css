@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/formular?styles=145773,145771,145765");
+
 ul.collapsed {
 	height: 0;
 	overflow: hidden;
@@ -9,6 +11,7 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
 body > footer {
 	margin-top: auto;
 }
@@ -22,10 +25,50 @@ nav.navbar {
 	transition: 0.5s;
 }
 
+.navbar-menu-item {
+	font-family: "Formular", sans-serif;
+	text-transform: uppercase;
+	flex-grow: 0;
+}
+
+.navbar-menu-item .menu-item-box,
+.navbar-menu-item .menu-item-box .link-wrapper {
+	height: 100%;
+}
+
+.navbar-menu-item .menu-item-box .link-wrapper {
+	border-bottom: 2px solid transparent;
+}
+
+.navbar-menu-item:hover .menu-item-box .link-wrapper {
+	border-bottom: 2px solid black;
+}
+
+.navbar-menu-item:hover a.navbar-item {
+	background-color: transparent;
+}
+
+.navbar-menu-item:first-of-type,
+.navbar-menu-item:last-of-type {
+	flex-grow: 1;
+	flex-basis: 0;
+}
+
 nav.navbar .navbar-item.site-name {
 	position: fixed;
 	left: 50%;
 	transform: translateX(-50%);
+	font-family: "Formular", sans-serif;
+}
+
+nav a.nav-menu-sublink {
+	color: black;
+	font-family: "Formular", sans-serif;
+	text-transform: none;
+}
+
+nav a.nav-menu-sublink:hover {
+	border-bottom: 1px solid black;
 }
 
 footer#page-footer {
@@ -54,13 +97,29 @@ div.has-products-main-menu div.products-main-menu {
 	position: absolute;
 	left: 0;
 	width: 100vw;
+	margin-top: -4px;
+}
+
+@media (max-width: 1023px) {
+	div.has-products-main-menu {
+		position: relative;
+	}
+
+	div.has-products-main-menu div.products-main-menu {
+		position: static;
+		margin-left: 0;
+		margin-top: 35px;
+	}
 }
 
 aside.browse-side-menu {
 	position: fixed;
+	transition: 0.5s;
+	top: 50px;
 }
+
 aside.browse-side-menu.pull-up {
-	top: 150px;
+	top: 190px;
 }
 
 button.scroll-button:focus:not(:active) {
@@ -183,6 +242,7 @@ button.scroll-button:focus:not(:active) {
 }
 
 .product-data .product-data-wrapper {
+	font-family: "Formular", sans-serif;
 	min-width: 300px;
 	position: sticky;
 	top: 50%;
@@ -243,6 +303,7 @@ button.scroll-button:focus:not(:active) {
 
 .card.product-information header.card-header,
 .card.product-information div.card-content {
+	font-family: "Formular", sans-serif;
 	border: none;
 	box-shadow: none;
 }

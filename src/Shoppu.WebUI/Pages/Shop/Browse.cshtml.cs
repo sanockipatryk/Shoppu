@@ -31,7 +31,7 @@ namespace Shoppu.WebUI.Pages.Shop
         public async Task OnGet(string gender, string query, string categoryName)
         {
             Gender = gender;
-            if (gender.ToLower().Equals("male") || gender.ToLower().Equals("female"))
+            if (gender.ToLower().Equals("man") || gender.ToLower().Equals("woman"))
             {
                 CategoryName = categoryName;
                 CategoryId = await _mediator.Send(new GetProductCategoryIdQuery(categoryName));

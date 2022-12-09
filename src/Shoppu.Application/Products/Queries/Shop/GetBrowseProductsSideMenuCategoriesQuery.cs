@@ -18,7 +18,9 @@ namespace Shoppu.Application.Products.Queries.Shop
 
         public async Task<BrowseSideMenuViewModel> Handle(GetBrowseProductsSideMenuCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var productCategories = await _context.ProductCategories.Include(pc => pc.ParentCategory).ToListAsync();
+            var productCategories = await _context.ProductCategories
+                .Include(pc => pc.ParentCategory)
+                .ToListAsync();
 
             return new BrowseSideMenuViewModel
             {
