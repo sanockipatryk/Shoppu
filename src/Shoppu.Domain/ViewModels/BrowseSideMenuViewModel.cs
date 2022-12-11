@@ -10,5 +10,6 @@ namespace Shoppu.Domain.ViewModels
     {
         public int CurrentProductCategoryId { get; set; }
         public List<ProductCategory> ProductCategories { get; set; }
+        public ManageProductsFiltersViewModel ManageProductsFilters { get; set; }
     }
 }

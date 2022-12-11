@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shoppu.Application.Products.Queries;
 using Shoppu.Domain.Entities;
+using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.WebUI.Pages.Products
 {
@@ -15,9 +16,14 @@ namespace Shoppu.WebUI.Pages.Products
 
         public List<Product> Products { get; set; }
 
-        public async Task OnGet()
+        public async Task OnGet(string? categoryUrl, ManageProductsFiltersViewModel filters)
         {
-            Products = await _mediator.Send(new GetProductsListQuery());
+            Products = await _mediator.Send(new GetProductsListQuery(categoryUrl, filters));
+        }
+
+        public async Task OnPostChangeVariantVisibility(int variantId)
+        {
+            // Products = await _mediator.Send(new GetProductsListQuery(categoryUrl, filters));
         }
     }
 }

@@ -10,7 +10,7 @@ using Shoppu.Domain.Entities;
 namespace Shoppu.Application.ProductTypes.Queries
 {
 
-    public record GetProductCategoryIdQuery(string categoryName) : IRequest<int?>;
+    public record GetProductCategoryIdQuery(string CategoryUrl) : IRequest<int?>;
 
     public class GetProductCategoryIdQueryHandler : IRequestHandler<GetProductCategoryIdQuery, int?>
     {
@@ -23,7 +23,7 @@ namespace Shoppu.Application.ProductTypes.Queries
 
         public async Task<int?> Handle(GetProductCategoryIdQuery request, CancellationToken cancellationToken)
         {
-            ProductCategory? category = await _context.ProductCategories.FirstOrDefaultAsync(p => p.Name.ToLower().Equals(request.categoryName.ToLower()));
+            ProductCategory? category = await _context.ProductCategories.FirstOrDefaultAsync(p => p.UrlName.Equals(request.CategoryUrl));
             if (category != null)
             {
                 return category.Id;

@@ -51,6 +51,8 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                     Name = request.ProductVariant.Name,
                     Price = request.ProductVariant.Price != null ? Decimal.Parse(request.ProductVariant.Price, CultureInfo.InvariantCulture) : null,
                     Slug = newVariantSlug,
+                    IsAccessible = false,
+                    DateCreated = DateTime.UtcNow
                 };
                 var productVariantFromDb = await _context.ProductVariants.AddAsync(productVariant);
                 await _context.SaveChangesAsync(cancellationToken);

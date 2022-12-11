@@ -6,31 +6,40 @@
         // adding Ids of all parent ProductCategries that lead to the choosen category
         // using this to display "opened" menu subcategories, and hide the ones that aren't choosen
         var listOfCategoryIdsToShow = new List<int>();
-        var category = Model.ProductCategories.FirstOrDefault(p => p.Id == Model.CurrentProductCategoryId);
+        var selectedCategory = Model.ProductCategories.FirstOrDefault(p => p.Id == Model.CurrentProductCategoryId);
         listOfCategoryIdsToShow.Add(Model.CurrentProductCategoryId);
-        while (category.ParentCategoryId != null)
+        while (selectedCategory.ParentCategoryId != null)
         {
-            listOfCategoryIdsToShow.Add((int)category.ParentCategoryId);
-            category = category.ParentCategory;
+            listOfCategoryIdsToShow.Add((int)selectedCategory.ParentCategoryId);
+            selectedCategory = selectedCategory.ParentCategory;
         }
 
-        <ul class=" @(currentLevel == 0 ? "menu-list pl-5 " : "my-0")">
-            @foreach (var cat in categories)
+        <ul name="categories" class=" @(currentLevel == 0 ? "menu-list pl-5 " : "my-0")">
+            @foreach (var category in categories)
             {
                 <li>
-                    <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(Model.CurrentProductCategoryId == cat.Id ? "has-text-info has-text-weight-bold" : "") "
-                asp-page="Browse" asp-route-gender="Man"
-                asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "All")"
-                asp-route-categoryName="@cat.Name">
-                        @cat.Name
-                    </a>
-                    @{
-                        string newUrl = url + cat.Name + "-";
-                        bool hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).Count() > 0;
-                    }
-                    @if (hasSubcategories && listOfCategoryIdsToShow.Contains(cat.Id))
+                    @if (ViewContext.RouteData.Values["page"].Equals("/Products/Manage"))
                     {
-                        await generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).ToList(),
+                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(Model.CurrentProductCategoryId == category.Id ? "has-text-link has-text-weight-bold" : "") "
+                asp-route-categoryUrl="@category.UrlName">
+                            @category.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(Model.CurrentProductCategoryId == category.Id ? "has-text-link has-text-weight-bold" : "") "
+                asp-route-gender="man" asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "all")"
+                asp-route-categoryUrl="@category.UrlName">
+                            @category.Name
+                        </a>
+                    }
+                    @{
+                        string newUrl = url + category.UrlName + "-";
+                        bool hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == category.Id).Count() > 0;
+                    }
+                    @if (hasSubcategories && listOfCategoryIdsToShow.Contains(category.Id))
+                    {
+                        await generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == category.Id).ToList(),
                         newUrl, currentLevel + 1);
                     }
                 </li>
@@ -39,7 +48,16 @@
     }
 }
 
-<aside class="is-hidden-mobile is-hidden-tablet-only menu browse-side-menu pull-up">
+<aside class="is-hidden-mobile is-hidden-tablet-only is-fullwidth browse-side-menu pull-up">
+    @if (ViewContext.RouteData.Values["page"].Equals("/Products/Manage"))
+    {
+        <div id="sideTabs" class="tabs">
+            <ul>
+                <li name="categories" class="is-active"><a>Categories</a></li>
+                <li name="filters"><a>Filters</a></li>
+            </ul>
+        </div>
+    }
     @* <p class="title is-4 mb-2 pb-0 pl-5">
         Gender
         </p> *@
@@ -48,7 +66,65 @@
         var baseUrl = "";
         await generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == null).ToList(), baseUrl, level);
     }
-    </ul>
+    @if (ViewContext.RouteData.Values["page"].Equals("/Products/Manage"))
+    {
+        <ul name="filters" class="is-hidden pl-5">
+            <p class="title is-5 mt-5">Filter results</p>
+            <form method="get" class="pr-5">
+                <div style="max-height: 500px; overflow-y: auto; position:relative;">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Enter" name="name"
+                            asp-for="@Model.ManageProductsFilters.Name">
+                            @* <span asp-validation-for="@Model.Product.Name" class="has-text-danger"></span> *@
+                        </div>
+                    </div>
+                    <div class="field is-fullwidth">
+                        <label class="label">Gender</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="gender" asp-for="@Model.ManageProductsFilters.Gender">
+                                    <option value="">-</option>
+                                    <option value="F">Female</option>
+                                    <option value="M">Male</option>
+                                    <option value="U">Unisex</option>
+                                </select>
+                            </div>
+                        </div>
+                        @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
+                    </div>
+                    <div class="field is-fullwidth">
+                        <label class="label">Category</label>
+                        <div class="control">
+                            <div class="select is-fullwidth is-multiple">
+                                <select name="category" multiple>
+                                    <option value="1">T-Shirts</option>
+                                    <option value="2">Shorts</option>
+                                    <option value="3">Joggers</option>
+                                </select>
+                            </div>
+                        </div>
+                        @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
+                    </div>
+                    <div class="field is-fullwidth">
+                        <label class="label">AccessibleStatus</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="accessible" asp-for="@Model.ManageProductsFilters.AccessibleStatus">
+                                    <option value="">All</option>
+                                    <option value="Acc">Accessible</option>
+                                    <option value="Not">Not accessible</option>
+                                </select>
+                            </div>
+                        </div>
+                        @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
+                    </div>
+                </div>
+                <button type="submit" class="button">submit</button>
+            </form>
+        </ul>
+    }
 </aside>
 <div class="is-flex is-hidden-desktop has-text-centered" style="overflow-x:scroll;">
     @foreach (var subcategory in @Model.ProductCategories.FirstOrDefault(pc => pc.Id ==
@@ -56,9 +132,26 @@
     {
         <button class="button mx-1 mb-4">@subcategory.Name</button>
     }
+
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        var $tabs = $('#sideTabs ul li');
+
+        $tabs.each((index, tab) => {
+            $(tab).on('click', () => {
+                var tabName = $(tab).attr('name');
+                if (!$(tab).hasClass('is-active')) {
+                    $(`#sideTabs li[name="${tabName == "categories" ? "filters" : "categories"}"]`).removeClass('is-active')
+                    $(`ul[name="${tabName == "categories" ? "categories" : "filters"}"]`).removeClass('is-hidden');
+
+                    $(tab).addClass('is-active')
+                    $(`ul[name="${tabName == "categories" ? "filters" : "categories"}"]`).addClass('is-hidden');
+
+                }
+            })
+        })
+
     })
 </script>

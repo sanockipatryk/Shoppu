@@ -21,20 +21,20 @@ namespace Shoppu.WebUI.Pages.Shop
         }
 
         public string Gender;
-        public string CategoryName;
+        public string CategoryUrl;
         public int? CategoryId;
 
         public BrowseProductViewModel BrowseProducts { get; set; }
 
         // public List<BrowseProductViewModel>
 
-        public async Task OnGet(string gender, string query, string categoryName)
+        public async Task OnGet(string gender, string query, string categoryUrl)
         {
             Gender = gender;
             if (gender.ToLower().Equals("man") || gender.ToLower().Equals("woman"))
             {
-                CategoryName = categoryName;
-                CategoryId = await _mediator.Send(new GetProductCategoryIdQuery(categoryName));
+                CategoryUrl = categoryUrl;
+                CategoryId = await _mediator.Send(new GetProductCategoryIdQuery(categoryUrl));
 
                 if (CategoryId != null)
                 {

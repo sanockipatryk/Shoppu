@@ -16,6 +16,16 @@ body > footer {
 	margin-top: auto;
 }
 
+.notification.app-notification {
+	position: fixed;
+	top: 100px;
+	right: 5px;
+	margin-left: 5px;
+	padding: 14px 20px;
+	max-width: 400px;
+	z-index: 1000;
+}
+
 nav.navbar {
 	position: fixed;
 	left: 0;
@@ -52,6 +62,20 @@ nav.navbar {
 .navbar-menu-item:last-of-type {
 	flex-grow: 1;
 	flex-basis: 0;
+}
+
+.navbar-menu-item:first-of-type {
+	justify-content: end;
+}
+
+.navbar-menu-item:last-of-type {
+	justify-content: start;
+}
+
+@media (max-width: 1023px) {
+	.navbar-menu-item:first-of-type {
+		justify-content: start;
+	}
 }
 
 nav.navbar .navbar-item.site-name {
@@ -100,20 +124,8 @@ div.has-products-main-menu div.products-main-menu {
 	margin-top: -4px;
 }
 
-@media (max-width: 1023px) {
-	div.has-products-main-menu {
-		position: relative;
-	}
-
-	div.has-products-main-menu div.products-main-menu {
-		position: static;
-		margin-left: 0;
-		margin-top: 35px;
-	}
-}
-
 aside.browse-side-menu {
-	position: fixed;
+	position: sticky;
 	transition: 0.5s;
 	top: 50px;
 }
@@ -387,6 +399,41 @@ label.is-grey {
 		top: unset;
 		transform: unset;
 		padding-top: 20px;
+	}
+
+	.navbar-menu-tablet {
+		max-width: 600px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.navbar-menu-tablet div.submenu {
+		display: none;
+	}
+
+	.navbar-menu-tablet .side-menu-item {
+		padding: 20px 0;
+		border-bottom: 1px solid #222;
+	}
+
+	.navbar-menu-tablet .side-menu-item .link-text {
+		font-family: "Formular", sans-serif;
+		text-transform: uppercase;
+	}
+
+	.navbar-menu-tablet .side-menu-item.is-toggled + div.submenu {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.navbar-menu-tablet .side-menu-item.is-toggled {
+		font-weight: 500;
+	}
+
+	.navbar-menu-tablet a.category-link {
+		color: black;
+		padding: 16px 0;
+		font-weight: 500;
 	}
 }
 

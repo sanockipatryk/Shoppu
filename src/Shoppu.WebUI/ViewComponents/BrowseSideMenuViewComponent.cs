@@ -22,6 +22,8 @@ namespace Shoppu.WebUI.ViewComponents
         {
             var SideMenuData = await _mediator.Send(new GetBrowseProductsSideMenuCategoriesQuery(categoryId));
 
+            var x = ViewContext.RouteData.Values["page"];
+
             return View(SideMenuData);
         }
     }

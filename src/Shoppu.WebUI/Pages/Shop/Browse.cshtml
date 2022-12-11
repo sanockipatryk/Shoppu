@@ -1,4 +1,4 @@
-@page "/{gender}/{query=All}/{categoryName=Clothes}"
+@page "/{gender}/{query}/{categoryUrl}"
 @* @page "/Browse/{gender?}/{categoryName?}/{subCategoryName?}/{test?}" *@
 @model Shoppu.WebUI.Pages.Shop.BrowseModel
 @{
@@ -8,7 +8,7 @@
 }
 
 <div class="columns is-multiline mx-0">
-    <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen side-menu">
+    <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen px-0 side-menu">
         @await Component.InvokeAsync("BrowseSideMenu", Model.CategoryId)
     </div>
 

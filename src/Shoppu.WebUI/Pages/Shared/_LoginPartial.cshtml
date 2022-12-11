@@ -6,9 +6,18 @@
 <div class="is-hidden-mobile is-hidden-tablet-only is-flex">
   @if (SignInManager.IsSignedIn(User))
   {
+    @if (User.IsInRole("Admin"))
+    {
+      <a class="navbar-item" asp-page="/Products/Manage">
+        Manage products
+      </a>
+    }
+    @* else
+      { *@
     <a class="navbar-item" asp-area="Cart" asp-page="ViewCart">
       <i class="fas fa-shopping-cart"></i><span class="pl-1">1</span>
     </a>
+    @* } *@
     <div class="navbar-item has-dropdown is-hoverable">
       <a class="navbar-link">
         Account

@@ -13,6 +13,11 @@
 </head>
 
 <body class="is-flex is-flex-direction-column">
+	@* <div id="appNotification" class="notification app-notification">
+		<button class="delete"></button>
+		<p class="title is-6">xd</p>
+		<p class="subtitle is-6">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio, quasi.</p>
+		</div> *@
 	<header>
 		<nav class="navbar is-flex is-flex-direction-column" role="navigation" aria-label="main navigation">
 			<div class="navbar-top is-flex is-justify-content-space-between is-relative pt-5">
@@ -30,7 +35,11 @@
 				</a>
 			</div>
 			<div id="navbarBasicExample" class="navbar-menu" style="">
-				<div class="is-flex is-justify-content-end navbar-menu-item">
+				@* div that takes empty space on the left side of menu - to disable hover events for flex-grow-1
+					dropdown items *@
+				<div class="is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item"></div>
+				@* *@
+				<div class="is-flex is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item">
 					<div class="menu-item-box">
 						<div class="is-flex is-align-items-center link-wrapper">
 							<a class="navbar-item px-4" asp-area="" asp-page="/Index">
@@ -46,31 +55,6 @@
 					</a>
 					} *@
 				@await Component.InvokeAsync("NavbarMenu")
-				@*
-					<div
-					class="navbar-item is-flex is-flex-grow-1 has-dropdown is-hoverable has-products-main-menu
-					navbar-menu-item side-item">
-					<a class="navbar-item px-5" asp-area="" asp-page="/Shop/Browse" asp-route-gender="Man"
-					asp-route-query="All" asp-route-categoryName="Clothes">
-					Men
-					</a>
-					<div class="navbar-dropdown products-main-menu">
-					<a class="navbar-item">
-					Men1
-					</a>
-					<a class="navbar-item">
-					Men2
-					</a>
-					<a class="navbar-item">
-					Men3
-					</a>
-					<hr class="navbar-divider">
-					<a class="navbar-item">
-					Report an issue
-					</a>
-					</div>
-					</div> *@
-			</div>
 		</nav>
 	</header>
 	<section class="section py-3 px-0 app-section">
@@ -96,11 +80,16 @@
 <script>
 	$(document).ready(function () {
 		// Check for click events on the navbar burger icon
-		$(".navbar-burger").click(function () {
+		$(".navbar-burger").on('click', function () {
 			// Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
 			$(".navbar-burger").toggleClass("is-active");
 			$(".navbar-menu").toggleClass("is-active");
 		});
+		@*
+				$(".notification.app-notification button").on('click', () => {
+				$(".notification.app-notification button").parent('div.notification').addClass('is-hidden')
+				}) *@
+
 	});
 
 	var $sideMenu = $('.side-menu aside');

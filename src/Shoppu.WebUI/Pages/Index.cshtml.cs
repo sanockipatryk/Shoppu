@@ -9,7 +9,6 @@ namespace Shoppu.WebUI.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IMediator _mediator;
-        public List<Product> Products { get; set; }
 
         public IndexModel(
             ILogger<IndexModel> logger,
@@ -22,7 +21,6 @@ namespace Shoppu.WebUI.Pages
 
         public async Task OnGet()
         {
-            Products = await _mediator.Send(new GetProductsListQuery());
         }
     }
 }
