@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shoppu.Domain.Entities;
 
 namespace Shoppu.Application.Common.Interfaces
@@ -6,6 +7,10 @@ namespace Shoppu.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        ValueTask<EntityEntry> AddAsync(object entity, CancellationToken cancellationToken = default);
+        Task AddRangeAsync(params object[] entities);
+        EntityEntry Update(object entity);
+        void UpdateRange(IEnumerable<object> entities);
 
         DbSet<Product> Products { get; set; }
         DbSet<ProductCategory> ProductCategories { get; set; }

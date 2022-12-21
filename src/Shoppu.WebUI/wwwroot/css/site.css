@@ -1,4 +1,4 @@
-@import url("https://fonts.cdnfonts.com/css/formular?styles=145773,145771,145765");
+@import url("https://fonts.cdnfonts.com/css/nanumsquare-neo");
 
 ul.collapsed {
 	height: 0;
@@ -16,14 +16,13 @@ body > footer {
 	margin-top: auto;
 }
 
-.notification.app-notification {
-	position: fixed;
-	top: 100px;
-	right: 5px;
-	margin-left: 5px;
-	padding: 14px 20px;
-	max-width: 400px;
-	z-index: 1000;
+.is-ff-nanum {
+	font-family: "NanumSquare Neo", sans-serif;
+}
+
+div.notification > button.delete {
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 nav.navbar {
@@ -36,7 +35,7 @@ nav.navbar {
 }
 
 .navbar-menu-item {
-	font-family: "Formular", sans-serif;
+	font-family: "NanumSquare Neo", sans-serif;
 	text-transform: uppercase;
 	flex-grow: 0;
 }
@@ -82,12 +81,12 @@ nav.navbar .navbar-item.site-name {
 	position: fixed;
 	left: 50%;
 	transform: translateX(-50%);
-	font-family: "Formular", sans-serif;
+	font-family: "NanumSquare Neo", sans-serif;
 }
 
 nav a.nav-menu-sublink {
 	color: black;
-	font-family: "Formular", sans-serif;
+	font-family: "NanumSquare Neo", sans-serif;
 	text-transform: none;
 }
 
@@ -254,7 +253,7 @@ button.scroll-button:focus:not(:active) {
 }
 
 .product-data .product-data-wrapper {
-	font-family: "Formular", sans-serif;
+	font-family: "NanumSquare Neo", sans-serif;
 	min-width: 300px;
 	position: sticky;
 	top: 50%;
@@ -315,7 +314,7 @@ button.scroll-button:focus:not(:active) {
 
 .card.product-information header.card-header,
 .card.product-information div.card-content {
-	font-family: "Formular", sans-serif;
+	font-family: "NanumSquare Neo", sans-serif;
 	border: none;
 	box-shadow: none;
 }
@@ -340,11 +339,52 @@ button.scroll-button:focus:not(:active) {
 	white-space: pre;
 }
 
+#testForm .button.dropdown-button > * {
+	pointer-events: none;
+}
+
 a.is-grey,
 p.is-grey,
 span.is-grey,
 label.is-grey {
 	color: #777;
+}
+
+#testForm input[type="checkbox"],
+#testForm input[type="radio"] {
+	width: 20px;
+	height: 20px;
+	accent-color: #666;
+}
+
+#testForm label.checkbox-label {
+	position: relative;
+	height: 20px;
+	margin-bottom: 10px;
+}
+
+#testForm label.checkbox-label span.option-name {
+	display: inline-block;
+	line-height: 20px;
+	font-size: 16px;
+	transform: translateY(-4px);
+}
+
+#testForm .filters-submit-buttons button.button {
+	border-radius: 0;
+}
+
+.payment-method-buttons button.selected {
+	background-color: lightblue;
+}
+
+article.media .media-left p.image {
+	max-width: 128px;
+}
+
+article.media .media-content {
+	height: 100%;
+	align-self: center;
 }
 
 @media (max-width: 1407px) {
@@ -417,7 +457,7 @@ label.is-grey {
 	}
 
 	.navbar-menu-tablet .side-menu-item .link-text {
-		font-family: "Formular", sans-serif;
+		font-family: "NanumSquare Neo", sans-serif;
 		text-transform: uppercase;
 	}
 
@@ -434,6 +474,15 @@ label.is-grey {
 		color: black;
 		padding: 16px 0;
 		font-weight: 500;
+	}
+
+	article.media {
+		margin-left: 12px;
+		margin-right: 12px;
+	}
+
+	.back-to-cart-button {
+		margin-left: 12px;
 	}
 }
 
@@ -473,5 +522,35 @@ label.is-grey {
 
 	.product-data .product-data-wrapper {
 		min-width: unset;
+	}
+
+	article.media .media-content {
+		overflow: hidden;
+	}
+
+	article.media {
+		flex-direction: column;
+	}
+
+	article.media .media-left {
+		margin: 0 auto;
+	}
+
+	article.media .media-left p.image {
+		max-width: 300px;
+	}
+
+	article.media .media-content {
+		margin-top: 14px;
+		width: 90%;
+	}
+
+	.field.has-addons.control-amount-buttons {
+		display: fex;
+		justify-content: center;
+	}
+
+	.proceed-shipping-button {
+		margin-top: 20px;
 	}
 }

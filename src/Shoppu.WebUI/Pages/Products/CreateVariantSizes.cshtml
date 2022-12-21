@@ -31,7 +31,9 @@
 							<div class="control">
 								<input @(size.AddSizeAsVariantOption ? null : "disabled")
 								name="ProductVariantSizes[@index].Quantity" class="input quantity-input" type="number"
-								step="1" asp-for="@size.Quantity" placeholder="Enter available quantity">
+								min="0" step="1" asp-for="@Model.ProductVariantSizes[index].Quantity"
+								value="@Model.ProductVariantSizes[index].Quantity"
+								placeholder="Enter available quantity">
 								<span name="ProductVariantSizes[@index].Quantity"
 								asp-validation-for="@Model.ProductVariantSizes[index].Quantity"
 								class="has-text-danger"></span>

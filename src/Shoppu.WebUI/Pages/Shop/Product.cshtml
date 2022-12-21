@@ -5,13 +5,19 @@
 	var location = new Uri($"{Request.Scheme}://{Request.Host}");
 	var url = location.AbsoluteUri;
 }
-
-
+@if (Model?.Notification != null)
+{
+	<div class="container">
+		<partial name="_Notification" model="@Model.Notification" />
+	</div>
+}
 <div class="container product-container px-6">
+
 	<div class="columns mt-5 main-columns is-multiline">
 		<div class="column is-12 is-8-desktop is-6-fullhd p-0">
 			<div class="columns is-wrapped images-columns">
-				<div class="column is-hidden-mobile is-hidden-tablet-only is-block-desktop is-2 px-0 py-0 is-relative images-list-wrapper">
+				<div
+					class="column is-hidden-mobile is-hidden-tablet-only is-block-desktop is-2 px-0 py-0 is-relative images-list-wrapper">
 					<button class="button is-hidden scroll-button up-button"><i class="fa fa-chevron-up"></i></button>
 					<button class="button is-hidden scroll-button down-button">
 						<i class="fa fa-chevron-down"></i>
@@ -22,50 +28,54 @@
 						}
 						@foreach (var imgPath in Model.ShopProduct.ImagePaths)
 						{
-								<img data-imageNumber="@index" class="@(index == 0 ? "selected" : null)" src="@url@imgPath" />
+							<img data-imageNumber="@index" class="@(index == 0 ? "selected" : null)" src="@url@imgPath" />
 							index++;
 						}
 					</div>
 				</div>
 				<div class="column is-12-mobile is-7 is-10-desktop py-0 main-image is-relative">
-					<button class="button is-hidden scroll-button left-button"><i class="fa fa-chevron-left"></i></button>
-					<button class="button is-hidden scroll-button right-button"><i class="fa fa-chevron-right"></i></button>
+					<button class="button is-hidden scroll-button left-button"><i
+							class="fa fa-chevron-left"></i></button>
+					<button class="button is-hidden scroll-button right-button"><i
+							class="fa fa-chevron-right"></i></button>
 					<img src="@url@Model.ShopProduct.ImagePaths[0]" />
 				</div>
 			</div>
 			<div class="columns product-information-columns">
-				<div class="column is-10-mobile mobile is-7 is-10-desktop is-offset-2-desktop is-9-widescreen is-10-fullhd product-information-container">
-				<div class="card product-information">
-					<header name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-header p-0">
-						<p class="card-header-title p-0">
-							@Html.DisplayNameFor(model => model.ShopProduct.ProductDescription)
-						</p>
-						<button class="card-header-icon px-0 pb-5" aria-label="more options">
-							<span class="ml-auto justify-content-end">
-								<i class="fas fa-angle-down" aria-hidden="true"></i>
-							</span>
-						</button>
-					</header>
-					<div name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-content p-0">
-						<div class="content pt-2 pb-5 collapsed">
-							<p class="information">@Model.ShopProduct.ProductDescription</p>
+				<div
+					class="column is-10-mobile mobile is-7 is-10-desktop is-offset-2-desktop is-9-widescreen is-10-fullhd product-information-container">
+					<div class="card product-information">
+						<header name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-header p-0">
+							<p class="card-header-title p-0">
+								@Html.DisplayNameFor(model => model.ShopProduct.ProductDescription)
+							</p>
+							<button class="card-header-icon px-0 pb-5" aria-label="more options">
+								<span class="ml-auto justify-content-end">
+									<i class="fas fa-angle-down" aria-hidden="true"></i>
+								</span>
+							</button>
+						</header>
+						<div name="@nameof(@Model.ShopProduct.ProductDescription)" class="card-content p-0">
+							<div class="content pt-2 pb-5 collapsed">
+								<p class="information">@Model.ShopProduct.ProductDescription</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			</div>
 		</div>
-		<div class="column is-8-mobile is-offset-2-mobile is-6 is-offset-3 is-4-desktop is-offset-0-desktop is-offset-2-fullhd product-data">
+		<div
+			class="column is-8-mobile is-offset-2-mobile is-6 is-offset-3 is-4-desktop is-offset-0-desktop is-offset-2-fullhd product-data">
 			<div class="product-data-wrapper has-text-centered-mobile">
 				<p class="subtitle is-dark @(Model.ShopProduct?.VariantName != null ? "is-7 mb-0" : "is-5")">
 					@Model.ShopProduct.ProductName
 				</p>
 				@if (Model.ShopProduct?.VariantName != null)
 				{
-						<p class="subtitle is-dark is-5">@Model.ShopProduct?.VariantName</p>
+					<p class="subtitle is-dark is-5">@Model.ShopProduct?.VariantName</p>
 
 				}
-				<p class="title is-4 mt-3">@Model.ShopProduct?.Price USD</p>
+				<p class="title is-4 mt-3">@(Model.ShopProduct.VariantPrice ?? Model.ShopProduct.Price) USD</p>
 				<p class="subtitle is-6 mt-4 mb-2">
 					<span class="is-grey">Color</span> -
 					@Model.ShopProduct.ProductVariants.FirstOrDefault(pv =>
@@ -74,31 +84,34 @@
 				<div class="is-flex is-flex-wrap-wrap">
 					@foreach (var variant in Model.ShopProduct.ProductVariants)
 					{
-							<a asp-page="Product" asp-route-slug="@variant.VariantSlug"
-					   class="color-option mr-1 mt-1 @(variant.IsSelected ? "selected" : null)"
-					   title="@variant.ColorName.ToLower()" style="background-color: @variant.HEXColor;">
-								<span></span>
+						<a asp-page="Product" asp-route-slug="@variant.VariantSlug"
+						class="color-option mr-1 mt-1 @(variant.IsSelected ? "selected" : null)"
+						title="@variant.ColorName.ToLower()" style="background-color: @variant.HEXColor;">
+							<span></span>
 							@* span with css adds a border outside *@
-							</a>
+						</a>
 					}
 				</div>
 
 				<form method="post">
+					<input type="hidden" name="slug" value="@Model.Slug" />
 					<div class="control">
-						<label class="label mt-5 mb-3 has-text-weight-normal is-grey"
-							   @* asp-for="@Model.ProductVariant.VariantId " *@>size</label>
+						<label class="label mt-5 mb-3 has-text-weight-normal is-grey">size</label>
 						<div class="select is-fullwidth">
-							<select @* asp-for="@Model.ProductVariant.VariantId" *@
-									@* asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId, "Select variant")"> *@>
+							<select asp-for="@Model.ProductVariantSizeId">
 								@foreach (var size in Model.ShopProduct.Sizes)
 								{
-										<!option @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name @(size.Quantity > 0 ? null : "(out of size)")</!option>
+									<!option value="@size.Id" @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name
+										@(size.Quantity > 0 ?
+									null : "(out of size)")</!option>
 								}
 							</select>
-							@* <span asp-validation-for="@Model.ProductVariant.VariantId" class="has-text-danger"></span> *@
+							@* <span asp-validation-for="@Model.ProductVariant.VariantId"
+								class="has-text-danger"></span> *@
 						</div>
 					</div>
-					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i class="fas fa-shopping-cart mr-1"></i>Add to cart</button>
+					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i
+							class="fas fa-shopping-cart mr-1"></i>Add to cart</button>
 				</form>
 			</div>
 		</div>
@@ -116,7 +129,7 @@
 		var $productInformationsContainer = $('.product-information-container');
 
 		@* $mainImageDiv.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
-		@* $productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
+			@* $productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
 
 		var $upButton = $('.up-button');
 		var $downButton = $('.down-button');
@@ -178,22 +191,22 @@
 			}
 		})
 
-		if($('.images-list-container img').length > 1) {
+		if ($('.images-list-container img').length > 1) {
 			$mainImageDiv.on('mouseenter', (e) => {
-				if($leftButton.hasClass('is-hidden'))
+				if ($leftButton.hasClass('is-hidden'))
 					$leftButton.removeClass('is-hidden')
 
-				if($rightButton.hasClass('is-hidden'))
+				if ($rightButton.hasClass('is-hidden'))
 					$rightButton.removeClass('is-hidden')
 			})
 		}
 
-		if($('.images-list-container img').length > 1) {
+		if ($('.images-list-container img').length > 1) {
 			$mainImageDiv.on('mouseleave', (e) => {
-				if(!$leftButton.hasClass('is-hidden'))
+				if (!$leftButton.hasClass('is-hidden'))
 					$leftButton.addClass('is-hidden')
 
-				if(!$rightButton.hasClass('is-hidden'))
+				if (!$rightButton.hasClass('is-hidden'))
 					$rightButton.addClass('is-hidden')
 			})
 		}
@@ -201,32 +214,29 @@
 		$leftButton.on('click', (e) => {
 			var $currentImage = $('img.selected');
 			var currentImageIndex = parseInt($currentImage.attr('data-imageNumber'))
-			if(currentImageIndex === 0)
-			{
-			 $('.images-list-container img:last-of-type()')[0].click();
+			if (currentImageIndex === 0) {
+				$('.images-list-container img:last-of-type()')[0].click();
 			}
 			else {
 				$(`.images-list-container img[data-imageNumber="${currentImageIndex - 1}"]`)[0].click();
 			}
-				scrollToSelectedImage();
+			scrollToSelectedImage();
 		})
 
 		$rightButton.on('click', (e) => {
 			var $currentImage = $('img.selected');
 			var currentImageIndex = parseInt($currentImage.attr('data-imageNumber'))
-			if(currentImageIndex === parseInt($('.images-list-container img:last-of-type()').attr('data-imageNumber')))
-			{
-			 $('.images-list-container img:first-of-type()')[0].click();
+			if (currentImageIndex === parseInt($('.images-list-container img:last-of-type()').attr('data-imageNumber'))) {
+				$('.images-list-container img:first-of-type()')[0].click();
 			}
 			else {
 				$(`.images-list-container img[data-imageNumber="${currentImageIndex + 1}"]`)[0].click();
 
 			}
-				scrollToSelectedImage();
+			scrollToSelectedImage();
 		})
 
-		function scrollToSelectedImage()
-		{
+		function scrollToSelectedImage() {
 			$('.images-list-container img.selected')[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
 		}
 
@@ -240,16 +250,16 @@
 				var $headerIcon = $(`.card-header[name="${informationName}"] .card-header-icon i`);
 				var $informationContent = $(`.card-content[name="${informationName}"] .content`);
 				$informationContent.css('transition', `0.4s`);
-				if($informationContent.hasClass('collapsed')){
+				if ($informationContent.hasClass('collapsed')) {
 					$informationContent.removeClass('collapsed');
 					$informationContent.css('margin-top', `0`);
-					if(!$headerIcon.hasClass('rotated'))
+					if (!$headerIcon.hasClass('rotated'))
 						$headerIcon.addClass('rotated')
 				}
 				else {
 					$informationContent.addClass('collapsed');
 					$informationContent.css('margin-top', `-${$informationContent.height() + 100}px`)
-					if($headerIcon.hasClass('rotated'))
+					if ($headerIcon.hasClass('rotated'))
 						$headerIcon.removeClass('rotated')
 				}
 			})

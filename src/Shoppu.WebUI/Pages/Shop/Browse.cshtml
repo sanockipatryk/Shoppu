@@ -1,6 +1,7 @@
 @page "/{gender}/{query}/{categoryUrl}"
-@* @page "/Browse/{gender?}/{categoryName?}/{subCategoryName?}/{test?}" *@
 @model Shoppu.WebUI.Pages.Shop.BrowseModel
+@using Shoppu.Domain.Enums
+@using Shoppu.WebUI.Extensions
 @{
     ViewData["Title"] = "Browse";
     var location = new Uri($"{Request.Scheme}://{Request.Host}");
@@ -9,13 +10,168 @@
 
 <div class="columns is-multiline mx-0">
     <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen px-0 side-menu">
-        @await Component.InvokeAsync("BrowseSideMenu", Model.CategoryId)
+        @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl})
     </div>
 
     <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen px-6">
+        <div class="columns">
+            <div class="column is-10 px-1">
+                <form id="testForm" method="get">
+                    <div class="dropdown filter-dropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
+                                aria-controls="dropdown-menu2">
+                                <span><strong>Sort</strong></span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                            <div class="dropdown-content py-0">
+                                <div class="dropdown-item is-flex is-flex-direction-column">
+                                    @foreach (var option in Enum.GetValues<ProductSortBy>())
+                                    {
+                                        <label class="checkbox-label" style="min-width: 164px;">
+                                            <input type="radio" id="sortBy@(option)"
+                                            asp-for="@Model.BrowseData.Filters.SortBy" name="sortBy"
+                                            value="@((int)option)"
+                                            checked="@Model.BrowseData?.Filters.SortBy.Equals(option)">
+                                            <span class=" option-name">@option.GetDisplayName()</span>
+                                        </label>
+                                    }
+                                </div>
+                                <div class="has-text-centered is-flex filters-submit-buttons">
+                                    <button type="button"
+                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
+                                    <button type="submit"
+                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown filter-dropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
+                                aria-controls="dropdown-menu2">
+                                @{
+                                    var numberOfPrices = 0;
+                                    if (Model.BrowseData.Filters?.MinPrice != null)
+                                        numberOfPrices++;
+                                    if (Model.BrowseData.Filters?.MaxPrice != null)
+                                        numberOfPrices++;
+                                }
+                                <span><strong>Price @(numberOfPrices > 0 ? "(" + numberOfPrices + ")" :
+                                        null)</strong>
+                                </span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                            <div class="dropdown-content py-0">
+                                <div class="field dropdown-item">
+                                    <label class="label">Price</label>
+                                    <div class="control is-flex" style="width: 240px;">
+                                        <input name="minPrice" asp-for="@Model.BrowseData.Filters.MinPrice"
+                                            min="@Model.BrowseData.MinPrice" max="@Model.BrowseData.MaxPrice"
+                                            step="0.01" class="input mr-2" type="number"
+                                            data-currentValue="@(Model.BrowseData.Filters.MinPrice ?? "")"
+                                            placeholder="@Model.BrowseData.MinPrice">
 
+                                        <input name="maxPrice" asp-for="@Model.BrowseData.Filters.MaxPrice"
+                                            min="@Model.BrowseData.MinPrice" max="@Model.BrowseData.MaxPrice"
+                                            step="0.01" class="input ml-2" type="number"
+                                            data-currentValue="@(Model.BrowseData.Filters.MaxPrice ?? "")"
+                                            placeholder="@Model.BrowseData.MaxPrice">
+                                    </div>
+                                </div>
+                                <div class="has-text-centered is-flex filters-submit-buttons">
+                                    <button type="button"
+                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
+                                    <button type="submit"
+                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown filter-dropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
+                                aria-controls="dropdown-menu2">
+                                <span><strong>Sizes @(Model.BrowseData.Filters?.Sizes?.Count() > 0 ? "(" +
+                                        Model.BrowseData.Filters.Sizes.Count() + ")" :
+                                        null)</strong></span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                            <div class="dropdown-content py-0">
+                                <div class="dropdown-item is-flex is-flex-direction-column">
+                                    @foreach (var size in Model.BrowseData.PossibleSizes)
+                                    {
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="size@size.Name" name="Sizes" value="@size.Id"
+                                            checked="@Model.BrowseData.Filters?.Sizes?.Contains(size.Id)">
+                                            <span class="option-name">@size.Name</span>
+                                        </label>
+                                    }
+                                </div>
+                                <div class="has-text-centered is-flex filters-submit-buttons">
+                                    <button type="button"
+                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
+                                    <button type="submit"
+                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown filter-dropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
+                                aria-controls="dropdown-menu2">
+                                <span><strong>Colors @(Model.BrowseData.Filters?.Variants?.Count() > 0 ? "(" +
+                                        Model.BrowseData.Filters.Variants.Count() + ")" :
+                                        null)</strong></span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                            <div class="dropdown-content py-0">
+                                <div class="dropdown-item is-flex is-flex-direction-column">
+                                    @foreach (var color in Model.BrowseData.PossibleVariants)
+                                    {
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="size@size.Name" name="Variants" value="@color.Id"
+                                            style="accent-color: @color.HEXColor;"
+                                            checked="@Model.BrowseData.Filters?.Variants?.Contains(color.Id)">
+                                            <span class="option-name">@color.Name</span>
+                                        </label>
+                                    }
+                                </div>
+                                <div class="has-text-centered is-flex filters-submit-buttons">
+                                    <button type="button"
+                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
+                                    <button type="submit"
+                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="button is-primary"><strong>Search</strong></button>
+                </form>
+            </div>
+            <div class="column is-2 px-1">
+                empty
+            </div>
+        </div>
         <div class="columns is-multiline is-flex">
-            @foreach (var product in Model.BrowseProducts.Products)
+            @foreach (var product in Model.BrowseData.Products)
             {
                 <div class="column is-6-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-6">
                     <div data-productId="@product.ProductId" class="images">
@@ -26,20 +182,29 @@
                         src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
                     </div>
                     <div>
-                        <p class="title is-6">@product.ProductName</p>
-                        <p class="subtitle is-7">@product.Price$</p>
+                        <p class="title is-6">@(product.VariantName ?? product.ProductName)
+                        </p>
+                        <p class="subtitle is-7">@(product.VariantPrice ?? product.Price)$</p>
                     </div>
                 </div>
             }
         </div>
+        <nav class="pagination is-flex is-justify-content-center" role="navigation" aria-label="pagination">
+            <button class="button">
+                < Prev</button>
+                    <p class="px-2">current: 5 of 120</p>
+                    <button class="button">Next ></button>
+        </nav>
     </div>
 </div>
-
 @section Scripts
 {
 <script>
     var $thumbnails = $('img.thumbnail');
     var thumbnails = document.querySelectorAll('img.thumbnail');
+
+    var $minPriceInput = $(`input[name="minPrice"]`);
+    var $maxPriceInput = $(`input[name="maxPrice"]`);
 
     thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('mouseenter', (e) => {
@@ -61,7 +226,64 @@
 
         })
     })
+
+    var $filterDropdowns = $('.filter-dropdown');
+    $filterDropdowns.each((index, dropdown) => {
+        $(dropdown).on('click', (e) => {
+            if ($('.filter-dropdown.is-active')[0] !== undefined && !$('.filter-dropdown.is-active').is(dropdown)) {
+                $('.filter-dropdown.is-active').removeClass('is-active')
+            }
+            if (e.target.classList.contains('dropdown-button'))
+                $(dropdown).toggleClass('is-active')
+        })
+    })
+
+    $("#testForm").on('submit', (e) => {
+        console.log(e.currentTarget);
+        $("#testForm").find('input').each(function () {
+            var input = $(this);
+            if (!input.val()) {
+                input.remove();
+            }
+        });
+    });
+
+    $minPriceInput.on('input', e => {
+        var regex = /(?<=^| )\d+(\.\d+)?(?=$| )/g;
+        if (regex.test(e.target.value)) {
+            $minPriceInput.attr('data-currentValue', e.target.value)
+        }
+        else {
+            $minPriceInput.val($minPriceInput.attr('data-currentValue'))
+        }
+    })
+
+    $maxPriceInput.on('input', e => {
+        var regex = /(?<=^| )\d+(\.\d+)?(?=$| )/g;
+        if (regex.test(e.target.value)) {
+            $minPriceInput.attr('data-currentValue', e.target.value)
+        }
+        else {
+            $minPriceInput.val($minPriceInput.attr('data-currentValue'))
+        }
+    })
+
+    $minPriceInput.on('focusout', e => {
+        if (parseFloat($minPriceInput.val()) > parseFloat($maxPriceInput.val())) {
+            $minPriceInput.val($maxPriceInput.val())
+            $minPriceInput.attr('data-currentValue', $minPriceInput.val())
+        }
+    })
+
+    $maxPriceInput.on('focusout', e => {
+        if (parseFloat($maxPriceInput.val()) < parseFloat($minPriceInput.val())) {
+            $maxPriceInput.val($minPriceInput.val())
+            $maxPriceInput.attr('data-currentValue', $maxPriceInput.val())
+        }
+    })
+
     @*
+
             $($thumbnails).each((i, img) => {
             $(img).on("mouseenter", (e) => {
             var productId = $(e.currentTarget).attr("data-productId");

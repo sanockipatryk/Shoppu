@@ -35,7 +35,7 @@ namespace Shoppu.WebUI.Pages.Products
                 var result = await _mediator.Send(new CreateProductVariantSizesCommand(VariantId, ProductVariantSizes));
 
                 if (result)
-                    return RedirectToPage("Manage");
+                    return RedirectToPage("Manage", new {categoryUrl = "clothes"});
             }
             return Page();
         }

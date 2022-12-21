@@ -6,7 +6,7 @@ namespace Shoppu.Domain.Entities
     public class OrderDetails
     {
         public int Id { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(14,2)")]
         public decimal TotalPrice { get; set; }
 
         public string FirstName { get; set; }

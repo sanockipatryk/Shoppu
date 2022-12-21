@@ -1,0 +1,106 @@
+@model Shoppu.Domain.ViewModels.ViewCartViewModel
+@using Shoppu.Domain.Enums
+
+
+<div class="is-flex is-flex-direction-column cart-item-list">
+    @foreach (var item in Model.CartItems)
+    {
+        @* @if (Model.IsEditable)
+            {
+            <div class="has-text-right">
+            <form method="post" asp-page-handler="RemoveAllItems">
+            <button class="button is-text" type="submit">Remove all items from cart</button>
+            </form>
+            </div>
+            } *@
+        <article class="media align-items-stretch">
+            <figure class="media-left">
+                <p class="image">
+                    <img src="@(ViewData["ImageUrlPrefix"])@(item.ProductVariantSize.ProductVariant.Images[0].ImageSource)"
+                    width="128">
+                </p>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    @if (Model.IsEditable)
+                    {
+
+                        <form method="post" asp-page-handler="UpdateItem">
+                            <p class="subtitle mb-1 is-flex is-justify-content-space-between is-ff-nanum">
+                                <span><strong>@(item.ProductVariantSize.ProductVariant.Name ??
+                                item.ProductVariantSize.ProductVariant.Product.Name)</strong></span>
+                                <span>
+                                    <button type="submit" class="delete"></button>
+                                </span>
+                            </p>
+                            <input type="hidden" name="productVariantSizeId" value="@item.ProductVariantSize.Id" />
+                            <input type="hidden" name="action" value="@CartItemAction.RemoveManyItems" />
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="subtitle is-6 mb-1 is-ff-nanum">
+                            @(item.Quantity)x
+                        </p>
+                        <p class="subtitle is-5 mb-1 is-ff-nanum">
+                            <strong>@(item.ProductVariantSize.ProductVariant.Name ??
+                        item.ProductVariantSize.ProductVariant.Product.Name)
+                            </strong>
+                        </p>
+                    }
+
+                    <p class="subtitle is-6 mb-1 is-flex is-justify-content-space-between is-ff-nanum ">
+                        <span>Price: @(item.ProductVariantSize.ProductVariant.Price ??
+                        item.ProductVariantSize.ProductVariant.Product.Price)$</span>
+                        <span>@((item.ProductVariantSize.ProductVariant.Price ??
+                        item.ProductVariantSize.ProductVariant.Product.Price) * item.Quantity)$</span>
+                    </p>
+                    <p class="subtitle is-6 mb-1 is-gray is-ff-nanum ">
+                        @item.ProductVariantSize.ProductVariant.Product.Gender
+                    </p>
+                    <p class="subtitle is-6 mb-1 is-gray is-ff-nanum ">Size: @item.ProductVariantSize.Size.Name
+                    </p>
+                </div>
+                @if (Model.IsEditable)
+                {
+                    <div class="field has-addons control-amount-buttons">
+                        <form method="post" asp-page-handler="UpdateItem">
+                            <p class="control">
+                                <button class="button" type="submit">-</button>
+                                <input type="hidden" name="productVariantSizeId" value="@item.ProductVariantSize.Id" />
+                                <input type="hidden" name="action" value="@CartItemAction.RemoveOneItem" />
+                            </p>
+                        </form>
+                        <p class="control">
+                            <input class="input has-text-centered" type="text" value="@item.Quantity" readonly>
+                        </p>
+                        <form method="post" asp-page-handler="UpdateItem">
+                            <p class="control">
+                                <button class="button" type="submit">+</button>
+                                <input type="hidden" name="productVariantSizeId" value="@item.ProductVariantSize.Id" />
+                                <input type="hidden" name="action" value="@CartItemAction.AddOneItem" />
+                            </p>
+                        </form>
+                    </div>
+                }
+            </div>
+        </article>
+    }
+
+    <article class="media align-items-stretch">
+        <div class="media-content">
+            <div class="content is-ff-nanum">
+                <p class="mb-1 is-grey is-flex is-justify-content-space-between">
+                    <span>Shipping cost:</span><span>@Model.ShippingCost$</span>
+                </p>
+                <p class="mb-1 is-grey is-flex is-justify-content-space-between">
+                    <span>Items total:</span><span>@Model.CartItemsTotalPrice$</span>
+                </p>
+                <p class="mb-1 is-3 is-flex is-justify-content-space-between">
+                    <strong class="has-text-primary">Final price:</strong><strong
+                        class="has-text-primary">@Model.CartTotalPrice$</strong>
+                </p>
+            </div>
+        </div>
+    </article>
+</div>

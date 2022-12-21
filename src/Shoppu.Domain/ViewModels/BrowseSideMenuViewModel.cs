@@ -8,8 +8,8 @@ namespace Shoppu.Domain.ViewModels
 {
     public class BrowseSideMenuViewModel
     {
-        public int CurrentProductCategoryId { get; set; }
+        public string CurrentProductCategoryUrl { get; set; }
         public List<ProductCategory> ProductCategories { get; set; }
-        public ManageProductsFiltersViewModel ManageProductsFilters { get; set; }
+        public ManageProductsFiltersViewModel? ManageProductsFilters { get; set; }
     }
 }

@@ -1,0 +1,40 @@
+@model Shoppu.Domain.ViewModels.NotificationMessageViewModel
+
+@if (Model?.Message != null)
+{
+    string statusClass = "";
+    switch (Model.StatusType)
+    {
+        case Shoppu.Domain.Enums.StatusType.Success:
+            statusClass = "is-success";
+            break;
+        case Shoppu.Domain.Enums.StatusType.Danger:
+            statusClass = "is-danger";
+            break;
+        case Shoppu.Domain.Enums.StatusType.Warning:
+            statusClass = "is-warning";
+            break;
+        case Shoppu.Domain.Enums.StatusType.Info:
+            statusClass = "is-info";
+            break;
+    }
+
+    <div class="notification @statusClass pr-6">
+        <button type="button" class="delete notification-close-button is-large"></button>
+        <p class="subtitle is-6">@Model.Message</p>
+    </div>
+
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', e => {
+
+        var $notification = $('div.notification');
+        var $notificationCloseButton = $('button.notification-close-button');
+
+        $notificationCloseButton.on('click', () => {
+            $notification.addClass('is-hidden')
+        })
+
+    })
+</script>

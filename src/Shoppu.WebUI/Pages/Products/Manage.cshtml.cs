@@ -1,5 +1,7 @@
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Shoppu.Application.Products.Commands.ManageProduct;
 using Shoppu.Application.Products.Queries;
 using Shoppu.Domain.Entities;
 using Shoppu.Domain.ViewModels;
@@ -13,17 +15,23 @@ namespace Shoppu.WebUI.Pages.Products
         {
             _mediator = mediator;
         }
-
         public List<Product> Products { get; set; }
+        public ManageProductsFiltersViewModel? AppliedFilters { get; set; }
+        public string CategoryUrl { get; set; }
 
         public async Task OnGet(string? categoryUrl, ManageProductsFiltersViewModel filters)
         {
-            Products = await _mediator.Send(new GetProductsListQuery(categoryUrl, filters));
+            CategoryUrl = categoryUrl;
+            AppliedFilters = filters;
+            Products = await _mediator.Send(new GetProductsListQuery(CategoryUrl, AppliedFilters));
         }
 
-        public async Task OnPostChangeVariantVisibility(int variantId)
+        public async Task OnPostChangeVariantVisibility(string? categoryUrl, int variantId)
         {
-            // Products = await _mediator.Send(new GetProductsListQuery(categoryUrl, filters));
+            var setAsAccessible = await _mediator.Send(new SetProductVariantAccessibleCommand(variantId));
+            CategoryUrl = categoryUrl;
+            AppliedFilters = new ManageProductsFiltersViewModel();
+            Products = await _mediator.Send(new GetProductsListQuery(CategoryUrl, AppliedFilters));
         }
     }
 }

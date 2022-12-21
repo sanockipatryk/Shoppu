@@ -5,7 +5,7 @@ using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Queries.Shop
 {
-    public record GetBrowseProductsSideMenuCategoriesQuery(int CurrentProductCategoryId) : IRequest<BrowseSideMenuViewModel>;
+    public record GetBrowseProductsSideMenuCategoriesQuery(string CurrentProductCategoryUrl) : IRequest<BrowseSideMenuViewModel>;
 
     public class GetBrowseProductsSideMenuCategoriesQueryHandler : IRequestHandler<GetBrowseProductsSideMenuCategoriesQuery, BrowseSideMenuViewModel>
     {
@@ -20,12 +20,13 @@ namespace Shoppu.Application.Products.Queries.Shop
         {
             var productCategories = await _context.ProductCategories
                 .Include(pc => pc.ParentCategory)
+                .Include(pc => pc.SubCategories)
                 .ToListAsync();
 
             return new BrowseSideMenuViewModel
             {
                 ProductCategories = productCategories,
-                CurrentProductCategoryId = request.CurrentProductCategoryId
+                CurrentProductCategoryUrl = request.CurrentProductCategoryUrl
             };
         }
     }

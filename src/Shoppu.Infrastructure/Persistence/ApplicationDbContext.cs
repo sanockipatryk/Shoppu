@@ -33,7 +33,7 @@ namespace Shoppu.Infrastructure.Persistence
         public virtual DbSet<ProductVariant> ProductVariants { get; set; }
         public virtual DbSet<ProductVariantImage> ProductVariantImages { get; set; }
         public virtual DbSet<ProductVariantSize> ProductVariantSizes { get; set; }
-        public virtual DbSet<Cart> Carts  { get; set; }
+        public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<CartItem> CartItems { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetails> OrderDetails { get; set; }

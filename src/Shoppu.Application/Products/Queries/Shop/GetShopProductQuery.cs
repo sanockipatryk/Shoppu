@@ -44,6 +44,7 @@ namespace Shoppu.Application.Products.Queries.Shop
                 }).ToList(),
                 Sizes = pv.Sizes.Select(s => new ProductVariantSize
                 {
+                    Id = s.Id,
                     Quantity = s.Quantity,
                     Size = new Size
                     {
@@ -77,8 +78,10 @@ namespace Shoppu.Application.Products.Queries.Shop
             shopProduct.VariantId = productData.Id;
             shopProduct.VariantName = productData.Name;
             shopProduct.Price = productData.Product.Price;
+            shopProduct.VariantPrice = productData.Price;
             shopProduct.Sizes = productData.Sizes;
             shopProduct.ProductVariants = productVariants;
+
 
             return shopProduct;
 

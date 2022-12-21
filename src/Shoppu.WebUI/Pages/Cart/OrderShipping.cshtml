@@ -1,0 +1,180 @@
+@page "/Cart/Shipping"
+@model Shoppu.WebUI.Pages.Cart.OrderShipping
+@using Shoppu.Domain.Enums
+@{
+    ViewData["Title"] = "OrderShipping";
+}
+
+<div class="container">
+    @if(Model?.Notification != null) {
+    	 <partial name="_Notification" model="@Model.Notification" />
+    }
+            @if(Model.Cart.CartItems.Count() > 0)
+        {
+    <div class="columns is-multiline mx-0 px-0">
+        <div class="column is-12 is-8-desktop">
+            <div class="has-text-centered mb-4">
+                <p class="subtitle is-3 is-grey is-ff-nanum">Cart summary</p>
+            </div>
+            <partial name="_CartItemsList" model="@Model.Cart" />
+            <div class="mt-6">
+                <a class="button is-dark back-to-cart-button" asp-page="/Cart/ViewCart">Back to cart</a>
+            </div>
+        </div>
+        <div class="column is-10 is-offset-1 is-4-desktop is-offset-0-desktop px-4 is-relative shipment-form-column">
+            <div style="position:sticky; top: 16%; left: 0; ">
+                <div class="has-text-centered mb-4">
+                    <p class="subtitle is-3 is-grey is-ff-nanum ">Shipment</p>
+                </div>
+                <form method="post">
+                    <div class="columns is-multiline">
+                        <div class="field column is-6">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" asp-for="@Model.ShippmentData.FirstName"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.FirstName)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa fa-signature"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.FirstName"
+                                    class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-6">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" asp-for="@Model.ShippmentData.LastName"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.LastName)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa fa-signature"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.LastName" class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-5">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" pattern="[0-9]{2}[-][0-9]{3}"
+                                    title="Postal code xx-xxx" asp-for="@Model.ShippmentData.PostalCode"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.PostalCode)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa-solid fa-envelope-open-text"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.PostalCode"
+                                    class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-7">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" asp-for="@Model.ShippmentData.City"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.City)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa fa-city"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.City" class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-7">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" asp-for="@Model.ShippmentData.Street"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.Street)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa fa-map-pin"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.Street" class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-5">
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" asp-for="@Model.ShippmentData.Apartment"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.Apartment)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa fa-house"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.Apartment"
+                                    class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-6">
+                            <div class="control has-icons-left">
+                                <input class="input" type="tel" pattern="[0-9]{9}" title="9 digit phone number"
+                                    asp-for="@Model.ShippmentData.Phone"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.Phone)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa-solid fa-phone"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.Phone" class="has-text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="field column is-6">
+                            <div class="control has-icons-left">
+                                <input class="input" type="email" asp-for="@Model.ShippmentData.Email"
+                                    placeholder="@Html.DisplayNameFor(model => model.ShippmentData.Email)">
+                                <span class=" icon is-small is-left">
+                                    <i class="fa-solid fa-at"></i>
+                                </span>
+                                <span asp-validation-for="@Model.ShippmentData.Email" class="has-text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input id="paymentMethodInput" type="hidden" asp-for="@Model.ShippmentData.PaymentMethod" />
+                    <div class="field has-addons is-justify-content-center payment-method-buttons">
+                        <p class="control">
+                            <button data-method="@((int)PaymentMethod.CreditCard)" type="button" 
+                            class="button @(Model.ShippmentData?.PaymentMethod == PaymentMethod.CreditCard ? "selected" : null)"
+                                style="font-size: 24pt">
+                                <i class="fa fa-credit-card"></i>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button data-method="@((int)PaymentMethod.Paypal)" type="button" 
+                            class="button @(Model.ShippmentData?.PaymentMethod == PaymentMethod.Paypal ? "selected" : null)"
+                                style="font-size: 24pt">
+                                <i class="fa-brands fa-paypal"></i>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button data-method="@((int)PaymentMethod.OnlineTransfer)" type="button" 
+                            class="button @(Model.ShippmentData?.PaymentMethod == PaymentMethod.OnlineTransfer ? "selected" : null)"
+                                style="font-size: 24pt">
+                                <i class="fa fa-arrow-right-arrow-left"></i>
+                            </button>
+                        </p>
+                    </div>
+                    <span asp-validation-for="@Model.ShippmentData.PaymentMethod" class="has-text-danger"></span>
+                    <div class="has-text-centered">
+                        <button id="submitShipmentForm" @(Model.ShippmentData?.PaymentMethod != null ? null : "disabled") type="submit"
+                            class="button is-success">Pay
+                            @Model.Cart.CartTotalPrice$</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+        }
+        else {
+            <div class="has-text-centered mb-4">
+                <p class="subtitle is-3 is-ff-nanum mt-6">Your cart is empty</p>
+            </div>
+        }
+</div>
+@section Scripts {
+<script>
+    var $paymentMethodButtons = $('.payment-method-buttons button');
+    var $paymentMethodInput = $('#paymentMethodInput');
+    var $submitFormButton = $('#submitShipmentForm')
+    
+
+    $paymentMethodButtons.each((index, button) => {
+        $(button).on('click', e => {
+            if ($('.payment-method-buttons button.selected')[0] !== undefined) {
+                $('.payment-method-buttons button.selected').removeClass('selected')
+            }
+            if($submitFormButton[0].hasAttribute('disabled'))
+            {
+                $submitFormButton.removeAttr('disabled');
+            }
+            $(button).addClass('selected')
+            $paymentMethodInput.val($(button).attr('data-method'))
+        })
+    })
+
+</script>
+}

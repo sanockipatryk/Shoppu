@@ -6,6 +6,7 @@ namespace Shoppu.Domain.Entities
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        [Column(TypeName = "decimal(14,2)")]
         public decimal? Price { get; set; }
         public string Slug { get; set; }
         public bool IsAccessible { get; set; }

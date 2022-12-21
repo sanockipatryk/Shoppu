@@ -1,13 +1,15 @@
-﻿@page "{categoryUrl?}"
+﻿@page "{categoryUrl}"
 @model Shoppu.WebUI.Pages.Products.ManageModel
-@using System.Web
+
 @{
   var location = new Uri($"{Request.Scheme}://{Request.Host}");
   var url = location.AbsoluteUri;
 }
+
 <div class="columns">
   <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen pr-0 side-menu">
-    @await Component.InvokeAsync("BrowseSideMenu", 1)
+    @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl, appliedManageFilters =
+    Model.AppliedFilters})
   </div>
   <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen pl-0 pr-5">
 
@@ -29,7 +31,8 @@
           <th class="has-text-centered"></th>
           <th class="has-text-centered"><abbr title="Product type">Type</abbr></th>
           <th class="has-text-centered">Price($)</th>
-          <th class="has-text-centered" style="width: 5%"></th>
+          <th class="has-text-centered" style="width: 5%"><a class="button is-success" asp-page="Create">Add new</a>
+          </th>
 
         </tr>
       </thead>
@@ -121,7 +124,6 @@
             }
           }
         }
-        <a class="button" asp-page="Create">Add new</a>
 
       </tbody>
     </table>

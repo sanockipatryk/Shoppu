@@ -12,7 +12,7 @@
 					@if (hasSubcategories)
 					{
 						<button id="collapse-@(cat.Id)"
-				class="button button-collapse is-white has-text-link @(currentLevel == 0? "px-0" : "")">
+				class="button button-collapse is-white has-text-primary @(currentLevel == 0? "px-0" : "")">
 							@cat.Name <i class="fa fa-caret-down ml-1"></i>
 						</button>
 						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).ToList(),
@@ -118,7 +118,7 @@
 	});
 
 	function setCategoryActive($element) {
-		$($element).addClass("is-active").addClass('is-link')
+		$($element).addClass("is-active").addClass('is-primary')
 	}
 	function setCategoryInActive($element) {
 		$($element).removeClass("is-active").removeClass('is-prilinkmary')

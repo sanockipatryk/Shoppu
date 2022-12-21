@@ -1,13 +1,36 @@
 @model Shoppu.Domain.ViewModels.BrowseSideMenuViewModel
 @using Shoppu.Domain.Entities
+@using Shoppu.Domain.Enums
+
+@{
+    var queryStringsDictionary = new Dictionary<string, string>();
+    if (ViewContext.RouteData.Values["page"].Equals("/Products/Manage"))
+
+        foreach (var queryString in Context.Request.Query)
+        {
+            if (queryString.Value.ToString()?.Length > 0)
+            {
+                if ((queryString.Key.Equals(nameof(Model.ManageProductsFilters.WithoutAnyVariants))
+                || queryString.Key.Equals(nameof(Model.ManageProductsFilters.WithoutSpecifiedSizes)))
+                && queryString.Value.Contains("true"))
+                {
+                    queryStringsDictionary.Add(queryString.Key, "true");
+                    continue;
+                }
+
+                queryStringsDictionary.Add(queryString.Key, queryString.Value);
+            }
+        }
+}
+
 @{
     async Task generateCategories(List<ProductCategory> categories, string url, int currentLevel)
     {
         // adding Ids of all parent ProductCategries that lead to the choosen category
         // using this to display "opened" menu subcategories, and hide the ones that aren't choosen
         var listOfCategoryIdsToShow = new List<int>();
-        var selectedCategory = Model.ProductCategories.FirstOrDefault(p => p.Id == Model.CurrentProductCategoryId);
-        listOfCategoryIdsToShow.Add(Model.CurrentProductCategoryId);
+        var selectedCategory = Model.ProductCategories.FirstOrDefault(p => p.UrlName == Model.CurrentProductCategoryUrl);
+        listOfCategoryIdsToShow.Add(selectedCategory.Id);
         while (selectedCategory.ParentCategoryId != null)
         {
             listOfCategoryIdsToShow.Add((int)selectedCategory.ParentCategoryId);
@@ -18,18 +41,29 @@
             @foreach (var category in categories)
             {
                 <li>
+
                     @if (ViewContext.RouteData.Values["page"].Equals("/Products/Manage"))
                     {
-                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(Model.CurrentProductCategoryId == category.Id ? "has-text-link has-text-weight-bold" : "") "
-                asp-route-categoryUrl="@category.UrlName">
+                        if (queryStringsDictionary.ContainsKey("categoryUrl"))
+                        {
+                            queryStringsDictionary["categoryUrl"] = category.UrlName;
+                        }
+                        else
+                        {
+                            queryStringsDictionary.Add("categoryUrl", category.UrlName);
+                        }
+
+                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(@Model.CurrentProductCategoryUrl.Equals(category.UrlName) ? "has-text-primary has-text-weight-bold" : "") "
+            asp-page="/Products/Manage" asp-route-categoryUrl="@category.UrlName"
+            asp-all-route-data="@queryStringsDictionary">
                             @category.Name
                         </a>
                     }
                     else
                     {
-                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(Model.CurrentProductCategoryId == category.Id ? "has-text-link has-text-weight-bold" : "") "
-                asp-route-gender="man" asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "all")"
-                asp-route-categoryUrl="@category.UrlName">
+                        <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(@Model.CurrentProductCategoryUrl.Equals(category.UrlName) ? "has-text-primary has-text-weight-bold" : "") "
+            asp-route-gender="man" asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "all")"
+            asp-route-categoryUrl="@category.UrlName">
                             @category.Name
                         </a>
                     }
@@ -73,62 +107,61 @@
             <form method="get" class="pr-5">
                 <div style="max-height: 500px; overflow-y: auto; position:relative;">
                     <div class="field">
-                        <label class="label">Name</label>
+                        <label class="label" asp-for="@Model.ManageProductsFilters.Name"></label>
                         <div class="control">
                             <input class="input" type="text" placeholder="Enter" name="name"
                             asp-for="@Model.ManageProductsFilters.Name">
-                            @* <span asp-validation-for="@Model.Product.Name" class="has-text-danger"></span> *@
                         </div>
                     </div>
                     <div class="field is-fullwidth">
-                        <label class="label">Gender</label>
+                        <label class="label" asp-for="@Model.ManageProductsFilters.Gender"></label>
                         <div class="control">
                             <div class="select is-fullwidth">
-                                <select name="gender" asp-for="@Model.ManageProductsFilters.Gender">
-                                    <option value="">-</option>
-                                    <option value="F">Female</option>
-                                    <option value="M">Male</option>
-                                    <option value="U">Unisex</option>
-                                </select>
-                            </div>
-                        </div>
-                        @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
-                    </div>
-                    <div class="field is-fullwidth">
-                        <label class="label">Category</label>
-                        <div class="control">
-                            <div class="select is-fullwidth is-multiple">
-                                <select name="category" multiple>
-                                    <option value="1">T-Shirts</option>
-                                    <option value="2">Shorts</option>
-                                    <option value="3">Joggers</option>
-                                </select>
-                            </div>
-                        </div>
-                        @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
-                    </div>
-                    <div class="field is-fullwidth">
-                        <label class="label">AccessibleStatus</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="accessible" asp-for="@Model.ManageProductsFilters.AccessibleStatus">
+                                <select name="gender" asp-for="@Model.ManageProductsFilters.Gender"
+                                asp-items="Html.GetEnumSelectList<ProductGender>()">
                                     <option value="">All</option>
-                                    <option value="Acc">Accessible</option>
-                                    <option value="Not">Not accessible</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-fullwidth">
+                        <label class="label" asp-for="@Model.ManageProductsFilters.AccessibilityStatus"></label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="accessibilityStatus"
+                                asp-for="@Model.ManageProductsFilters.AccessibilityStatus"
+                                asp-items="Html.GetEnumSelectList<ProductAccessibilityStatus>()">
+                                    <option value="">All</option>
                                 </select>
                             </div>
                         </div>
                         @* <span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span> *@
                     </div>
+                    <label class="checkbox mt-4">
+                        <input name="@nameof(Model.ManageProductsFilters.WithoutAnyVariants)"
+                        asp-for="@Model.ManageProductsFilters.WithoutAnyVariants" type="checkbox" value="true">
+                        @Html.DisplayNameFor(model => model.ManageProductsFilters.WithoutAnyVariants)
+                        <input name="@nameof(Model.ManageProductsFilters.WithoutAnyVariants)" type="hidden" value="false">
+                    </label>
+
+                    <label class="checkbox mt-4">
+                        <input name="@nameof(Model.ManageProductsFilters.WithoutSpecifiedSizes)"
+                        asp-for="@Model.ManageProductsFilters.WithoutSpecifiedSizes" type="checkbox" value="true">
+                        @Html.DisplayNameFor(model => model.ManageProductsFilters.WithoutSpecifiedSizes)
+                        <input name="@nameof(Model.ManageProductsFilters.WithoutSpecifiedSizes)" type="hidden"
+                        value="false">
+                    </label>
                 </div>
-                <button type="submit" class="button">submit</button>
+                <button type="submit" class="button mt-5">Submit</button>
             </form>
         </ul>
     }
 </aside>
 <div class="is-flex is-hidden-desktop has-text-centered" style="overflow-x:scroll;">
-    @foreach (var subcategory in @Model.ProductCategories.FirstOrDefault(pc => pc.Id ==
-    @Model.CurrentProductCategoryId)?.SubCategories)
+    @{
+    }
+    @foreach (var subcategory in @Model.ProductCategories?.FirstOrDefault(pc =>
+    pc.UrlName.Equals(Model.CurrentProductCategoryUrl))?.SubCategories)
     {
         <button class="button mx-1 mb-4">@subcategory.Name</button>
     }

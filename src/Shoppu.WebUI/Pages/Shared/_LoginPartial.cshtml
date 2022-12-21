@@ -8,15 +8,13 @@
   {
     @if (User.IsInRole("Admin"))
     {
-      <a class="navbar-item" asp-page="/Products/Manage">
+      <a class="navbar-item" asp-page="/Products/Manage" asp-route-categoryUrl="clothes">
         Manage products
       </a>
     }
     @* else
       { *@
-    <a class="navbar-item" asp-area="Cart" asp-page="ViewCart">
-      <i class="fas fa-shopping-cart"></i><span class="pl-1">1</span>
-    </a>
+    @await Component.InvokeAsync("ShoppingCardNavbarItem")
     @* } *@
     <div class="navbar-item has-dropdown is-hoverable">
       <a class="navbar-link">

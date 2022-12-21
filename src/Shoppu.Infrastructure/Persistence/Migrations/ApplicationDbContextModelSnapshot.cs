@@ -337,7 +337,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(14,2)");
 
                     b.HasKey("Id");
 
@@ -461,7 +461,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(14,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

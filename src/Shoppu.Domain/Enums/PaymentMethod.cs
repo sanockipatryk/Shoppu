@@ -4,12 +4,12 @@ namespace Shoppu.Domain.Enums
 {
     public enum PaymentMethod
     {
-        [Display(Name = "BLIK")]
-        Blik = 1,
+        [Display(Name = "Credit card")]
+        CreditCard = 1,
+        [Display(Name = "Paypal")]
+        Paypal = 2,
         [Display(Name = "Online transfer")]
-        OnlineTransfer = 2,
-        [Display(Name = "On delivery")]
-        OnDelivery = 3
+        OnlineTransfer = 3
 
     }
 }

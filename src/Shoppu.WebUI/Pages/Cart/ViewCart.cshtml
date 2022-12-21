@@ -1,0 +1,30 @@
+@page "/Cart"
+@model Shoppu.WebUI.Pages.Cart.ViewCart
+@using Shoppu.Domain.Enums
+@{
+    ViewData["Title"] = "Cart";
+}
+<div class="container">
+    @if (Model?.Notification != null)
+    {
+        <partial name="_Notification" model="@Model.Notification" />
+    }
+    <div class="has-text-centered mb-4">
+        @if (Model.Cart.CartItems.Count() > 0)
+        {
+            <p class="subtitle is-3 is-grey is-ff-nanum">Items in your cart</p>
+        }
+        else
+        {
+            <p class="subtitle is-3 is-ff-nanum mt-6">Your cart is empty</p>
+
+        }
+    </div>
+    @if (Model.Cart.CartItems.Count() > 0)
+    {
+        <partial name="_CartItemsList" model="@Model.Cart" />
+        <div class="has-text-centered">
+            <a class="button is-dark proceed-shipping-button" asp-page="/Cart/OrderShipping">Proceed to shipping</a>
+        </div>
+    }
+</div>

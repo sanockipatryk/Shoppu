@@ -1,15 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using Shoppu.Domain.Enums;
 
 namespace Shoppu.Domain.ViewModels
 {
     public class ManageProductsFiltersViewModel
     {
+        [Display(Name = "Product name")]
         public string? Name { get; set; }
-        public List<int>? ColorVariants { get; set; }
-        public string? Gender { get; set; }
-        public int? AccessibleStatus { get; set; }
+        [Display(Name = "Targeted gender")]
+        public ProductGender? Gender { get; set; }
+        [Display(Name = "Accessibility status")]
+        public ProductAccessibilityStatus? AccessibilityStatus { get; set; }
+        [Display(Name = "Products without any variants")]
+        public bool WithoutAnyVariants { get; set; } = false;
+        [Display(Name = "Variants without specified sizes")]
+        public bool WithoutSpecifiedSizes { get; set; } = false;
     }
 }
