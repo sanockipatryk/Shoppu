@@ -15,23 +15,38 @@ namespace Shoppu.WebUI.Pages.Products
         {
             _mediator = mediator;
         }
-        public List<Product> Products { get; set; }
-        public ManageProductsFiltersViewModel? AppliedFilters { get; set; }
+        public ManageDataViewModel ManageData { get; set; }
         public string CategoryUrl { get; set; }
 
-        public async Task OnGet(string? categoryUrl, ManageProductsFiltersViewModel filters)
+        public async Task OnGet(string? categoryUrl, ManageProductsFiltersViewModel? filters, int? currentPage)
         {
+            PaginationViewModel pagination = new PaginationViewModel
+            {
+                Page = currentPage ?? 1,
+                ItemsPerPage = (int)filters.ItemsPerPage
+            };
+
             CategoryUrl = categoryUrl;
-            AppliedFilters = filters;
-            Products = await _mediator.Send(new GetProductsListQuery(CategoryUrl, AppliedFilters));
+            ManageData = await _mediator.Send(new GetProductsListQuery(CategoryUrl, filters, pagination));
         }
 
         public async Task OnPostChangeVariantVisibility(string? categoryUrl, int variantId)
         {
-            var setAsAccessible = await _mediator.Send(new SetProductVariantAccessibleCommand(variantId));
+            var productCode = await _mediator.Send(new SetProductVariantAccessibleCommand(variantId));
             CategoryUrl = categoryUrl;
-            AppliedFilters = new ManageProductsFiltersViewModel();
-            Products = await _mediator.Send(new GetProductsListQuery(CategoryUrl, AppliedFilters));
+
+            var newFilters = new ManageProductsFiltersViewModel
+            {
+                Code = productCode
+            };
+
+            PaginationViewModel pagination = new PaginationViewModel
+            {
+                Page = 1,
+                ItemsPerPage = (int)newFilters.ItemsPerPage
+            };
+
+            ManageData = await _mediator.Send(new GetProductsListQuery(CategoryUrl, newFilters, pagination));
         }
     }
 }

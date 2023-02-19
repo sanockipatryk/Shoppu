@@ -1,9 +1,10 @@
-@page "/{gender}/{query}/{categoryUrl}"
+@page "/{gender}/{query}/{categoryUrl}/{currentPage:int?}"
 @model Shoppu.WebUI.Pages.Shop.BrowseModel
 @using Shoppu.Domain.Enums
 @using Shoppu.WebUI.Extensions
 @{
-    ViewData["Title"] = "Browse";
+    var gender = Model.Gender[0].ToString().ToUpper() + Model.Gender.Substring(1);
+    ViewData["Title"] = @$"{gender} {Model.CategoryUrl}";
     var location = new Uri($"{Request.Scheme}://{Request.Host}");
     var url = location.AbsoluteUri;
 }
@@ -27,7 +28,7 @@
                                 </span>
                             </button>
                         </div>
-                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                        <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content py-0">
                                 <div class="dropdown-item is-flex is-flex-direction-column">
                                     @foreach (var option in Enum.GetValues<ProductSortBy>())
@@ -41,12 +42,7 @@
                                         </label>
                                     }
                                 </div>
-                                <div class="has-text-centered is-flex filters-submit-buttons">
-                                    <button type="button"
-                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
-                                    <button type="submit"
-                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
-                                </div>
+                                <partial name="_BrowseFiltersButtons" />
                             </div>
                         </div>
                     </div>
@@ -69,7 +65,7 @@
                                 </span>
                             </button>
                         </div>
-                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                        <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content py-0">
                                 <div class="field dropdown-item">
                                     <label class="label">Price</label>
@@ -87,12 +83,7 @@
                                             placeholder="@Model.BrowseData.MaxPrice">
                                     </div>
                                 </div>
-                                <div class="has-text-centered is-flex filters-submit-buttons">
-                                    <button type="button"
-                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
-                                    <button type="submit"
-                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
-                                </div>
+                                <partial name="_BrowseFiltersButtons" />
                             </div>
                         </div>
                     </div>
@@ -108,7 +99,7 @@
                                 </span>
                             </button>
                         </div>
-                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                        <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content py-0">
                                 <div class="dropdown-item is-flex is-flex-direction-column">
                                     @foreach (var size in Model.BrowseData.PossibleSizes)
@@ -120,12 +111,7 @@
                                         </label>
                                     }
                                 </div>
-                                <div class="has-text-centered is-flex filters-submit-buttons">
-                                    <button type="button"
-                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
-                                    <button type="submit"
-                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
-                                </div>
+                                <partial name="_BrowseFiltersButtons" />
                             </div>
                         </div>
                     </div>
@@ -141,7 +127,7 @@
                                 </span>
                             </button>
                         </div>
-                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                        <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content py-0">
                                 <div class="dropdown-item is-flex is-flex-direction-column">
                                     @foreach (var color in Model.BrowseData.PossibleVariants)
@@ -154,47 +140,78 @@
                                         </label>
                                     }
                                 </div>
-                                <div class="has-text-centered is-flex filters-submit-buttons">
-                                    <button type="button"
-                                        class="button is-dark is-outlined is-flex-grow-1"><strong>Clear</strong></button>
-                                    <button type="submit"
-                                        class="button is-dark is-flex-grow-1"><strong>Save</strong></button>
+                                <partial name="_BrowseFiltersButtons" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown filter-dropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
+                                aria-controls="dropdown-menu2">
+                                <span><strong>Show
+                                        (@((int)Model.BrowseData.Filters.ItemsPerPage))</strong></span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content py-0">
+                                <div class="dropdown-item is-flex is-flex-direction-column">
+                                    @foreach (var option in Enum.GetValues<ItemsPerPage>())
+                                    {
+                                        <label class="checkbox-label" style="min-width: 164px;">
+                                            <input type="radio" id="ItemsPerPage@(option)"
+                                            asp-for="@Model.BrowseData.Filters.ItemsPerPage" name="itemsPerPage"
+                                            value="@((int)option)"
+                                            checked="@Model.BrowseData?.Filters.ItemsPerPage.Equals(option)">
+                                            <span class=" option-name">@((int)option)</span>
+                                        </label>
+                                    }
                                 </div>
+                                <partial name="_BrowseFiltersButtons" />
                             </div>
                         </div>
                     </div>
                     <button type="submit" class="button is-primary"><strong>Search</strong></button>
                 </form>
             </div>
-            <div class="column is-2 px-1">
-                empty
+            <div class="column is-2 px-1 has-text-right">
+                <p class="is-grey">Total of @Model.BrowseData.Pagination.TotalItemsCount @(Model.BrowseData.Pagination.TotalItemsCount == 1 ? "product" : "products")</p>
             </div>
         </div>
         <div class="columns is-multiline is-flex">
-            @foreach (var product in Model.BrowseData.Products)
+            @if (Model.BrowseData?.Products.Count() > 0)
             {
-                <div class="column is-6-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-6">
-                    <div data-productId="@product.ProductId" class="images">
-                        <a asp-page="Product" asp-route-slug="@product.Slug">
-                            <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
-                        </a>
-                        <img data-variantId="@product.VariantId" hidden class="thumbnail2"
+                @foreach (var product in Model.BrowseData.Products)
+                {
+                    <div class="column is-6-mobile is-4 is-4-desktop is-3-fullhd p-1 mb-4">
+                        <div data-productId="@product.ProductId" class="images">
+                            <a asp-page="Product" asp-route-slug="@product.Slug">
+                                <img data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
+                            </a>
+                            <img data-variantId="@product.VariantId" hidden class="thumbnail2"
                         src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
+                        </div>
+                        <div class="px-2">
+                            <a class="subtitle is-6 mb-0" asp-page="Product" asp-route-slug="@product.Slug">
+                                @(product.VariantName ?? product.ProductName)
+                            </a>
+                            <p class="title is-5 mt-0">
+                                @(product.VariantPrice ?? product.Price)$
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="title is-6">@(product.VariantName ?? product.ProductName)
-                        </p>
-                        <p class="subtitle is-7">@(product.VariantPrice ?? product.Price)$</p>
-                    </div>
+                }
+            }
+            else
+            {
+                <div class="column is-12 p-1">
+                    <p class="subtitle is-5 is-grey has-text-centered mt-5">No products matching the filters.</p>
                 </div>
             }
         </div>
-        <nav class="pagination is-flex is-justify-content-center" role="navigation" aria-label="pagination">
-            <button class="button">
-                < Prev</button>
-                    <p class="px-2">current: 5 of 120</p>
-                    <button class="button">Next ></button>
-        </nav>
+        <partial name="_ListPagination" model="@Model.BrowseData.Pagination" />
     </div>
 </div>
 @section Scripts

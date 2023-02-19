@@ -1,0 +1,32 @@
+@page "/orders/{currentPage:int?}"
+@model Shoppu.WebUI.Pages.Orders.ListModel
+@using Shoppu.Domain.Enums
+@using Shoppu.Domain.Extensions
+@using System.ComponentModel.DataAnnotations;
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<div class="container">
+    @foreach (var order in @Model.Orders.OrderList)
+    {
+        <div class="box order-list-box">
+            <p class="subtitle is-7 is-flex is-justify-content-space-between is-grey">
+                <span>#@order.OrderNumber</span>
+                <span>@order.DateOrdered.ToLocalTime()</span>
+            </p>
+            <p class="subtitle is-5 is-flex is-justify-content-space-between">
+                <span>Total: <strong>@order.TotalPrice$</strong></span>
+                <span><strong
+                    class="has-text-success">@(order.PaymentMethod.GetAttribute<DisplayAttribute>().Name)</strong></span>
+            </p>
+            <div class="is-flex is-justify-content-end my-1">
+
+                <a asp-page="/Orders/Details" asp-route-orderNumber="@order.OrderNumber"><strong>View details</strong></a>
+            </div>
+
+        </div>
+    }
+    <partial name="_ListPagination" model="@Model.Orders.Pagination" />
+</div>

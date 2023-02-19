@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shoppu.Domain.Entities
 {
-    public class CartItem
+    public class OrderItem
     {
         public int Id { get; set; }
         public int Quantity { get; set; }
@@ -16,8 +11,8 @@ namespace Shoppu.Domain.Entities
         public int ProductVariantSizeId { get; set; }
         public ProductVariantSize ProductVariantSize { get; set; }
 
-        [ForeignKey(nameof(Cart))]
-        public string CartId { get; set; }
-        public Cart Cart { get; set; }
+        [ForeignKey(nameof(Order))]
+        public string OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }

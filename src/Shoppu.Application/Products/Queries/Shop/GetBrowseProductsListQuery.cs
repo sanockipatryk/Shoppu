@@ -8,7 +8,7 @@ using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Queries.Shop
 {
-    public record GetBrowseProductsListQuery(string CategoryUrl, string Gender, BrowseProductsFiltersViewModel Filters) : IRequest<BrowseDataViewModel>;
+    public record GetBrowseProductsListQuery(string CategoryUrl, string Gender, BrowseProductsFiltersViewModel Filters, PaginationViewModel Pagination) : IRequest<BrowseDataViewModel>;
     public class GetBrowseProductsListQueryHandler : IRequestHandler<GetBrowseProductsListQuery, BrowseDataViewModel>
     {
         private readonly IApplicationDbContext _context;
@@ -20,6 +20,11 @@ namespace Shoppu.Application.Products.Queries.Shop
 
         public async Task<BrowseDataViewModel> Handle(GetBrowseProductsListQuery request, CancellationToken cancellationToken)
         {
+            PaginationViewModel newPagination = new PaginationViewModel
+            {
+                Page = request.Pagination.Page,
+                ItemsPerPage = request.Pagination.ItemsPerPage
+            };
 
             var allCategories = await _context.ProductCategories.Include(p => p.SubCategories).ToListAsync();
 
@@ -41,6 +46,7 @@ namespace Shoppu.Application.Products.Queries.Shop
                 .FilterVariants(request.Filters.Variants)
                 .FilterPrices(request.Filters.MinPrice, request.Filters.MaxPrice)
                 .Where(pv => belongingCategoriesIds.Contains(pv.Product.ProductCategory.Id))
+                .ApplyPagination(ref newPagination)
                 .Select(pv => new ProductVariant
                 {
                     Id = pv.Id,
@@ -120,6 +126,7 @@ namespace Shoppu.Application.Products.Queries.Shop
             browseData.MaxPrice = maxPrice ?? 0;
             browseData.PossibleSizes = possibleSizes;
             browseData.PossibleVariants = possibleColors;
+            browseData.Pagination = newPagination;
 
             return browseData;
 

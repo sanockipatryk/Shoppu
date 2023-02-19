@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shoppu.Application.Common.Interfaces;
 using Shoppu.Domain.Entities;
+using Shoppu.Domain.Enums;
 using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Queries.Shop

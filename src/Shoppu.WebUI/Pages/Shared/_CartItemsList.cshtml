@@ -3,16 +3,21 @@
 
 
 <div class="is-flex is-flex-direction-column cart-item-list">
+    @if (Model.IsEditable)
+    {
+        <div class="has-text-right">
+            <button class="button is-text mb-4 remove-all-button" type="button">Remove all items from cart</button>
+            <form id="removeAllItems" method="post" asp-page-handler="RemoveAllItems" class="mb-4 is-hidden">
+                <input type="hidden" name="action" value="@CartItemAction.RemoveAllItems" />
+                <p class="has-text-danger mb-3 is-ff-nanum">You are about to clear your cart.</p>
+                <button id="cancelRemoveAllItems" class="button is-dark mb-4" type="button">Cancel</button>
+                <button class="button is-warning mb-4" type="submit">Remove all</button>
+            </form>
+        </div>
+    }
     @foreach (var item in Model.CartItems)
     {
-        @* @if (Model.IsEditable)
-            {
-            <div class="has-text-right">
-            <form method="post" asp-page-handler="RemoveAllItems">
-            <button class="button is-text" type="submit">Remove all items from cart</button>
-            </form>
-            </div>
-            } *@
+
         <article class="media align-items-stretch">
             <figure class="media-left">
                 <p class="image">
@@ -104,3 +109,22 @@
         </div>
     </article>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        var $removeAllButton = $('.remove-all-button');
+        var $removeAllForm = $('#removeAllItems');
+
+        var $cancelRemoveAllItems = $("#cancelRemoveAllItems");
+
+        $removeAllButton.on('click', () => {
+            $removeAllButton.addClass('is-hidden');
+            $removeAllForm.removeClass('is-hidden');
+        })
+
+        $cancelRemoveAllItems.on('click', () => {
+            $removeAllButton.removeClass('is-hidden');
+            $removeAllForm.addClass('is-hidden');
+        })
+    })
+</script>

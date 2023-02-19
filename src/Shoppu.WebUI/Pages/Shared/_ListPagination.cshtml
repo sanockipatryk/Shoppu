@@ -1,0 +1,67 @@
+@model Shoppu.Domain.ViewModels.PaginationViewModel
+@using System.Text
+
+@{
+    var location = new Uri($"{Context.Request.Scheme}://{Context.Request.Host}");
+    var url = location.AbsoluteUri;
+    var path = Context.Request.Path.ToString();
+
+    string generateHref(int pageNumber)
+    {
+        StringBuilder stringBuilder = new StringBuilder(url.Substring(0, url.Length - 1));
+        if(Int32.TryParse(path.Substring(path.LastIndexOf("/") + 1), out _))
+        {
+         stringBuilder.Append(path.Substring(0, path.LastIndexOf('/') + 1)); 
+        }
+        else
+        {
+            stringBuilder.Append(path);
+            stringBuilder.Append("/");
+        } 
+            stringBuilder.Append((pageNumber).ToString());
+            stringBuilder.Append(Context.Request.QueryString.ToString());
+            return stringBuilder.ToString();
+    }
+}
+
+<nav class="pagination is-flex is-justify-content-center" role="navigation" aria-label="pagination">
+
+    @if (Model.Page > 1)
+    {
+        <a class="pagination-button" href="@generateHref(1)">
+            <span><i class="fa fa-chevron-left"></i></span>
+        </a>
+    }
+@if (Model.TotalPages == 1)
+    {
+        <p class="pagination-button innactive" disabled>
+            <span>1</span>
+        </p>
+    }
+else {
+    @for (int i = Model.Page - 2; i <= Model.Page + 2; i++)
+    {
+        if (i > 0)
+        {
+            if (i > Model.TotalPages)
+            {
+                break;
+            }
+            <a class="pagination-button @(Model.Page == i ? "innactive" : "")" href="@generateHref(i)">
+                <span>@i</span>
+            </a>
+        }
+        else
+        {
+            continue;
+        }
+    }
+}
+    @if (Model.Page < Model.TotalPages)
+    {
+        <a class="pagination-button" href="@generateHref(Model.TotalPages)">
+            <span><i class="fa fa-chevron-right"></i></span>
+        </a>
+    }
+
+</nav>

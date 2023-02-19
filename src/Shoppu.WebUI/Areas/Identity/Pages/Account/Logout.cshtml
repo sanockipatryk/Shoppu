@@ -1,0 +1,42 @@
+﻿@page
+@model LogoutModel
+@{
+	ViewData["Title"] = "Log out";
+}
+
+<header>
+	@{
+		if (User.Identity.IsAuthenticated)
+		{
+			<div class="container">
+				<div class="columns is-centered">
+					<div class="column is-half">
+						<div class="card">
+							<div class="card-content">
+								<h1 class="title is-4 has-text-centered">Do you want to log out?</h1>
+								<form class="has-text-centered" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+									<button type="submit" class="button is-primary">Logout</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+		else
+		{
+			<div class="container">
+				<div class="columns is-centered">
+					<div class="column is-half">
+						<div class="card">
+							<div class="card-content">
+								<h1 class="title is-4 has-text-centered">You have been logged out</h1>
+								<p class="subtitle has-text-centered">Thank you for using our service.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	}
+</header>

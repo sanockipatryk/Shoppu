@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shoppu.Application.Common.Interfaces;
@@ -25,7 +26,8 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 .Select(p => new Product
                 {
                     Id = p.Id,
-                    BaseSlug = p.BaseSlug
+                    BaseSlug = p.BaseSlug,
+                    Code = p.Code,
                 })
                 .FirstOrDefaultAsync();
 
@@ -44,6 +46,9 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                     }
                 } while (true);
 
+                StringBuilder codeStringBuilder = new StringBuilder(productFromDb.Code);
+                codeStringBuilder.Append("/").Append(request.ProductVariant.CodeAddition);
+
                 var productVariant = new ProductVariant
                 {
                     ProductId = request.ProductVariant.ProductId,
@@ -51,6 +56,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                     Name = request.ProductVariant.Name,
                     Price = request.ProductVariant.Price != null ? Decimal.Parse(request.ProductVariant.Price, CultureInfo.InvariantCulture) : null,
                     Slug = newVariantSlug,
+                    Code = codeStringBuilder.ToString(),
                     IsAccessible = false,
                     DateCreated = DateTime.UtcNow
                 };

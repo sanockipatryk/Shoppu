@@ -54,7 +54,7 @@ namespace Shoppu.Application.ShoppingCart.Queries
                 };
 
                 await _context.Carts.AddAsync(userCart);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
                 return 0;
             }
 

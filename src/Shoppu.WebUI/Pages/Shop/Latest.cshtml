@@ -1,0 +1,114 @@
+@page "/latest"
+@model Shoppu.WebUI.Pages.Shop.Latest
+@{
+    ViewData["Title"] = "Latest";
+    var location = new Uri($"{Request.Scheme}://{Request.Host}");
+    var url = location.AbsoluteUri;
+}
+
+<div class="container">
+        <div class="columns m-0 is-multiline">
+            <div class="column is-offset-1-mobile is-10-mobile is-12 p-0 mb-3">
+                <p class="subtitle is-5 is-flex is-justify-content-space-between is-align-items-center">
+                    <span>Latest additions for Women</span>
+                    <a class="subtitle is-6 has-text-info" asp-page="/Shop/Browse" 
+                    asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes">See more</a>
+                </p>
+                <div id="slider" class="columns px-0 mx-0 column-latest">
+                @foreach (var product in Model.LatestProducts.LatestWomanProducts)
+                {
+                            <div class="column is-12 px-0 latest-product">
+                                <div data-productId="@product.ProductId" class="images">
+                                    <a asp-page="Product" asp-route-slug="@product.Slug">
+                                        <img alt="@product.CategoryName" data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
+                                    </a>
+                                    <img alt="@product.CategoryName" data-variantId="@product.VariantId" hidden class="thumbnail2"
+                                        src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
+                                </div>
+                                <a asp-page="Product" asp-route-slug="@product.Slug">
+                                <div class="is-flex is-flex-direction-column is-justify-content-center latest-product-info">
+                                    <p class="title is-5 mb-2 is-grey title-category-name">@product.CategoryName</p>
+                                    <p class="title is-2 mb-2 title-product-name">@(product.VariantName ?? product.ProductName)</p>
+                                    <p class="title is-3 title-product-price">@(product.VariantPrice ?? product.Price)$</p>
+                                </div>
+                                </a>
+                            </div>
+                }
+                </div>
+            </div>
+            <div class="column is-offset-1-mobile is-10-mobile is-12 p-0 mb-3">
+                <p class="subtitle is-5 is-flex is-justify-content-space-between is-align-items-center">
+                    <span>Latest additions for Men</span>
+                    <a class="subtitle is-6 has-text-info" asp-page="/Shop/Browse" 
+                    asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes">See more</a>
+                </p>
+                <div id="slider2" class="columns px-0 mx-0 column-latest">
+                @foreach (var product in Model.LatestProducts.LatestManProducts)
+                {
+                            <div class="column is-12 px-0 latest-product">
+                                <div data-productId="@product.ProductId" class="images">
+                                    <a asp-page="Product" asp-route-slug="@product.Slug">
+                                        <img alt="@product.CategoryName" data-variantId="@product.VariantId" class="thumbnail" src="@url\@product.ImagePaths[0]" />
+                                    </a>
+                                    <img alt="@product.CategoryName" data-variantId="@product.VariantId" hidden class="thumbnail2"
+                                        src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
+                                </div>
+                                <a asp-page="Product" asp-route-slug="@product.Slug">
+                                <div class="is-flex is-flex-direction-column is-justify-content-center latest-product-info">
+                                    <p class="title is-5 mb-2 is-grey title-category-name">@product.CategoryName</p>
+                                    <p class="title is-2 mb-2 title-product-name">@(product.VariantName ?? product.ProductName)</p>
+                                    <p class="title is-3 title-product-price">@(product.VariantPrice ?? product.Price)$</p>
+                                </div>
+                                </a>
+                            </div>
+                }
+                </div>
+            </div>
+        </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        var carouselSettings = {
+                slidesToScroll: 1,
+                slidesToShow: 2,
+                infinite: true,
+                loop:true,
+                autoplay: false,
+                pagination: false,
+                navigationSwipe: true,
+                autoplaySpeed: 4000,
+                breakpoints: [
+                { changePoint: 640, slidesToShow: 1, slidesToScroll: 1 },
+                { changePoint: 768, slidesToShow: 2, slidesToScroll: 2 }]
+            };
+
+        bulmaCarousel.attach('#slider', carouselSettings);
+
+        bulmaCarousel.attach('#slider2', carouselSettings);
+
+    var thumbnails = document.querySelectorAll('img.thumbnail');
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('mouseenter', (e) => {
+            var variantId = thumbnail.getAttribute('data-variantId');
+            var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
+
+            var tempSrc = thumbnail.getAttribute('src');
+            thumbnail.setAttribute('src', image2.getAttribute('src'));
+            image2.setAttribute('src', tempSrc);
+
+        })
+        thumbnail.addEventListener('mouseleave', (e) => {
+            var variantId = thumbnail.getAttribute('data-variantId');
+            var image2 = document.querySelector(`img.thumbnail2[data-variantId="${variantId}"]`);
+
+            var tempSrc = thumbnail.getAttribute('src');
+            thumbnail.setAttribute('src', image2.getAttribute('src'));
+            image2.setAttribute('src', tempSrc);
+
+        })
+    })
+
+    </script>
+}

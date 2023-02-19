@@ -8,11 +8,11 @@ using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.WebUI.Pages.Cart
 {
-    public class ViewCart : PageModel
+    public class ViewCartModel : PageModel
     {
         private readonly IMediator _mediator;
 
-        public ViewCart(IMediator mediator)
+        public ViewCartModel(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -34,6 +34,13 @@ namespace Shoppu.WebUI.Pages.Cart
         public async Task OnPostUpdateItem(int productVariantSizeId, CartItemAction action)
         {
             Notification = await _mediator.Send(new ChangeCartItemQuantityCommand(User, productVariantSizeId, action));
+            Cart = await _mediator.Send(new GetCartWithCartItemsQuery(User, false));
+            Cart.IsEditable = true;
+        }
+
+        public async Task OnPostRemoveAllItems(CartItemAction action)
+        {
+            Notification = await _mediator.Send(new RemoveAllItemsFromCartCommand(User, action));
             Cart = await _mediator.Send(new GetCartWithCartItemsQuery(User, false));
             Cart.IsEditable = true;
         }

@@ -1,0 +1,114 @@
+@page "~/AddSizesForVariant/{productId:int}/{variantId:int}"
+@model Shoppu.WebUI.Pages.Products.AddVariantSizesModel
+@{
+    ViewData["Title"] = "AddVariantSizes";
+    int index = 0;
+}
+
+<div class="container">
+    @if (Model.Notification != null)
+    {
+        <partial name="_Notification" model="@Model.Notification" />
+    }
+    <form method="post">
+        <input type="hidden" asp-for="@Model.ProductId" />
+        <input type="hidden" asp-for="@Model.VariantId" />
+        <p class="subtitle is-5 mb-6">Add items to existing sizes:</p>
+        <div class="columns is-multiline">
+            @foreach (var size in @Model.AddVariantSizes.Where(s => s.AlreadyExists))
+            {
+                <div data-sizeId="@size.SizeId" class="column is-3 px-6 size-form-field">
+                    <input name="AddVariantSizes[@index].SizeName" type="hidden" asp-for="@size.SizeName" />
+                    <input name="AddVariantSizes[@index].SizeId" type="hidden" asp-for="@size.SizeId" />
+                    <input name="AddVariantSizes[@index].AlreadyExists" type="hidden" asp-for="@size.AlreadyExists" />
+                    <div class="has-text-centered">
+                        <p class="title mb-2">
+                            @size.SizeName
+                        </p>
+                        <label class="label pt-3" asp-for="@size.QuantityToAdd"></label>
+                        <div class="field has-addons">
+                            <p class="control">
+                                <a class="button is-static">
+                                    <strong>In shop: @size.Quantity</strong>
+                                </a>
+                            </p>
+                            <div class="control">
+                                <input name="AddVariantSizes[@index].QuantityToAdd" class="input " type="number" min="0"
+                                step="1" asp-for="@Model.AddVariantSizes[index].QuantityToAdd"
+                                value="@Model.AddVariantSizes[index].QuantityToAdd"
+                                placeholder="Enter number of quantity to add">
+                                <span name="AddVariantSizes[@index].QuantityToAdd"
+                                asp-validation-for="@Model.AddVariantSizes[index].QuantityToAdd"
+                                class="has-text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                index++;
+            }
+        </div>
+        @if (Model.AddVariantSizes.Where(s => !s.AlreadyExists).Count() > 0)
+        {
+            <p class="subtitle is-5 my-6">Add new sizes for this item:</p>
+            <div class="columns is-multiline">
+                @foreach (var size in @Model.AddVariantSizes.Where(s => !s.AlreadyExists))
+                {
+                    <div data-sizeId="@size.SizeId" class="column is-3 px-6 size-form-field">
+                        <input name="AddVariantSizes[@index].SizeName" type="hidden" asp-for="@size.SizeName" />
+                        <input name="AddVariantSizes[@index].SizeId" type="hidden" asp-for="@size.SizeId" />
+                        <input name="AddVariantSizes[@index].AlreadyExists" type="hidden" asp-for="@size.AlreadyExists" />
+                        <div class="has-text-centered">
+                            <p class="title mb-2">
+                                @size.SizeName
+                            </p>
+                            <label class="checkbox pt-3">
+                                <p>@Html.DisplayNameFor(model =>
+                            model.AddVariantSizes.FirstOrDefault().AddSizeAsVariantOption)</p>
+                                <input data-sizeId="@size.SizeId" class="add-size-checkbox"
+                            name="AddVariantSizes[@index].AddSizeAsVariantOption" type="checkbox"
+                            asp-for="@size.AddSizeAsVariantOption" />
+
+                            </label>
+                            <div class="field pt-3">
+                                <label class="label" asp-for="@size.Quantity"></label>
+                                <div class="control">
+                                    <input @(size.AddSizeAsVariantOption ? null : "disabled")
+                                name="AddVariantSizes[@index].Quantity" class="input quantity-input" type="number"
+                                min="0" step="1" asp-for="@Model.AddVariantSizes[index].Quantity"
+                                value="@Model.AddVariantSizes[index].Quantity" placeholder="Enter available quantity">
+                                    <span name="AddVariantSizes[@index].Quantity"
+                                asp-validation-for="@Model.AddVariantSizes[index].Quantity"
+                                class="has-text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    index++;
+                }
+            </div>
+        }
+        <button type="submit" class="button is-primary">Add sizes to variant</button>
+    </form>
+</div>
+@section Scripts {
+<script>
+    var $sizeFormFieldsAddSizeCheckboxes = $('.add-size-checkbox');
+
+    $($sizeFormFieldsAddSizeCheckboxes).each((i, checkbox) => {
+        $(checkbox).on('change', (e) => {
+            var checkboxSizeId = $(checkbox).attr("data-sizeId")
+            if (checkbox.checked) {
+                console.log($(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`));
+                $(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`).removeAttr("disabled");
+            }
+            else {
+                $(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`).attr("disabled", "");
+
+            }
+        })
+    })
+
+
+</script>
+}

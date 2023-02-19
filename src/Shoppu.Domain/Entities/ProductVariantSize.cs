@@ -14,5 +14,9 @@ namespace Shoppu.Domain.Entities
         [ForeignKey(nameof(Size))]
         public int SizeId { get; set; }
         public Size Size { get; set; }
+
+        [NotMapped]
+        public int? QuantitySold { get; set; }
+        public List<OrderItem>? OrderItems { get; set; }
     }
 }

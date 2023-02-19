@@ -5,6 +5,14 @@ namespace Shoppu.Domain.ViewModels
 {
     public class ManageProductsFiltersViewModel
     {
+
+
+        [Display(Name = "Sort by")]
+        public ProductSortBy? SortBy { get; set; } = ProductSortBy.MostRecent;
+        [Display(Name = "Items per page")]
+        public ItemsPerPage? ItemsPerPage { get; set; } = Enums.ItemsPerPage.Twelve;
+        [Display(Name = "Product code")]
+        public string? Code { get; set; }
         [Display(Name = "Product name")]
         public string? Name { get; set; }
         [Display(Name = "Targeted gender")]

@@ -10,6 +10,7 @@ namespace Shoppu.Domain.Entities
         public decimal? Price { get; set; }
         public string Slug { get; set; }
         public bool IsAccessible { get; set; }
+        public string Code { get; set; }
 
         public DateTime DateCreated { get; set; }
         public DateTime? DateSetAsAccessible { get; set; }

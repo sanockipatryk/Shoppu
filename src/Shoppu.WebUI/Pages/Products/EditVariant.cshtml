@@ -1,0 +1,175 @@
+@page "{productId:int}/{variantId:int}"
+@model Shoppu.WebUI.Pages.Products.EditVariantModel
+@using Shoppu.WebUI.Extensions
+
+@{
+    var location = new Uri($"{Request.Scheme}://{Request.Host}");
+    var url = location.AbsoluteUri;
+}
+
+
+<img id="sampleImage" class="m-3 create-variant-upload-image" style="height: 500px">
+<div class="container">
+    <div class="has-text-centered">
+        <p class="title is-4 mb-5">Edit variant</p>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="@Model.ProductVariant.ProductId" />
+        <input type="hidden" asp-for="@Model.ProductVariant.ProductVariantId" />
+        <input type="hidden" asp-for="@Model.ProductVariant.ProductCode" />
+        <div class="columns mb-2">
+            <div class="column is-2">
+                <label class="label" asp-for="@Model.ProductVariant.CodeAddition"></label>
+                <div class="field has-addons mb-0">
+                    <p class="control p-0">
+                        <a class="button is-static">
+                            @Model.ProductVariant.ProductCode/
+                        </a>
+                    </p>
+                    <div class="control">
+                        <input class="input px-1 has-text-right" type="text"
+                            asp-for="@Model.ProductVariant.CodeAddition" placeholder="_ _">
+                    </div>
+                </div>
+                <span asp-validation-for="@Model.ProductVariant.CodeAddition" class="has-text-danger"></span>
+            </div>
+        </div>
+        <div class="columns mb-0">
+            <div class="field column">
+                <label class="label" asp-for="@Model.ProductVariant.Name"></label>
+                <div class="control">
+                    <input class="input" type="text" asp-for="@Model.ProductVariant.Name"
+                        placeholder="Specific name (optional)">
+                    <span asp-validation-for="@Model.ProductVariant.Name" class="has-text-danger"></span>
+                </div>
+            </div>
+            <div class="field column is-3">
+                <label class="label" asp-for="@Model.ProductVariant.Price "></label>
+                <div class="control">
+                    <input class="input" type="number" step="0.01" min="0" asp-for="@Model.ProductVariant.Price"
+                        placeholder="Specific price (optional)">
+                    <span asp-validation-for="@Model.ProductVariant.Price" class="has-text-danger"></span>
+                </div>
+            </div>
+            <div class="field column is-2 has-text-right">
+                <div class="control">
+                    <label class="label" asp-for="@Model.ProductVariant.VariantId"></label>
+                    <div class="select is-fullwidth">
+                        <select id="variantSelect" asp-for="@Model.ProductVariant.VariantId">
+                            asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId,
+                            "Select variant")"
+                            <option value="-1">Select variant</option>
+                            @foreach (var option in @Model.PossibleVariants)
+                            {
+                                @if (Model.ProductVariant.VariantId == option.Id)
+                                {
+                                    <option selected value="@option.Id">@option.Name (current)</option>
+
+                                }
+                                else if (Model.ExistingVariants.Any(ev => ev.Variant.Id == option.Id))
+                                {
+                                    <option disabled>@option.Name - already exists</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Id">@option.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="@Model.ProductVariant.VariantId" class="has-text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div id="variantPhotosInput" class="column is-fullwidth file has-name">
+                <label class="file-label">
+                    <input class="file-input" type="file" accept="image/png, image/jpeg, image/webp, image/jpg" multiple
+                        name="Product image">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                            Choose files...
+                        </span>
+                    </span>
+                    <span class="file-name">
+                        No images attached...
+                    </span>
+                </label>
+                @if (ViewData["imagesError"] != null)
+                {
+                    <span class="has-text-danger">@ViewData["imagesError"]</span>
+
+                }
+            </div>
+            <div class="column is-2">
+                <button class="button is-primary is-fullwidth" type="submit">Add variant</button>
+            </div>
+        </div>
+    </form>
+    <div>
+        <p id="imagesLoadedInfo" class="title is-4 mb-5">Add images to overwrite existing ones...</p>
+        <div id="imagesContainer" class="has-text-centered">
+        </div>
+    </div>
+    <div class="has-text-centered">
+        <p class="title is-4 mb-5">Current @Model.ProductVariant.ImagePaths.Count() images for this variant</p>
+        @foreach (var imgPath in Model.ProductVariant.ImagePaths)
+        {
+            <img class="m-3 create-variant-upload-image" src="@url\@imgPath">
+        }
+    </div>
+</div>
+@section Scripts
+{
+<script>
+    var sampleImage = document.querySelector('#sampleImage');
+    sampleImage.remove();
+    const fileInput = document.querySelector('#variantPhotosInput input[type=file]');
+    var $imagesLoadedInfo = $('#imagesLoadedInfo');
+    fileInput.onchange = (e) => {
+        const fileName = document.querySelector('#variantPhotosInput .file-name');
+        if (fileInput.files.length === 0) {
+            fileName.textContent = "No images attached..."
+            $imagesLoadedInfo.text("Add images to overwrite existing ones...");
+
+        }
+        else if (fileInput.files.length === 1) {
+            fileName.textContent = fileInput.files[0].name;
+            $imagesLoadedInfo.text("Loaded image:")
+        }
+        else if (fileInput.files.length > 1) {
+            fileName.textContent = `${fileInput.files.length} files...`
+            $imagesLoadedInfo.text(`Loaded ${fileInput.files.length} images:`)
+        }
+        onFileSelected(e)
+    }
+
+    $(fileInput).on('blur', (e) => {
+        if (fileInput.files.length === 0) {
+            $imagesLoadedInfo.text("Add images to overwrite existing ones...");
+        }
+    })
+
+    function onFileSelected(event) {
+        $('#imagesContainer').empty();
+        var index = 0;
+        var files = [...event.target.files];
+
+        files.forEach(file => {
+            var reader = new FileReader();
+            var $newImage = $(sampleImage).clone();
+            $newImage.attr('id', `image-${index}`);
+            $newImage.title = file.name;
+            $('#imagesContainer').append($newImage);
+            reader.onload = function (event) {
+                $newImage.attr('src', event.target.result)
+            };
+            reader.readAsDataURL(file);
+            index++;
+        });
+    }
+</script>
+}

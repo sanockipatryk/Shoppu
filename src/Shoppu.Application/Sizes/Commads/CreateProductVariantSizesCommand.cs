@@ -32,7 +32,7 @@ namespace Shoppu.Application.Sizes.Commads
                             Quantity = (int)productVariantSize.Quantity
                         });
                     }
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(cancellationToken);
                     return true;
                 }
             }

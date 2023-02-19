@@ -92,27 +92,37 @@
 						</a>
 					}
 				</div>
-
-				<form method="post">
-					<input type="hidden" name="slug" value="@Model.Slug" />
-					<div class="control">
-						<label class="label mt-5 mb-3 has-text-weight-normal is-grey">size</label>
-						<div class="select is-fullwidth">
-							<select asp-for="@Model.ProductVariantSizeId">
-								@foreach (var size in Model.ShopProduct.Sizes)
-								{
-									<!option value="@size.Id" @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name
-										@(size.Quantity > 0 ?
+				@if (Model.ShopProduct.Sizes.Any(s => s.Quantity > 0))
+				{
+					<form method="post">
+						<input type="hidden" name="slug" value="@Model.Slug" />
+						<div class="control">
+							<label class="label mt-5 mb-3 has-text-weight-normal is-grey">size</label>
+							<div class="select is-fullwidth">
+								<select asp-for="@Model.ProductVariantSizeId">
+									@foreach (var size in Model.ShopProduct.Sizes)
+									{
+										<!option value="@size.Id" @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name
+											@(size.Quantity > 0 ?
 									null : "(out of size)")</!option>
-								}
-							</select>
-							@* <span asp-validation-for="@Model.ProductVariant.VariantId"
-								class="has-text-danger"></span> *@
+									}
+								</select>
+								@* <span asp-validation-for="@Model.ProductVariant.VariantId"
+									class="has-text-danger"></span> *@
+							</div>
 						</div>
-					</div>
-					<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i
+
+						<button type="submit" class="button is-fullwidth mt-5 add-to-cart-button"><i
 							class="fas fa-shopping-cart mr-1"></i>Add to cart</button>
-				</form>
+					</form>
+				}
+				else
+				{
+					<div>
+						<button type="button" disabled class="button is-fullwidth mt-5 add-to-cart-button"><i
+							class="fas fa-shopping-cart mr-1"></i>Product ran out of stock</button>
+					</div>
+				}
 			</div>
 		</div>
 	</div>

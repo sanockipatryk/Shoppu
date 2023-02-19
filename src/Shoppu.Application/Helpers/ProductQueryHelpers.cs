@@ -1,5 +1,6 @@
 using Shoppu.Domain.Entities;
 using Shoppu.Domain.Enums;
+using Shoppu.Domain.ViewModels;
 using System.Globalization;
 
 namespace Shoppu.Application.Helpers
@@ -74,24 +75,24 @@ namespace Shoppu.Application.Helpers
         {
             switch (sortBy)
             {
-                case ProductSortBy.ZA:
-                    return query.OrderByDescending(pv => pv.Name ?? pv.Product.Name);
+                case ProductSortBy.LeastRecent:
+                    return query.OrderBy(pv => pv.DateSetAsAccessible);
 
                 case ProductSortBy.PriceLowest:
                     return query.OrderBy(pv => pv.Price ?? pv.Product.Price);
 
                 case ProductSortBy.PriceHighest:
-
                     return query.OrderByDescending(pv => pv.Price ?? pv.Product.Price);
 
-                case ProductSortBy.MostRecent:
-                    return query.OrderByDescending(pv => pv.DateSetAsAccessible);
-
-                case ProductSortBy.LeastRecent:
-                    return query.OrderBy(pv => pv.DateSetAsAccessible);
                 case ProductSortBy.AZ:
-                default:
                     return query.OrderBy(pv => pv.Name ?? pv.Product.Name);
+
+                case ProductSortBy.ZA:
+                    return query.OrderByDescending(pv => pv.Name ?? pv.Product.Name);
+
+                case ProductSortBy.MostRecent:
+                default:
+                    return query.OrderByDescending(pv => pv.DateSetAsAccessible);
             }
         }
 
@@ -108,6 +109,31 @@ namespace Shoppu.Application.Helpers
                 .ThenByDescending(s => s.Name == "4XL")
                 .ThenBy(s => s.Name)
                 .ToList();
+        }
+
+        public static IQueryable<BrowseDataProductItemViewModel> SelectBrowseData(this IQueryable<ProductVariant> query)
+        {
+            return query
+            .Select(pv => new BrowseDataProductItemViewModel
+            {
+                ProductId = pv.Product.Id,
+                ProductName = pv.Product.Name,
+                CategoryId = pv.Product.ProductCategory.Id,
+                CategoryName = pv.Product.ProductCategory.Name,
+                Slug = pv.Slug,
+                Price = pv.Product.Price,
+                VariantId = pv.Id,
+                VariantName = pv.Name,
+                VariantPrice = pv.Price,
+                ImagePaths = pv.Images
+                        .Take(2)
+                        .Select(pvi => pvi.ImageSource)
+                        .ToList(),
+                DateSetAsAccessible = pv.DateSetAsAccessible
+
+            })
+                .OrderBy(pv => pv.DateSetAsAccessible)
+                .Take(8);
         }
 
     }

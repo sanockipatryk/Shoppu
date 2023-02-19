@@ -30,8 +30,8 @@ namespace Shoppu.WebUI.Pages.Products
         {
             if (ModelState.IsValid)
             {
-                await _mediator.Send(new CreateProductCommand(Product));
-                return RedirectToPage("Manage", new { categoryUrl = "clothes" });
+                var addedProduct = await _mediator.Send(new CreateProductCommand(Product));
+                return RedirectToPage("Manage", new { categoryUrl = addedProduct.ProductCategory.UrlName, code = addedProduct.Code });
             }
             ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery());
             return Page();

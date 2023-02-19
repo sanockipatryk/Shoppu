@@ -55,6 +55,7 @@ namespace Shoppu.Application.ShoppingCart.Commands
                                 StatusType = Domain.Enums.StatusType.Success,
                                 Message = "Product removed from cart."
                             };
+
                     }
 
                 }

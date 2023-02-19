@@ -5,7 +5,7 @@ using Shoppu.Domain.Entities;
 
 namespace Shoppu.Application.ProductTypes.Queries
 {
-    public record GetProductVariantListQuery(int id) : IRequest<List<ProductVariant>>;
+    public record GetProductVariantListQuery(int ProductId) : IRequest<List<ProductVariant>>;
 
     public class GetProductVariantListQueryHandler : IRequestHandler<GetProductVariantListQuery, List<ProductVariant>>
     {
@@ -17,7 +17,7 @@ namespace Shoppu.Application.ProductTypes.Queries
 
         public async Task<List<ProductVariant>> Handle(GetProductVariantListQuery request, CancellationToken cancellationToken)
         {
-            var productVariants = await _context.ProductVariants.Where(p => p.ProductId == request.id).ToListAsync();
+            var productVariants = await _context.ProductVariants.Where(p => p.ProductId == request.ProductId).ToListAsync();
             return productVariants;
         }
     }

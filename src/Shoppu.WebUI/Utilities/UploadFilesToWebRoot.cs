@@ -4,6 +4,27 @@ namespace Shoppu.WebUI.Utilities
 {
     public static class UploadFilesToWebRoot
     {
+        public static void Empty(this DirectoryInfo directory)
+        {
+            foreach (FileInfo file in directory.GetFiles()) file.Delete();
+            foreach (DirectoryInfo subDirectory in directory.GetDirectories()) subDirectory.Delete(true);
+        }
+
+        public static void RemoveOldPath(
+            IWebHostEnvironment _webHostEnvironment,
+            string productVariantImagePath
+        )
+        {
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            var directory = Path.GetDirectoryName(productVariantImagePath);
+
+            var path = Path.Combine(webRootPath, directory);
+
+            DirectoryInfo pathInfo = new DirectoryInfo(path);
+            pathInfo.Empty();
+
+            Directory.Delete(path);
+        }
 
         public static List<string> UploadManyFiles(
             IWebHostEnvironment _webHostEnvironment,

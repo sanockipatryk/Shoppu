@@ -4,10 +4,10 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - Shoppu.WebUI</title>
-	@* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+	<title>@ViewData["Title"] - Shoppu</title>
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/lib/bulma/css/bulma.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" />
 	<link rel="stylesheet" href="~/Shoppu.WebUI.styles.css" asp-append-version="true" />
 	<script src="https://kit.fontawesome.com/3ff53c5c37.js" crossorigin="anonymous"></script>
 </head>
@@ -17,55 +17,110 @@
 		<nav class="navbar is-flex is-flex-direction-column" role="navigation" aria-label="main navigation">
 			<div class="navbar-top is-flex is-justify-content-space-between is-relative pt-5">
 				<p class="is-hidden-mobile-only is-hidden-tablet-only"></p>
-				<a class="navbar-item site-name py-0" asp-area="" asp-page="Index">
+				<a class="navbar-item site-name py-0" asp-area="" asp-page="/Index">
 					<p class="m-0 title p-0 is-3">SHOPPU</p>
 				</a>
 				<partial name="_LoginPartial" />
+				<div class="is-flex is-hidden-desktop is-justify-content-center is-align-content-center ml-auto">
+					@if (User.Identity.IsAuthenticated)
+					{
+						@await Component.InvokeAsync("ShoppingCardNavbarItem")
+					}
+				</div>
 
-				<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-					data-target="navbarBasicExample">
+				<a role="button" class="navbar-burger has-text-black ml-0" aria-label="menu" aria-expanded="false"
+					data-target="navbarElement">
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
 				</a>
 			</div>
-			<div id="navbarBasicExample" class="navbar-menu" style="">
+			<div id="navbarElement" class="navbar-menu" style="">
 				@* div that takes empty space on the left side of menu - to disable hover events for flex-grow-1
 					dropdown items *@
 				<div class="is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item"></div>
 				@* *@
-				<div class="is-flex is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item">
+				<div class="is-flex is-hidden-mobile is-hidden-tablet-only navbar-menu-item">
 					<div class="menu-item-box">
 						<div class="is-flex is-align-items-center link-wrapper">
-							<a class="navbar-item px-4" asp-area="" asp-page="/Index">
+							<a class="navbar-item px-4" asp-area="" asp-page="/Shop/Latest">
 								Latest
 							</a>
 						</div>
 					</div>
 				</div>
-				@* @if (User.IsInRole("Admin"))
-					{
-					<a class="navbar-item" asp-page="/Products/Manage">
-					Manage products
-					</a>
-					} *@
 				@await Component.InvokeAsync("NavbarMenu")
 		</nav>
 	</header>
 	<section class="section py-3 px-0 app-section">
 		@RenderBody()
 	</section>
-	<footer id="page-footer" class="footer py-0 is-relative" style="max-width: 100vw;">
-		<div class="content has-text-centered" style="max-width: 100vw;">
-			<p style="max-width: 100vw;">
-				<strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is
-				licensed
-				<a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-				is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
-			</p>
+	<footer id="page-footer" class="footer p-0 mt-6 is-relative">
+		<div class="content">
+			<div class="text-content py-3">
+				<p class="subtitle is-4 has-text-centered mb-3 has-text-white">
+					<strong class="has-text-white">Thank you</strong> for using <strong class="has-text-white">Shoppu</strong>!
+				</p>
+				<p class="subtitle is-4 has-text-centered my-0 has-text-white">
+					Find us on 
+					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-facebook"></i></a>
+					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-instagram"></i></a>
+					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-youtube"></i></a>
+					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-tiktok"></i></a>
+				</p>
+			</div>
+			<div class="columns page-links px-4">
+				<div class="column is-3 is-flex is-flex-direction-column">
+					<p class="link-title">Check this out</p>
+					<a asp-area="" asp-page="/Index">
+						Offers
+					</a>
+					<a asp-area="" asp-page="/Shop/Latest">
+						Latest
+					</a>
+				</div>
+				<div class="column is-3 is-flex is-flex-direction-column">
+					<p class="link-title">Woman</p>
+					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes">
+						Women clothes
+					</a>
+					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="accessories">
+						Women accessories
+					</a>
+				</div>
+				<div class="column is-3 is-flex is-flex-direction-column">
+					<p class="link-title">Man</p>
+					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes">
+						Men clothes
+					</a>
+					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="accessories">
+						Men accessories
+					</a>
+				</div>
+				<div class="column is-3 is-flex is-flex-direction-column">
+					<p class="link-title">Account</p>
+					@if (User.Identity.IsAuthenticated)
+					{
+										<a asp-area="" asp-page="/Orders/List">
+											  My orders
+										</a>
+					}
+					else
+					{
+										<a asp-area="Identity" asp-page="/Account/Login">
+											Login
+										</a>
+										<a asp-area="Identity" asp-page="/Account/Register">
+											Register
+										</a>
+					}
+
+				</div>
+			</div>
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 
 	@await RenderSectionAsync("Scripts", required: false)
@@ -80,11 +135,6 @@
 			$(".navbar-burger").toggleClass("is-active");
 			$(".navbar-menu").toggleClass("is-active");
 		});
-		@*
-				$(".notification.app-notification button").on('click', () => {
-				$(".notification.app-notification button").parent('div.notification').addClass('is-hidden')
-				}) *@
-
 	});
 
 	var $sideMenu = $('.side-menu aside');

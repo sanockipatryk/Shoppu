@@ -54,9 +54,8 @@ namespace Shoppu.WebUI.Pages.Products
                     HttpContext.Request,
                     "productVariants",
                     newVariant.Product.ProductCategory.Name,
-                    newVariant.Product.Id.ToString(),
-                    newVariant.Product.Name,
-                    newVariant.Id.ToString()
+                    newVariant.Product.Code,
+                    newVariant.Code
                     );
 
                 var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(newVariant.Id, imagePaths));

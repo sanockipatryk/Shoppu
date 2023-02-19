@@ -237,7 +237,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.CartItem", b =>
@@ -264,7 +264,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductVariantSizeId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.Order", b =>
@@ -286,7 +286,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.OrderDetails", b =>
@@ -343,7 +343,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.OrderItem", b =>
@@ -370,7 +370,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductVariantSizeId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.Product", b =>
@@ -382,6 +382,10 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("BaseSlug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -411,7 +415,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductCategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductCategory", b =>
@@ -437,7 +441,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariant", b =>
@@ -447,6 +451,10 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -479,7 +487,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("VariantId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantImage", b =>
@@ -501,7 +509,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ProductVariantImages");
+                    b.ToTable("ProductVariantImages", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.ProductVariantSize", b =>
@@ -527,7 +535,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SizeId");
 
-                    b.ToTable("ProductVariantSizes");
+                    b.ToTable("ProductVariantSizes", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.Size", b =>
@@ -549,7 +557,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductCategoryId");
 
-                    b.ToTable("Sizes");
+                    b.ToTable("Sizes", (string)null);
                 });
 
             modelBuilder.Entity("Shoppu.Domain.Entities.Variant", b =>
@@ -570,7 +578,7 @@ namespace Shoppu.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Variants");
+                    b.ToTable("Variants", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,7 +4,9 @@ namespace Shoppu.Domain.ViewModels
 {
     public class BrowseProductsFiltersViewModel
     {
-        public ProductSortBy? SortBy { get; set; } = ProductSortBy.AZ;
+        public ProductSortBy? SortBy { get; set; } = ProductSortBy.MostRecent;
+
+        public ItemsPerPage? ItemsPerPage { get; set; } = Enums.ItemsPerPage.Four;
 
         public string? MinPrice { get; set; }
         public string? MaxPrice { get; set; }

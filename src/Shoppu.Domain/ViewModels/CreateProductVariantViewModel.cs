@@ -16,5 +16,11 @@ namespace Shoppu.Domain.ViewModels
         public string? Name { get; set; }
         [Display(Name = "Specific price of this variant")]
         public string? Price { get; set; }
+
+        [Required(ErrorMessage = "Add assigned variation code.")]
+        [Display(Name = "Variation code")]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "Variation code should have a total of 2 characters.")]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Variation code should consist of only letters and numbers.")]
+        public string CodeAddition { get; set; }
     }
 }

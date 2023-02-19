@@ -1,12 +1,6 @@
-﻿using Shoppu.Domain.Entities;
-using Shoppu.Domain.Enums;
-using System;
-using System.Collections.Generic;
+﻿using Shoppu.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Shoppu.Domain.ViewModels
 {
@@ -23,6 +17,10 @@ namespace Shoppu.Domain.ViewModels
 
         [Required(ErrorMessage = "Add a price for the product.")]
         public string Price { get; set; }
+        [Required(ErrorMessage = "Add assigned code of the product.")]
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "Code should have a total of 13 characters.")]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Code should consist of only letters and numbers.")]
+        public string Code { get; set; }
         public bool IsAccessible { get; set; } = false;
 
         [Required(ErrorMessage = "Select the product category.")]

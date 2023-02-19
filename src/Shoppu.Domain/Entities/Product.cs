@@ -17,6 +17,7 @@ namespace Shoppu.Domain.Entities
         public decimal Price { get; set; }
         public bool IsAccessible { get; set; }
         public string BaseSlug { get; set; }
+        public string Code { get; set; }
 
         [ForeignKey(nameof(ProductCategory))]
         public int ProductCategoryId { get; set; }

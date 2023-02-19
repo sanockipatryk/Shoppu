@@ -42,12 +42,34 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 Description = request.ProductViewModel.Description,
                 Gender = (ProductGender)request.ProductViewModel.Gender,
                 ProductCategoryId = (int)request.ProductViewModel.ProductCategoryId,
+                Code = request.ProductViewModel.Code,
                 BaseSlug = baseSlug,
                 IsAccessible = false,
             };
             await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
-            return product;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var addedProduct = await _context.Products
+                .Where(p => p.Id == product.Id)
+                .Select(p => new Product
+                {
+                    Name = p.Name,
+                    ProductCategory = new ProductCategory
+                    {
+                        Id = p.ProductCategory.Id,
+                        Name = p.ProductCategory.Name,
+                        UrlName = p.ProductCategory.UrlName
+                    },
+                    Price = p.Price,
+                    Gender = p.Gender,
+                    ProductCategoryId = p.ProductCategoryId,
+                    Code = p.Code,
+                    BaseSlug = p.BaseSlug,
+                    IsAccessible = p.IsAccessible,
+                })
+                .FirstOrDefaultAsync();
+
+            return addedProduct;
         }
     }
 }

@@ -1,5 +1,10 @@
 @model int
 
-<a class="navbar-item" asp-area="" asp-page="/Cart/ViewCart">
+<a class="navbar-item is-hidden-mobile is-hidden-tablet-only" asp-area="" asp-page="/Cart/ViewCart">
     <i class="fas fa-shopping-cart"></i><span class="pl-1">@Model</span>
+</a>
+
+<a class="button is-ghost is-hidden-desktop has-text-black "
+	asp-page="/Cart/ViewCart" style="height: 52px; width: 52px;">
+	<span ><i class="fa fa-shopping-cart pr-1"></i>@Model</span>
 </a>

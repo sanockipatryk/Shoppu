@@ -5,14 +5,14 @@
 @{
     async Task generateMenu(string gender)
     {
-        <div 
+        <div
         class="dropdown is-hoverable navbar-item is-hidden-mobile is-hidden-tablet-only is-flex p-0 has-products-main-menu navbar-menu-item">
             <div class="menu-item-box">
                 <div class="is-flex is-align-items-center link-wrapper">
                     <a class="navbar-item text px-4" aria-haspopup="true" aria-controls="@(gender)Menu" asp-area=""
-                        asp-page="/Shop/Browse" asp-route-gender="@gender" asp-route-query="all"
-                        asp-route-categoryUrl="clothes">
-                            <span>@gender</span>
+                    asp-page="/Shop/Browse" asp-route-gender="@gender" asp-route-query="all"
+                    asp-route-categoryUrl="clothes">
+                        <span>@gender</span>
                     </a>
                 </div>
             </div>
@@ -23,16 +23,15 @@
                         {
                             <div class="column is-3 mx-3">
                                 <a class="is-6 is-uppercase is-grey" asp-area="" asp-page="/Shop/Browse" asp-route-gender="@gender"
-                            asp-route-categoryUrl="@mainCategory.UrlName">@mainCategory.Name</a>
+                            asp-route-query="all" asp-route-categoryUrl="@mainCategory.UrlName">@mainCategory.Name</a>
                                 <div class="is-flex is-flex-direction-column mt-4">
                                     @foreach (var subcategory in @mainCategory.SubCategories)
                                     {
                                         <div class="my-1">
                                             <a class="is-text nav-menu-sublink" asp-area="" asp-page="/Shop/Browse"
-                                                asp-route-gender="@gender"
-                                                asp-route-query="@mainCategory.UrlName"
-                                                asp-route-categoryUrl="@subcategory.UrlName">
-                                                    @subcategory.Name
+                                    asp-route-gender="@gender" asp-route-query="@mainCategory.UrlName"
+                                    asp-route-categoryUrl="@subcategory.UrlName">
+                                                @subcategory.Name
                                             </a>
                                         </div>
                                     }
@@ -49,76 +48,117 @@
 
     async Task generateTabletMenu(string gender)
     {
-            <li>
-                <a id="@(gender)Menu" class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item open-submenu">
-                    <span class="link-text">
-                        @gender                      
-                    </span>
-                    <span class="link-icon">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                    </span>
-                </a>
-                <div class="pl-4 submenu">
-                    <ul>
-                        @foreach (var mainCategory in Model.MainCategoriesWithTheirSubcategories)
-                        {
-                            <li>
-                                <p id="@gender@mainCategory.Id" class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item open-submenu">
-                                    <span class="link-text">
-                                        @mainCategory.Name
-                                    </span>
-                                    <span class="link-icon">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </span>
-                                </p>
-                                <div class="pl-4 submenu">
-                                    <ul>
-                                        @foreach (var subcategory in mainCategory.SubCategories)
-                                        {
-                                            <li>
-                                                <a class="navbar-item px-4 category-link" asp-area="" asp-page="/Shop/Browse" 
-                                                    asp-route-gender="@gender" asp-route-categoryUrl="@subcategory.UrlName">
-                                                    <span class="link-text">@subcategory.Name</span>
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </li>
+        <li>
+            <a id="@(gender)Menu" class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item open-submenu">
+                <span class="link-text">
+                    @gender
+                </span>
+                <span class="link-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </span>
+            </a>
+            <div class="pl-4 submenu">
+                <ul>
+                    @foreach (var mainCategory in Model.MainCategoriesWithTheirSubcategories)
+                    {
+                        <li>
+                            <p id="@gender@mainCategory.Id"
+                        class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item open-submenu">
+                                <span class="link-text">
+                                    @mainCategory.Name
+                                </span>
+                                <span class="link-icon">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </span>
+                            </p>
+                            <div class="pl-4 submenu">
+                                <ul>
+                                    @foreach (var subcategory in mainCategory.SubCategories)
+                                    {
+                                        <li>
+                                            <a class="navbar-item px-4 category-link" asp-area="" asp-page="/Shop/Browse"
+                                    asp-route-gender="@gender" asp-route-categoryUrl="@subcategory.UrlName">
+                                                <span class="link-text">@subcategory.Name</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </li>
     };
 }
 
 @{
     await generateMenu("woman");
     await generateMenu("man");
-	@* div that takes empty space on the right side of menu - to disable hover events for flex-grow-1 dropdown items *@
-        <div class="is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item"></div>
-    @*  *@
+    @* div that takes empty space on the right side of menu - to disable hover events for flex-grow-1 dropdown items *@
+    <div class="is-hidden-mobile-only is-hidden-tablet-only navbar-menu-item"></div>
+    @* *@
 }
 
 <aside class="is-hidden-desktop navbar-menu-tablet pb-6">
-        <ul>
-            <a class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item" 
-                asp-area="" asp-page="/Shop/Browse">
-                    <span class="link-text">
-                        Latest
-                    </span>
-                    <span class="link-icon">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </span>
-                </a>
-    @{
-        await generateTabletMenu("woman");
-        await generateTabletMenu("man");
-    }
-        </ul>
+    <ul>
+        <li>
+            <a class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item" asp-area="" asp-page="/Shop/Latest">
+                <span class="link-text">
+                    Latest
+                </span>
+                <span class="link-icon">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </span>
+            </a>
+        </li>
+        @{
+            await generateTabletMenu("woman");
+            await generateTabletMenu("man");
+        }
+        <li>
+            <a id="accountMenu" class="navbar-item is-flex is-justify-content-space-between px-4 side-menu-item open-submenu">
+                <span class="link-text">
+                    Account
+                </span>
+                <span class="link-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </span>
+            </a>
+            <div class="pl-4 submenu">
+                <ul>
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a class="navbar-item px-4 category-link" asp-area="" asp-page="/Orders/List">
+                                <span class="link-text">My orders</span>
+                            </a>
+                        </li>
+                        <li>
+                            <form id="logout-form-tablet" asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                <a id="submit-logout-tablet" class="navbar-item px-4 category-link">Logout</a>
+                            </form>
+                        </li>
+                    }
+                    else {
+                        <li>
+                            <a class="navbar-item px-4 category-link" asp-area="Identity" asp-page="/Account/Login">
+                                <span class="link-text">Log in</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="navbar-item px-4 category-link" asp-area="Identity" asp-page="/Account/Register">
+                                <span class="link-text">Sign up</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </li>
+
+
+    </ul>
 </aside>
-@* TODO: MOBILE, TABLET -> NO DISPLAY *@
-@* TODO: REDO DISPLAY OF NAVBAR MENU *@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -133,6 +173,14 @@
             })
         })
 
+    var isUserSignedIn = "@User.Identity.IsAuthenticated";
+    if (isUserSignedIn === "True") {
+    var submitFormLink = document.querySelector('#submit-logout-tablet');
+    var form = document.querySelector("#logout-form-tablet")
+    submitFormLink.addEventListener('click', () => {
+      form.submit();
+    })
+  }
 
     })
 </script>

@@ -1,4 +1,4 @@
-﻿@page "{categoryUrl}"
+﻿@page "/manage/products/{categoryUrl}/{currentPage:int?}"
 @model Shoppu.WebUI.Pages.Products.ManageModel
 
 @{
@@ -9,123 +9,163 @@
 <div class="columns">
   <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen pr-0 side-menu">
     @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl, appliedManageFilters =
-    Model.AppliedFilters})
+    Model.ManageData.AppliedFilters})
   </div>
   <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen pl-0 pr-5">
-
-    @* @foreach (var product in Model.Products)
-      {
-      <div class="columns has-background-white-ter">
-      <div class="column is-3">@product.Name</div>
-      <div class="column is-5">@product.Description</div>
-      <div class="column is-1">@product.Price$</div>
-      <div class="column is-2"><a class="button" asp-page="CreateVariant" asp-route-id="@product.Id">Create variant</a>
-      </div>
-      </div>
-      } *@
     <table class="table is-fullwidth is-bordered has-text-centered manage-product-table">
       <thead>
         <tr>
-          <th class="has-text-centered">Gender</th>
+          <th class="has-text-centered" style="width: 200px;">Code</th>
+          <th class="has-text-centered" style="width: 10%;">Gender</th>
           <th class="has-text-centered">Name</th>
-          <th class="has-text-centered"></th>
-          <th class="has-text-centered"><abbr title="Product type">Type</abbr></th>
+          <th class="has-text-centered">Type / Variant</th>
           <th class="has-text-centered">Price($)</th>
-          <th class="has-text-centered" style="width: 5%"><a class="button is-success" asp-page="Create">Add new</a>
+          <th class="has-text-centered" style="width: 5%">
+            <a class="button is-success" asp-page="Create">Add new</a>
           </th>
 
         </tr>
       </thead>
       <tbody>
-        @if (Model.Products != null)
+        @if (Model.ManageData.Products != null)
         {
-          @foreach (var product in Model.Products)
+          @foreach (var product in Model.ManageData.Products)
           {
             <tr class="product-row">
-              <td>@product.Gender</td>
-              <td>@product.Name</td>
+              <td><strong class="has-text-light">@product.Code</strong></td>
+              <td><strong class="has-text-light">@product.Gender</strong></td>
+              <td><strong class="has-text-light">@product.Name</strong></td>
+              <td><strong class="has-text-light">@product.ProductCategory.Name</strong></td>
+              <td><strong class="has-text-light">@product.Price.ToString("0.00$")</strong></td>
               <td></td>
-              <td>@product.ProductCategory.Name</td>
-              <td>@product.Price.ToString("0.00$")</td>
-
-              <td><a class="button" asp-page="CreateVariant" asp-route-id="@product.Id">Create variant</a></td>
             </tr>
             @if (product.Variants.Count() > 0)
             {
-              <tr class="has-background-success-light has-text-centered">
-                <th>Main image</th>
-                <th>
-                  @if (product.Variants.Count > 0)
-                  {
-                    <form method="post" asp-page-handler="ChangeProductVisibility">
-                      <button type="submit" class="button is-warning">Make all accessible</button>
-                    </form>
-                  }
-                </th>
-                <th></th>
-                <th>Color</th>
-                <th>Size: Quantity</th>
-                <th>test</th>
-              </tr>
               @foreach (var variant in product.Variants)
               {
-                <tr class=" has-text-centered">
+                <tr>
                   <td>
-                    <p>@variant.Name</p>
-                    <img width="100" src="@url\@variant.Images[0].ImageSource" />
+                    <p><strong>@variant.Code</strong></p>
                   </td>
                   <td>
-                    @{
-                      if (variant.IsAccessible)
+                    @if (variant.IsAccessible)
+                    {
+                      <div class="box has-background-primary p-2" disabled>
+                        <strong class="has-text-light">Accessible</strong>
+                      </div>
+                    }
+                    else
+                    {
+                      @if (variant.Sizes.Count > 0)
                       {
-                        <button class="button is-success">Active</button>
+                        <form method="post" asp-page-handler="ChangeVariantVisibility">
+                          <input type="hidden" name="variantId" asp-for="@variant.Id" />
+                          <button type="submit" class="button is-warning">
+                            <strong>Make accessible</strong>
+                          </button>
+                        </form>
                       }
                       else
                       {
-                        if (variant.Sizes.Count > 0)
-                        {
-                          <form method="post" asp-page-handler="ChangeVariantVisibility">
-                            <input type="hidden" name="variantId" asp-for="@variant.Id" />
-                            <button type="submit" class="button is-warning">Make accessible</button>
-                          </form>
-                        }
-                        else
-                        {
-                          <button disabled class="button is-danger">Sizes not set</button>
-
-                        }
+                        <div class="box has-background-danger p-2" disabled>
+                          <strong class="has-text-light">Sizes not specified</strong>
+                        </div>
                       }
                     }
                   </td>
-                  <td></td>
-                  <td>@variant.Variant.Name</td>
                   <td>
-                    @foreach (var size in variant.Sizes)
+                    <p><strong>@(variant.Name ?? product.Name)</strong></p>
+                  </td>
+                  <td><strong>@variant.Variant.Name</strong></td>
+                  <td><strong>@(variant.Price ?? product.Price)</strong></td>
+                  <td>
+                    @if (!variant.IsAccessible)
                     {
-                      <p><span>@size.Size.Name:</span><span>
-                          @size.Quantity</span></p>
+                      <a class="button is-warning" asp-page="EditVariant" asp-route-productId="@product.Id"
+              asp-route-variantId="@variant.Id"><strong>Edit variant</strong></a>
                     }
                   </td>
+                </tr>
+                <tr class="has-text-centered border-bottom-3">
+                  <td class="p-0">
+                    <img width="200" src="@url\@variant.Images[0].ImageSource" style="margin-bottom: -6px;" />
+                  </td>
+                  <td class="p-0" colspan="5">
 
-                  <td class="">
-                    <a class="button is-info" asp-page="CreateVariantSizes" asp-route-productId="@product.Id"
-              asp-route-variantId="@variant.Id">Edit variant</a>
-                    <a class="button is-info mt-1" asp-page="CreateVariantSizes" asp-route-productId="@product.Id"
-              asp-route-variantId="@variant.Id">Specify sizes</a>
+                    @if (!variant.Sizes.Any())
+                    {
+                      <div class="mt-3">
+                        <p class="subtitle mb-2"><strong class="has-text-danger">Sizes not yet specified.</strong></p>
+                        <a class="button is-info mt-1" asp-page="CreateVariantSizes" asp-route-productId="@product.Id"
+                asp-route-variantId="@variant.Id"><strong>Specify sizes</strong></a>
+                      </div>
+                    }
+                    else
+                    {
+                      <table style="width: 100%">
+                        <thead>
+                          <tr>
+                            <td style="width:120px;"></td>
+                            @foreach (var size in variant.Sizes)
+                            {
+                              <td><strong>@size.Size.Name</strong></td>
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><strong>In stock</strong></td>
+                            @foreach (var size in variant.Sizes)
+                            {
+
+                              <td>@size.Quantity</td>
+
+                            }
+                          </tr>
+                          <tr>
+                            <td><strong>Sold</strong></td>
+                            @foreach (var size in variant.Sizes)
+                            {
+
+                              <td>@(size.QuantitySold)</td>
+
+                            }
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="mt-3">
+                        <a class="button is-success mt-1" asp-page="AddVariantSizes" asp-route-productId="@product.Id"
+                asp-route-variantId="@variant.Id"><strong>Add sizes</strong></a>
+                        <a class="button is-link mt-1" asp-page="AddVariantSizes" asp-route-productId="@product.Id"
+                asp-route-variantId="@variant.Id"><strong>See details</strong></a>
+                      </div>
+                    }
                   </td>
                 </tr>
               }
             }
-            else
-            {
+
               <tr class="has-background-grey-lighter">
-                <td colspan="5">Product has no variants</td>
+                <td colspan="6">
+                  <div>
+                    @if (product.Variants.Count() == 0)
+                    {
+                      <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
+                        <strong>Create first variant</strong>
+                      </a>
+                    }
+                    else {
+                      <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
+                        <strong>Create another variant</strong>
+                      </a>
+                    }
+                  </div>
+                </td>
               </tr>
-            }
           }
         }
-
       </tbody>
     </table>
+    <partial name="_ListPagination" model="@Model.ManageData.Pagination" />
   </div>
 </div>

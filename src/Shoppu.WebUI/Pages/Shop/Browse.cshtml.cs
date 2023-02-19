@@ -27,13 +27,17 @@ namespace Shoppu.WebUI.Pages.Shop
         public BrowseDataViewModel BrowseData { get; set; }
 
 
-        public async Task OnGet(string gender, string query, string categoryUrl, BrowseProductsFiltersViewModel? filters)
+        public async Task OnGet(string gender, string query, string categoryUrl, BrowseProductsFiltersViewModel? filters, int? currentPage)
         {
+            PaginationViewModel pagination = new PaginationViewModel();
+            pagination.Page = currentPage ?? 1;
+            pagination.ItemsPerPage = (int)filters.ItemsPerPage;
+
             Gender = gender;
             if (gender.ToLower().Equals("man") || gender.ToLower().Equals("woman"))
             {
                 CategoryUrl = categoryUrl;
-                BrowseData = await _mediator.Send(new GetBrowseProductsListQuery(categoryUrl, gender, filters));
+                BrowseData = await _mediator.Send(new GetBrowseProductsListQuery(categoryUrl, gender, filters, pagination));
                 BrowseData.Filters = filters;
             }
 
