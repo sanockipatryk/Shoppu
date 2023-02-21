@@ -20,15 +20,16 @@ namespace Shoppu.Infrastructure.Persistence
             builder.ApplyConfigurationsFromAssembly(
                 assembly: typeof(ApplicationDbContext).Assembly);
 
-            builder.Entity<ProductCategory>()
+            builder.Entity<SizeType>()
                 .HasMany(p => p.Sizes)
-                .WithOne(s => s.ProductCategory)
+                .WithOne(s => s.SizeType)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<Variant> Variants { get; set; }
+        public virtual DbSet<SizeType> SizeTypes { get; set; }
         public virtual DbSet<Size> Sizes { get; set; }
         public virtual DbSet<ProductVariant> ProductVariants { get; set; }
         public virtual DbSet<ProductVariantImage> ProductVariantImages { get; set; }

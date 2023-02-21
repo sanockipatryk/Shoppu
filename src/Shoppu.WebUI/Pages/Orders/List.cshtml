@@ -9,24 +9,31 @@
 }
 
 <div class="container">
-    @foreach (var order in @Model.Orders.OrderList)
+    @if (@Model.Orders.OrderList.Count() > 0)
     {
-        <div class="box order-list-box">
-            <p class="subtitle is-7 is-flex is-justify-content-space-between is-grey">
-                <span>#@order.OrderNumber</span>
-                <span>@order.DateOrdered.ToLocalTime()</span>
-            </p>
-            <p class="subtitle is-5 is-flex is-justify-content-space-between">
-                <span>Total: <strong>@order.TotalPrice$</strong></span>
-                <span><strong
+        @foreach (var order in @Model.Orders.OrderList)
+        {
+            <div class="box order-list-box">
+                <p class="subtitle is-7 is-flex is-justify-content-space-between is-grey">
+                    <span>#@order.OrderNumber</span>
+                    <span>@order.DateOrdered.ToLocalTime()</span>
+                </p>
+                <p class="subtitle is-5 is-flex is-justify-content-space-between">
+                    <span>Total: <strong>@order.TotalPrice$</strong></span>
+                    <span><strong
                     class="has-text-success">@(order.PaymentMethod.GetAttribute<DisplayAttribute>().Name)</strong></span>
-            </p>
-            <div class="is-flex is-justify-content-end my-1">
+                </p>
+                <div class="is-flex is-justify-content-end my-1">
 
-                <a asp-page="/Orders/Details" asp-route-orderNumber="@order.OrderNumber"><strong>View details</strong></a>
+                    <a asp-page="/Orders/Details" asp-route-orderNumber="@order.OrderNumber"><strong>View details</strong></a>
+                </div>
+
             </div>
-
-        </div>
+        }
+        <partial name="_ListPagination" model="@Model.Orders.Pagination" />
     }
-    <partial name="_ListPagination" model="@Model.Orders.Pagination" />
+    else
+    {
+        <p class="subtitle is-3 mt-6 has-text-centered is-ff-nanum">You did not order anything yet.</p>
+    }
 </div>

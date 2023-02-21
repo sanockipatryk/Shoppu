@@ -13,7 +13,6 @@ namespace Shoppu.Domain.Entities
 
         public List<ProductCategory>? SubCategories { get; set; }
         public List<Product>? Products { get; set; }
-        public List<Size>? Sizes { get; set; }
 
         [NotMapped]
         public bool HasNoExistingProducts { get; set; }

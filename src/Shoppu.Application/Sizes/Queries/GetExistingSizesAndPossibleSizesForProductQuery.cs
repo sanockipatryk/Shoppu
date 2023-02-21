@@ -31,7 +31,7 @@ namespace Shoppu.Application.Sizes.Queries
             var existingSizesIds = productVariantFromDb.Sizes.Select(pvs => pvs.SizeId).ToList();
 
             var possibleSizesFromDb = await _context.Sizes
-                .Where(s => s.ProductCategoryId == productVariantFromDb.Product.ProductCategoryId)
+                .Where(c => c.SizeTypeId == productVariantFromDb.Product.SizeTypeId)
                 .Where(s => !existingSizesIds.Contains(s.Id))
                 .ToListAsync();
 

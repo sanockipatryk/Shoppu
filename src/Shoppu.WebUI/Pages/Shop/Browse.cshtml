@@ -11,7 +11,7 @@
 
 <div class="columns is-multiline mx-0">
     <div class="column is-12-mobile is-12-tablet is-3-desktop is-2-widescreen px-0 side-menu">
-        @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl})
+        @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl, gender = Model.Gender})
     </div>
 
     <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen px-6">

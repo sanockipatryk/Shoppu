@@ -54,16 +54,17 @@
                         }
 
                         <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(@Model.CurrentProductCategoryUrl.Equals(category.UrlName) ? "has-text-primary has-text-weight-bold" : "") "
-                asp-page="/Products/Manage" asp-route-categoryUrl="@category.UrlName"
-                asp-all-route-data="@queryStringsDictionary">
+            asp-page="/Products/Manage" asp-route-categoryUrl="@category.UrlName"
+            asp-all-route-data="@queryStringsDictionary">
                             @category.Name
                         </a>
                     }
                     else
                     {
                         <a class="py-1 @(currentLevel == 0? "px-0 has-text-weight-bold" : "") @(@Model.CurrentProductCategoryUrl.Equals(category.UrlName) ? "has-text-primary has-text-weight-bold" : "") "
-                asp-route-gender="man" asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "all")"
-                asp-route-categoryUrl="@category.UrlName">
+            asp-route-gender="@Model.CurrentGenderSelected"
+            asp-route-query="@(url.Length > 0 ? url.Substring(0, url.Length - 1) : "all")"
+            asp-route-categoryUrl="@category.UrlName">
                             @category.Name
                         </a>
                     }

@@ -19,9 +19,15 @@ namespace Shoppu.Domain.Entities
         public string BaseSlug { get; set; }
         public string Code { get; set; }
 
+
         [ForeignKey(nameof(ProductCategory))]
         public int ProductCategoryId { get; set; }
         public ProductCategory? ProductCategory { get; set; }
+
+
+        [ForeignKey(nameof(SizeType))]
+        public int SizeTypeId { get; set; }
+        public SizeType SizeType { get; set; }
 
         public List<ProductVariant>? Variants { get; set; }
 

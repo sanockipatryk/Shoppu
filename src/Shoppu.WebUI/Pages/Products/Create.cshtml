@@ -77,6 +77,13 @@
 						</div>
 						<span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span>
 					</div>
+					<div class="field column is-4">
+						<label class="label" asp-for="@Model.Product.SizeTypeId"></label>
+						<div class="control">
+							<input class="input" type="number" asp-for="@Model.Product.SizeTypeId">
+							<span asp-validation-for="@Model.Product.SizeTypeId" class="has-text-danger"></span>
+						</div>
+					</div>
 				</div>
 				<button id="submitProductButton" type="submit" class="button is-success">Submit</button>
 			</div>

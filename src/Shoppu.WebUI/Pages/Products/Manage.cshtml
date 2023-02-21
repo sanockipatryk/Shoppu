@@ -145,23 +145,24 @@
               }
             }
 
-              <tr class="has-background-grey-lighter">
-                <td colspan="6">
-                  <div>
-                    @if (product.Variants.Count() == 0)
-                    {
-                      <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
-                        <strong>Create first variant</strong>
-                      </a>
-                    }
-                    else {
-                      <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
-                        <strong>Create another variant</strong>
-                      </a>
-                    }
-                  </div>
-                </td>
-              </tr>
+            <tr class="has-background-grey-lighter">
+              <td colspan="6">
+                <div>
+                  @if (product.Variants.Count() == 0)
+                  {
+                    <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
+                      <strong>Create first variant</strong>
+                    </a>
+                  }
+                  else
+                  {
+                    <a class="button is-info" asp-page="CreateVariant" asp-route-id="@product.Id">
+                      <strong>Create another variant</strong>
+                    </a>
+                  }
+                </div>
+              </td>
+            </tr>
           }
         }
       </tbody>

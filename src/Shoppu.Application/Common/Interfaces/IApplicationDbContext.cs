@@ -15,6 +15,7 @@ namespace Shoppu.Application.Common.Interfaces
         DbSet<Product> Products { get; set; }
         DbSet<ProductCategory> ProductCategories { get; set; }
         DbSet<Variant> Variants { get; set; }
+        DbSet<SizeType> SizeTypes { get; set; }
         DbSet<Size> Sizes { get; set; }
         DbSet<ProductVariant> ProductVariants { get; set; }
         DbSet<ProductVariantImage> ProductVariantImages { get; set; }

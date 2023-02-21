@@ -10,8 +10,8 @@ namespace Shoppu.Domain.Entities
         [Required]
         public string Name { get; set; }
 
-        [ForeignKey(nameof(ProductCategory))]
-        public int ProductCategoryId { get; set; }
-        public ProductCategory ProductCategory { get; set; }
+        [ForeignKey(nameof(SizeType))]
+        public int SizeTypeId { get; set; }
+        public SizeType SizeType { get; set; }
     }
 }

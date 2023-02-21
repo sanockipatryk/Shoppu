@@ -14,9 +14,9 @@ namespace Shoppu.WebUI.ViewComponents
             _mediator = mediator;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string categoryUrl, ManageProductsFiltersViewModel? appliedManageFilters)
+        public async Task<IViewComponentResult> InvokeAsync(string categoryUrl, string gender, ManageProductsFiltersViewModel? appliedManageFilters)
         {
-            var SideMenuData = await _mediator.Send(new GetBrowseProductsSideMenuCategoriesQuery(categoryUrl));
+            var SideMenuData = await _mediator.Send(new GetBrowseProductsSideMenuCategoriesQuery(categoryUrl, gender));
             SideMenuData.ManageProductsFilters = appliedManageFilters;
             var x = ViewContext.RouteData.Values["page"];
 

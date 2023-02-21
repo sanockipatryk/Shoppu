@@ -169,127 +169,129 @@ namespace Shoppu.Infrastructure.Persistence
 
             if (!_context.Sizes.Any())
             {
-                string[] sizesShirts = { "XS", "S", "M", "L", "XL", "XXL" };
+                string[] sizesLetters = { "XS", "S", "M", "L", "XL", "XXL" };
                 string[] sizesPants = { "34", "36", "38", "40", "42", "44" };
-                var tShirts = _context.ProductCategories.FirstOrDefault(p => p.Name == "T-Shirts");
-                foreach (var size in sizesShirts)
+
+                _context.SizeTypes.Add(new SizeType
+                {
+                    Name = "Letters",
+                });
+
+                _context.SizeTypes.Add(new SizeType
+                {
+                    Name = "Numbers",
+                });
+
+                _context.SizeTypes.Add(new SizeType
+                {
+                    Name = "Socks",
+                });
+
+                await _context.SaveChangesAsync();
+
+                var sizeTypeLetters = _context.SizeTypes.FirstOrDefault(st => st.Name == "Letters");
+                foreach (var size in sizesLetters)
                 {
                     _context.Sizes.Add(new Size
                     {
                         Name = size,
-                        ProductCategoryId = tShirts.Id
+                        SizeTypeId = sizeTypeLetters.Id
                     });
                 }
 
-                var shorts = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shorts");
-                var joggers = _context.ProductCategories.FirstOrDefault(p => p.Name == "Joggers");
-                foreach (var size in sizesPants)
+                var sizeTypeNumbers = _context.SizeTypes.FirstOrDefault(st => st.Name == "Numbers");
+
+                for (int i = 30; i < 50; i++)
                 {
                     _context.Sizes.Add(new Size
                     {
-                        Name = size,
-                        ProductCategoryId = shorts.Id
-                    });
-                }
-                foreach (var size in sizesPants)
-                {
-                    _context.Sizes.Add(new Size
-                    {
-                        Name = size,
-                        ProductCategoryId = joggers.Id
+                        Name = i.ToString(),
+                        SizeTypeId = sizeTypeNumbers.Id
                     });
                 }
 
-                string[] sizesShoes = { "36", "37", "38", "39", "40", "41", "42", "43" };
+                var sizeTypeSocks = _context.SizeTypes.FirstOrDefault(st => st.Name == "Numbers");
+
                 string[] sizesSocks = { "35-38", "39-42", "43-46" };
-                var shoes = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shoes");
-                var socks = _context.ProductCategories.FirstOrDefault(p => p.Name == "Socks");
-                foreach (var size in sizesShoes)
-                {
-                    _context.Sizes.Add(new Size
-                    {
-                        Name = size,
-                        ProductCategoryId = shoes.Id
-                    });
-                }
+
                 foreach (var size in sizesSocks)
                 {
                     _context.Sizes.Add(new Size
                     {
                         Name = size,
-                        ProductCategoryId = socks.Id
+                        SizeTypeId = sizeTypeSocks.Id
                     });
                 }
             }
 
-            if (!_context.Products.Any())
-            {
-                var tShirts = _context.ProductCategories.FirstOrDefault(p => p.Name == "T-Shirts");
-                var shorts = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shorts");
-                var joggers = _context.ProductCategories.FirstOrDefault(p => p.Name == "Joggers");
+            // if (!_context.Products.Any())
+            // {
+            //     var tShirts = _context.ProductCategories.FirstOrDefault(p => p.Name == "T-Shirts");
+            //     var shorts = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shorts");
+            //     var joggers = _context.ProductCategories.FirstOrDefault(p => p.Name == "Joggers");
 
-                var shoes = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shoes");
-                var socks = _context.ProductCategories.FirstOrDefault(p => p.Name == "Socks");
+            //     var shoes = _context.ProductCategories.FirstOrDefault(p => p.Name == "Shoes");
+            //     var socks = _context.ProductCategories.FirstOrDefault(p => p.Name == "Socks");
 
-                _context.Products.Add(new Product
-                {
-                    Name = "T-shirt Puma",
-                    Description = "Puma shirt",
-                    Price = 34.99m,
-                    ProductCategoryId = tShirts.Id,
-                    BaseSlug = "T-shirt Puma".Slugify().AppendRandomDigits(4)
-                });
-                _context.Products.Add(new Product
-                {
-                    Name = "Gucci shirto",
-                    Description = "Its all gucci",
-                    Price = 74.99m,
-                    ProductCategoryId = tShirts.Id,
-                    BaseSlug = "Gucci shirto".Slugify().AppendRandomDigits(4)
-                });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "T-shirt Puma",
+            //         Description = "Puma shirt",
+            //         Price = 34.99m,
+            //         ProductCategoryId = tShirts.Id,
+            //         BaseSlug = "T-shirt Puma".Slugify().AppendRandomDigits(4)
+            //     });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Gucci shirto",
+            //         Description = "Its all gucci",
+            //         Price = 74.99m,
+            //         ProductCategoryId = tShirts.Id,
+            //         BaseSlug = "Gucci shirto".Slugify().AppendRandomDigits(4)
+            //     });
 
-                _context.Products.Add(new Product
-                {
-                    Name = "Shorts Shorty",
-                    Description = "Shorty pants",
-                    Price = 19.99m,
-                    ProductCategoryId = shorts.Id,
-                    BaseSlug = "Shorts Short".Slugify().AppendRandomDigits(4)
-                });
-                _context.Products.Add(new Product
-                {
-                    Name = "Jogging Joggu",
-                    Description = "Joggy pants",
-                    Price = 54.99m,
-                    ProductCategoryId = joggers.Id,
-                    BaseSlug = "Jogging Joggu".Slugify().AppendRandomDigits(4)
-                });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Shorts Shorty",
+            //         Description = "Shorty pants",
+            //         Price = 19.99m,
+            //         ProductCategoryId = shorts.Id,
+            //         BaseSlug = "Shorts Short".Slugify().AppendRandomDigits(4)
+            //     });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Jogging Joggu",
+            //         Description = "Joggy pants",
+            //         Price = 54.99m,
+            //         ProductCategoryId = joggers.Id,
+            //         BaseSlug = "Jogging Joggu".Slugify().AppendRandomDigits(4)
+            //     });
 
-                _context.Products.Add(new Product
-                {
-                    Name = "Yeezes shoos",
-                    Description = "Nice shoes",
-                    Price = 39.99m,
-                    ProductCategoryId = shoes.Id,
-                    BaseSlug = "Yeezes shoos".Slugify().AppendRandomDigits(4)
-                });
-                _context.Products.Add(new Product
-                {
-                    Name = "Vans shoos",
-                    Description = "Vans shoes",
-                    Price = 24.99m,
-                    ProductCategoryId = shoes.Id,
-                    BaseSlug = "Vans shoos".Slugify().AppendRandomDigits(4)
-                });
-                _context.Products.Add(new Product
-                {
-                    Name = "Plain Socky 3-pack",
-                    Description = "Socks 3-pack",
-                    Price = 14.99m,
-                    ProductCategoryId = socks.Id,
-                    BaseSlug = "Plain Socky 3-pack".Slugify().AppendRandomDigits(4)
-                });
-            }
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Yeezes shoos",
+            //         Description = "Nice shoes",
+            //         Price = 39.99m,
+            //         ProductCategoryId = shoes.Id,
+            //         BaseSlug = "Yeezes shoos".Slugify().AppendRandomDigits(4)
+            //     });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Vans shoos",
+            //         Description = "Vans shoes",
+            //         Price = 24.99m,
+            //         ProductCategoryId = shoes.Id,
+            //         BaseSlug = "Vans shoos".Slugify().AppendRandomDigits(4)
+            //     });
+            //     _context.Products.Add(new Product
+            //     {
+            //         Name = "Plain Socky 3-pack",
+            //         Description = "Socks 3-pack",
+            //         Price = 14.99m,
+            //         ProductCategoryId = socks.Id,
+            //         BaseSlug = "Plain Socky 3-pack".Slugify().AppendRandomDigits(4)
+            //     });
+            // }
 
             await _context.SaveChangesAsync();
         }

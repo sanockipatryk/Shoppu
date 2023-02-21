@@ -45,6 +45,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 Code = request.ProductViewModel.Code,
                 BaseSlug = baseSlug,
                 IsAccessible = false,
+                SizeTypeId = request.ProductViewModel.SizeTypeId
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync(cancellationToken);

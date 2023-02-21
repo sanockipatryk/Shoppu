@@ -54,29 +54,27 @@ namespace Shoppu.Application.ShopOrder.Queries
                 })
                 .ToListAsync();
 
-            if (userOrders.Count() > 0)
+
+            var listOfUserOrders = new List<UserOrderViewModel>();
+
+            foreach (var order in userOrders)
             {
-                var listOfUserOrders = new List<UserOrderViewModel>();
-
-                foreach (var order in userOrders)
+                listOfUserOrders.Add(new UserOrderViewModel
                 {
-                    listOfUserOrders.Add(new UserOrderViewModel
-                    {
-                        DateOrdered = order.Order.DateOrdered,
-                        NumberOfItems = order.Order.Items.Sum(odi => odi.Quantity),
-                        OrderNumber = order.Order.Number,
-                        TotalPrice = order.TotalPrice,
-                        PaymentMethod = order.PaymentMethod
-                    });
-                }
-
-                return new UserOrderListViewModel
-                {
-                    OrderList = listOfUserOrders,
-                    Pagination = newPagination
-                };
+                    DateOrdered = order.Order.DateOrdered,
+                    NumberOfItems = order.Order.Items.Sum(odi => odi.Quantity),
+                    OrderNumber = order.Order.Number,
+                    TotalPrice = order.TotalPrice,
+                    PaymentMethod = order.PaymentMethod
+                });
             }
-            return null;
+
+            return new UserOrderListViewModel
+            {
+                OrderList = listOfUserOrders,
+                Pagination = newPagination
+            };
+
         }
     }
 }

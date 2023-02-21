@@ -5,7 +5,7 @@ using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Queries.Shop
 {
-    public record GetBrowseProductsSideMenuCategoriesQuery(string CurrentProductCategoryUrl) : IRequest<BrowseSideMenuViewModel>;
+    public record GetBrowseProductsSideMenuCategoriesQuery(string CurrentProductCategoryUrl, string? CurrentGenderSelected = null) : IRequest<BrowseSideMenuViewModel>;
 
     public class GetBrowseProductsSideMenuCategoriesQueryHandler : IRequestHandler<GetBrowseProductsSideMenuCategoriesQuery, BrowseSideMenuViewModel>
     {
@@ -26,7 +26,8 @@ namespace Shoppu.Application.Products.Queries.Shop
             return new BrowseSideMenuViewModel
             {
                 ProductCategories = productCategories,
-                CurrentProductCategoryUrl = request.CurrentProductCategoryUrl
+                CurrentProductCategoryUrl = request.CurrentProductCategoryUrl,
+                CurrentGenderSelected = request.CurrentGenderSelected
             };
         }
     }
