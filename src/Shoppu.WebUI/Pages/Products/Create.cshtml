@@ -115,9 +115,7 @@
 			var $currentlyActiveCategory = $('.button.productCategory.is-active')[0];
 			if ($currentlyActiveCategory !== undefined) {
 				setCategoryInActive($currentlyActiveCategory)
-				if (category !== $currentlyActiveCategory) {
-					setCategoryActive(category)
-				}
+				setCategoryActive(category)
 			}
 			else {
 				setCategoryActive(category)
@@ -129,7 +127,7 @@
 		$($element).addClass("is-active").addClass('is-primary')
 	}
 	function setCategoryInActive($element) {
-		$($element).removeClass("is-active").removeClass('is-prilinkmary')
+		$($element).removeClass("is-active").removeClass('is-primary')
 	}
 
 	var PostBackURL = '@Url.Content("~/Products/Create")';

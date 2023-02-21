@@ -177,7 +177,8 @@
                 </form>
             </div>
             <div class="column is-2 px-1 has-text-right">
-                <p class="is-grey">Total of @Model.BrowseData.Pagination.TotalItemsCount @(Model.BrowseData.Pagination.TotalItemsCount == 1 ? "product" : "products")</p>
+                <p class="is-grey">Total of @Model.BrowseData.Pagination.TotalItemsCount
+                    @(Model.BrowseData.Pagination.TotalItemsCount == 1 ? "product" : "products")</p>
             </div>
         </div>
         <div class="columns is-multiline is-flex">
@@ -194,10 +195,10 @@
                         src="@url\@(product.ImagePaths.Count() > 1 ? product.ImagePaths[1] : product.ImagePaths[0])" />
                         </div>
                         <div class="px-2">
-                            <a class="subtitle is-6 mb-0" asp-page="Product" asp-route-slug="@product.Slug">
+                            <a class="subtitle is-6 mb-0 is-ff-nanum" asp-page="Product" asp-route-slug="@product.Slug">
                                 @(product.VariantName ?? product.ProductName)
                             </a>
-                            <p class="title is-5 mt-0">
+                            <p class="title is-5 mt-1 is-ff-nanum">
                                 @(product.VariantPrice ?? product.Price)$
                             </p>
                         </div>

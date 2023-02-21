@@ -1,0 +1,350 @@
+@page "/manage/categories"
+@model Shoppu.WebUI.Pages.Products.ManageCategoriesModel
+@{
+    ViewData["Title"] = "ManageCategories";
+}
+@{
+    void generateCategories(List<ProductCategory> categories, int currentLevel, int? parentCategoryId)
+    {
+        <ul id="list-collapse-@(parentCategoryId)" data-categoryId="@parentCategoryId"
+        class="@(currentLevel == 0 ? "menu-list" : "my-1 collapsed")">
+            @foreach (var cat in categories)
+            {
+                var hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).Count() > 0;
+                <li>
+                    @if (hasSubcategories)
+                    {
+                        <div class="is-relative">
+                            <button id="collapse-@(cat.Id)" data-categoryId="@cat.Id"
+                    class="button button-collapse is-white has-text-link @(currentLevel == 0? "pl-0" : "")">
+                                @cat.Name <i class="fa fa-caret-down ml-1"></i>
+                            </button>
+                            <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
+                    class="button is-info manage-categories edit-btn"><i class="fas fa-edit"></i></button>
+                        </div>
+
+                        generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).ToList(),
+                                    currentLevel + 1, cat.Id);
+                    }
+                    else
+                    {
+                        @if (cat.HasNoExistingProducts)
+                        {
+                        <li>
+                            <p class="has-text-link py-1 is-relative">@cat.Name
+                                <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
+                    class="button is-info manage-categories edit-btn"><i class="fas fa-edit"></i></button>
+                                <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
+                    class="button is-danger manage-categories delete-btn">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </p>
+                        </li>
+                        <ul class="my-1">
+                            <li>
+                                <button data-parentCategoryId="@cat.Id" data-parentCategory="@cat.Name"
+                    class="button is-primary is-outlined add-subcategory">Add subcategory to @cat.Name</button>
+                            </li>
+                        </ul>
+                        }
+                        else
+                        {
+                        <button disabled class="button my-1 has-text-link productCategory">@cat.Name</button>
+                        }
+                    }
+                </li>
+
+            }
+            @{
+                var parentCategory = Model.ProductCategories.FirstOrDefault(c => c.Id == parentCategoryId);
+            }
+            @if (parentCategoryId != null && parentCategory.HasNoExistingProducts)
+            {
+                <li>
+                    <button data-parentCategoryId="@parentCategoryId" data-parentCategory="@parentCategory.Name"
+                class="button is-primary is-outlined add-subcategory my-1">Add
+                        subcategory to
+                        @parentCategory.Name</button>
+                </li>
+            }
+        </ul>
+    }
+}
+
+<div class="container">
+    @if (Model?.Notification != null)
+    {
+        <partial name="_Notification" model="@Model.Notification" />
+    }
+    <div class="columns mx-0">
+        <div class="column is-8">
+            <div>
+                <p class="subtitle is-4 mb-3 is-grey">Current categories</p>
+            </div>
+            @{
+                int level = 0;
+                generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == null).ToList(), level,
+                null);
+            }
+        </div>
+        <div class="column is-4">
+            <form id="newCategoryForm"
+                class="@(Model.DisplayAction == ProductCategoryDisplayAction.Create ? "" : "is-hidden")" method="post"
+                asp-page-handler="CreateCategory">
+                <p class="subtitle is-4 is-grey">Adding subcategory</p>
+                <input id="parentCategoryIdField" type="hidden" asp-for="@Model.NewCategory.ParentCategoryId">
+                <div class="field">
+                    <p class="subtitle is-5">Selected parent category: <strong
+                            class="selected-category-name">@(Model.NewCategory.ParentCategoryId != null ?
+                            @Model.ProductCategories.FirstOrDefault(pc => pc.Id ==
+                            Model.NewCategory.ParentCategoryId).Name :
+                            "-")</strong></p>
+                    <span class="has-text-danger" asp-validation-for="@Model.NewCategory.ParentCategoryId"></span>
+                </div>
+                <div class="field">
+                    <label class="label" asp-for="@Model.NewCategory.Name"></label>
+                    <div class="control">
+                        <input class="input" type="text" asp-for="@Model.NewCategory.Name">
+                        <span class="has-text-danger" asp-validation-for="@Model.NewCategory.Name"></span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" asp-for="@Model.NewCategory.UrlName"></label>
+                    <div class="control">
+                        <input class="input" type="text" asp-for="@Model.NewCategory.UrlName">
+                        <span class="has-text-danger" asp-validation-for="@Model.NewCategory.UrlName"></span>
+                    </div>
+                </div>
+                <div class="has-text-right">
+                    <button id="submitCategoryButton" class="button is-success" type="submit">Add category</button>
+                </div>
+            </form>
+
+
+            <form id="editCategoryForm"
+                class="@(Model.DisplayAction == ProductCategoryDisplayAction.Edit ? "" : "is-hidden")" method="post"
+                asp-page-handler="EditCategory">
+                <p class="subtitle is-4 is-grey">Updating category</p>
+                <input id="editCategoryIdField" type="hidden" asp-for="@Model.EditCategory.CategoryId">
+                <div class="field">
+                    <p class="subtitle is-5">Category being edited: <strong
+                            class="edited-category-name">@(Model.EditCategory.CategoryId !=
+                            null ?
+                            @Model.ProductCategories.FirstOrDefault(pc => pc.Id ==
+                            Model.EditCategory.CategoryId).Name :
+                            "-")</strong></p>
+                    <span class="has-text-danger" asp-validation-for="@Model.EditCategory.CategoryId"></span>
+                </div>
+                <div class="field">
+                    <label class="label" asp-for="@Model.EditCategory.Name"></label>
+                    <div class="control">
+                        <input class="input" type="text" asp-for="@Model.EditCategory.Name">
+                        <span class="has-text-danger" asp-validation-for="@Model.EditCategory.Name"></span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" asp-for="@Model.EditCategory.UrlName"></label>
+                    <div class="control">
+                        <input class="input" type="text" asp-for="@Model.EditCategory.UrlName">
+                        <span class="has-text-danger" asp-validation-for="@Model.EditCategory.UrlName"></span>
+                    </div>
+                </div>
+                <div class="is-flex is-justify-content-space-between">
+                    <button id="cancelEditButton" class="button is-warning" type="button">Cancel</button>
+                    <button id="submitEditCategoryButton" class="button is-info" type="submit">Update
+                        category</button>
+                </div>
+            </form>
+
+            <form id="deleteCategoryForm" class="is-hidden" method="post" asp-page-handler="DeleteCategory">
+                <p class="subtitle is-4 is-grey">Deleting category</p>
+                <p class="subtitle is-5">Are you sure you want to delete category <strong
+                        class="deleted-category-name">Category</strong>?</p>
+                <input id="deleteCategoryIdField" type="hidden" name="categoryId">
+                <div class="is-flex is-justify-content-space-between">
+                    <button id="cancelDeleteButton" class="button is-warning" type="button">Cancel</button>
+                    <button id="submitDeleteCategoryButton" class="button is-danger" type="submit">Delete
+                        category</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var $submitCategoryButton = $('#submitCategoryButton');
+    var $addSubcategoryButtons = $(".add-subcategory");
+    var $selectedCategoryNameField = $('.selected-category-name');
+
+    var $newCategoryForm = $("#newCategoryForm");
+    var $editCategoryForm = $("#editCategoryForm");
+
+
+    // if category selected - expand categories leading to selected category and mark it as active
+    var modelParentCategoryId = "@Model.NewCategory.ParentCategoryId";
+
+    var modelEditCategoryId = "@Model.EditCategory.CategoryId";
+
+
+    if (modelParentCategoryId.length > 0) {
+        var $ulsThatContainSelectedCategory = $(`ul.collapsed:has(.button.add-subcategory[data-parentCategoryId="${modelParentCategoryId}"])`);
+        $ulsThatContainSelectedCategory.each((i, el) => {
+            var collapsingButton = $(`.button-collapse[data-categoryId="${$(el).attr('data-categoryId')}"]`);
+            toggleCaret(collapsingButton);
+            $(el).removeClass('collapsed')
+        })
+        setCategorySelected($(`.button.add-subcategory[data-parentCategoryId="${modelParentCategoryId}"]`))
+    }
+
+    if (modelEditCategoryId.length > 0) {
+        var $ulsThatContainSelectedCategory = $(`ul.collapsed:has(.manage-categories.edit-btn[data-categoryId="${modelEditCategoryId}"])`);
+        $ulsThatContainSelectedCategory.each((i, el) => {
+            var collapsingButton = $(`.button-collapse[data-categoryId="${$(el).attr('data-categoryId')}"]`);
+            toggleCaret(collapsingButton);
+            $(el).removeClass('collapsed')
+        })
+        setCategorySelected($(`.manage-categories.edit-btn[data-categoryId="${modelEditCategoryId}"]`))
+    }
+
+    $addSubcategoryButtons.each((i, category) => {
+        $(category).on('click', e => {
+            e.preventDefault();
+            var $currentlySelectedCategory = $('.add-subcategory.selected')[0];
+            deselectButtons("create");
+            if ($currentlySelectedCategory !== undefined) {
+                setCategoryDeselected($currentlySelectedCategory)
+                setCategorySelected(category)
+            }
+            else {
+                setCategorySelected(category)
+            }
+        })
+    });
+
+    function setCategorySelected($element) {
+        $($element).addClass("selected").removeClass('is-outlined')
+        $selectedCategoryNameField.text($($element).attr("data-parentCategory"))
+    }
+    function setCategoryDeselected($element) {
+        $($element).removeClass("selected").addClass('is-outlined')
+    }
+
+
+    var PostBackURL = '@Url.Content("~/Products/Create")';
+
+    $submitCategoryButton.on('click', async (e) => {
+        e.preventDefault();
+        parentCategoryId = $('.add-subcategory.selected').attr('data-parentCategoryId');
+        if (parentCategoryId !== undefined)
+            $('#parentCategoryIdField').val(parseInt(parentCategoryId));
+        else
+            $('#parentCategoryIdField').val(null);
+        $newCategoryForm.submit();
+    });
+
+    $buttonsCollapse = $('button.button-collapse');
+    $buttonsCollapse.each((i, button) => {
+        $(button).on('click', e => {
+            e.preventDefault();
+            var id = $(button).attr('id');
+            toggleCaret(button);
+            $(`#list-${id}`).toggleClass('collapsed');
+        })
+    })
+
+    function toggleCaret(button) {
+        var id = $(button).attr('id');
+        console.log(button)
+        $(button).children('i').toggleClass('fa-caret-down');
+        $(button).children('i').toggleClass('fa-caret-up');
+    }
+
+    var $cancelEditButton = $("#cancelEditButton");
+    var $editCategoryButtons = $(".manage-categories.edit-btn");
+    var $editCategoryIdField = $("#editCategoryIdField");
+    var $editCategoryNameField = $(".edited-category-name");
+
+    $editCategoryButtons.each((index, button) => {
+        $(button).on('click', e => {
+            e.preventDefault();
+
+            deselectButtons("edit");
+
+            if (!$(button).hasClass("selected")) {
+                $('.manage-categories.edit-btn.selected').removeClass('selected');
+                $(button).addClass("selected");
+            }
+            var editedId = $(button).attr('data-categoryId');
+            $("#editCategoryIdField").val(parseInt(editedId))
+            $editCategoryNameField.text($(button).attr("data-categoryName"))
+        });
+    });
+
+    $cancelEditButton.on('click', e => {
+        showForm("newCategoryForm")
+        $('.manage-categories.edit-btn.selected').removeClass('selected');
+    })
+
+
+    var $cancelDeleteButton = $("#cancelDeleteButton");
+    var $deleteCategoryButtons = $(".manage-categories.delete-btn");
+    var $editCategoryIdField = $("#deleteCategoryIdField");
+    var $deleteCategoryNameField = $('.deleted-category-name');
+
+    $deleteCategoryButtons.each((index, button) => {
+        $(button).on('click', e => {
+            e.preventDefault();
+
+            deselectButtons("delete");
+
+            if (!$(button).hasClass("selected")) {
+                $('.manage-categories.delete-btn.selected').removeClass('selected');
+                $(button).addClass("selected");
+            }
+            var deletedId = $(button).attr('data-categoryId');
+            $editCategoryIdField.val(parseInt(deletedId));
+            $deleteCategoryNameField.text($(button).attr("data-categoryName"));
+        });
+    });
+
+    $cancelDeleteButton.on('click', e => {
+        showForm("newCategoryForm")
+        $('.manage-categories.delete-btn.selected').removeClass('selected');
+    })
+
+    // actionType: create, edit, delete
+    function deselectButtons(actionType) {
+        switch (actionType) {
+            case 'create':
+                $('.manage-categories.delete-btn.selected')?.removeClass('selected');
+                $('.manage-categories.edit-btn.selected')?.removeClass('selected');
+                showForm("newCategoryForm");
+                break;
+            case 'edit':
+                $('.manage-categories.delete-btn.selected')?.removeClass('selected');
+                $('.add-subcategory.selected')?.removeClass('selected').addClass("is-outlined");
+                showForm("editCategoryForm");
+                break;
+            case 'delete':
+                $('.manage-categories.edit-btn.selected')?.removeClass('selected');
+                $('.add-subcategory.selected')?.removeClass('selected').addClass("is-outlined");
+                showForm("deleteCategoryForm");
+                break;
+        }
+    }
+
+    function showForm(formId) {
+        var $forms = $("form");
+
+        $forms.each((index, form) => {
+            if (!$(form).hasClass('is-hidden'))
+                $(form).addClass('is-hidden');
+
+            $(`#${formId}`).removeClass('is-hidden')
+        })
+    }
+
+</script>
+}

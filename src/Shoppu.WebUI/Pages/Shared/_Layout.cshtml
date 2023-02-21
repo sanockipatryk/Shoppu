@@ -52,24 +52,25 @@
 				@await Component.InvokeAsync("NavbarMenu")
 		</nav>
 	</header>
-	<section class="section py-3 px-0 app-section">
+	<section class="section py-3 px-0 app-section mb-6">
 		@RenderBody()
 	</section>
-	<footer id="page-footer" class="footer p-0 mt-6 is-relative">
+	<footer id="page-footer" class="footer p-0 is-relative">
 		<div class="content">
 			<div class="text-content py-3">
 				<p class="subtitle is-4 has-text-centered mb-3 has-text-white">
-					<strong class="has-text-white">Thank you</strong> for using <strong class="has-text-white">Shoppu</strong>!
+					<strong class="has-text-white">Thank you</strong> for using <strong
+						class="has-text-white">Shoppu</strong>!
 				</p>
 				<p class="subtitle is-4 has-text-centered my-0 has-text-white">
-					Find us on 
+					Find us on
 					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-facebook"></i></a>
 					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-instagram"></i></a>
 					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-youtube"></i></a>
 					<a class="has-text-white px-2" href="#"><i class="fa-brands fa-tiktok"></i></a>
 				</p>
 			</div>
-			<div class="columns page-links px-4">
+			<div class="columns page-links mx-0 px-4">
 				<div class="column is-3 is-flex is-flex-direction-column">
 					<p class="link-title">Check this out</p>
 					<a asp-area="" asp-page="/Index">
@@ -81,19 +82,23 @@
 				</div>
 				<div class="column is-3 is-flex is-flex-direction-column">
 					<p class="link-title">Woman</p>
-					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes">
+					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
+						asp-route-categoryUrl="clothes">
 						Women clothes
 					</a>
-					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="accessories">
+					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
+						asp-route-categoryUrl="accessories">
 						Women accessories
 					</a>
 				</div>
 				<div class="column is-3 is-flex is-flex-direction-column">
 					<p class="link-title">Man</p>
-					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes">
+					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
+						asp-route-categoryUrl="clothes">
 						Men clothes
 					</a>
-					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="accessories">
+					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
+						asp-route-categoryUrl="accessories">
 						Men accessories
 					</a>
 				</div>
@@ -101,18 +106,18 @@
 					<p class="link-title">Account</p>
 					@if (User.Identity.IsAuthenticated)
 					{
-										<a asp-area="" asp-page="/Orders/List">
-											  My orders
-										</a>
+						<a asp-area="" asp-page="/Orders/List">
+							My orders
+						</a>
 					}
 					else
 					{
-										<a asp-area="Identity" asp-page="/Account/Login">
-											Login
-										</a>
-										<a asp-area="Identity" asp-page="/Account/Register">
-											Register
-										</a>
+						<a asp-area="Identity" asp-page="/Account/Login">
+							Login
+						</a>
+						<a asp-area="Identity" asp-page="/Account/Register">
+							Register
+						</a>
 					}
 
 				</div>

@@ -13,7 +13,7 @@
 }
 <div class="container product-container px-6">
 
-	<div class="columns mt-5 main-columns is-multiline">
+	<div class="columns mt-5 main-columns is-multiline mx-0">
 		<div class="column is-12 is-8-desktop is-6-fullhd p-0">
 			<div class="columns is-wrapped images-columns">
 				<div
@@ -103,12 +103,9 @@
 									@foreach (var size in Model.ShopProduct.Sizes)
 									{
 										<!option value="@size.Id" @(size.Quantity > 0 ? null : "disabled")>@size.Size.Name
-											@(size.Quantity > 0 ?
-									null : "(out of size)")</!option>
+											@(size.Quantity > 0 ? null : "(out of size)")</!option>
 									}
 								</select>
-								@* <span asp-validation-for="@Model.ProductVariant.VariantId"
-									class="has-text-danger"></span> *@
 							</div>
 						</div>
 
@@ -141,7 +138,7 @@
 		@* $mainImageDiv.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
 			@* $productInformationsContainer.css('max-width', $mainImage[0].clientWidth + parseInt($mainImageDiv.css('padding-left').slice(0, -2)) + parseInt($mainImageDiv.css('padding-right').slice(0, -2))) *@
 
-		var $upButton = $('.up-button');
+																				var $upButton = $('.up-button');
 		var $downButton = $('.down-button');
 		var $leftButton = $('.left-button');
 		var $rightButton = $('.right-button');
@@ -201,26 +198,37 @@
 			}
 		})
 
-		if ($('.images-list-container img').length > 1) {
-			$mainImageDiv.on('mouseenter', (e) => {
-				if ($leftButton.hasClass('is-hidden'))
-					$leftButton.removeClass('is-hidden')
+		var touchDevice = ('ontouchstart' in document.documentElement);
 
-				if ($rightButton.hasClass('is-hidden'))
-					$rightButton.removeClass('is-hidden')
-			})
+		if (!touchDevice) {
+
+			if ($('.images-list-container img').length > 1) {
+				$mainImageDiv.on('mouseenter', (e) => {
+					if ($leftButton.hasClass('is-hidden'))
+						$leftButton.removeClass('is-hidden')
+
+					if ($rightButton.hasClass('is-hidden'))
+						$rightButton.removeClass('is-hidden')
+				})
+			}
+
+			if ($('.images-list-container img').length > 1) {
+				$mainImageDiv.on('mouseleave', (e) => {
+					if (!$leftButton.hasClass('is-hidden'))
+						$leftButton.addClass('is-hidden')
+
+					if (!$rightButton.hasClass('is-hidden'))
+						$rightButton.addClass('is-hidden')
+				})
+			}
 		}
+		else {
+			if ($leftButton.hasClass('is-hidden'))
+				$leftButton.removeClass('is-hidden');
 
-		if ($('.images-list-container img').length > 1) {
-			$mainImageDiv.on('mouseleave', (e) => {
-				if (!$leftButton.hasClass('is-hidden'))
-					$leftButton.addClass('is-hidden')
-
-				if (!$rightButton.hasClass('is-hidden'))
-					$rightButton.addClass('is-hidden')
-			})
+			if ($rightButton.hasClass('is-hidden'))
+				$rightButton.removeClass('is-hidden');
 		}
-
 		$leftButton.on('click', (e) => {
 			var $currentImage = $('img.selected');
 			var currentImageIndex = parseInt($currentImage.attr('data-imageNumber'))

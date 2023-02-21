@@ -1,4 +1,6 @@
-﻿namespace Shoppu.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Shoppu.Domain.Entities
 {
     public class ProductCategory
     {
@@ -12,5 +14,8 @@
         public List<ProductCategory>? SubCategories { get; set; }
         public List<Product>? Products { get; set; }
         public List<Size>? Sizes { get; set; }
+
+        [NotMapped]
+        public bool HasNoExistingProducts { get; set; }
     }
 }
