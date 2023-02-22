@@ -31,7 +31,18 @@
 	<form id="productForm" method="post">
 		<input id="productCategoryIdInput" type="hidden" asp-for="@Model.Product.ProductCategoryId" />
 		<div class="columns">
-			<div class="column">
+			<div class="column is-5">
+				<aside class="menu">
+					<p class="subtitle is-4 mb-3 is-grey">Category selection</p>
+					@{
+						int level = 0;
+						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == null).ToList(), level);
+					}
+				</aside>
+				<span asp-validation-for="@Model.Product.ProductCategoryId" class="has-text-danger"></span>
+			</div>
+			<div class="column is-7">
+				<p class="subtitle is-4 mb-3 is-grey">Enter product information</p>
 				<div class="field">
 					<label class="label" asp-for="@Model.Product.Name"></label>
 					<div class="control">
@@ -49,7 +60,7 @@
 					</div>
 				</div>
 				<div class="columns">
-					<div class="field column is-4">
+					<div class="field column is-3">
 						<label class="label" asp-for="@Model.Product.Code"></label>
 						<div class="control">
 							<input class="input" type="text" asp-for="@Model.Product.Code"
@@ -57,7 +68,7 @@
 							<span asp-validation-for="@Model.Product.Code" class="has-text-danger"></span>
 						</div>
 					</div>
-					<div class="field column is-4">
+					<div class="field column is-3">
 						<label class="label" asp-for="@Model.Product.Price"></label>
 						<div class="control">
 							<input class="input" type="number" step="0.01" min="0.01" asp-for="@Model.Product.Price"
@@ -68,7 +79,7 @@
 					<div class="field column">
 						<label class="label" asp-for="@Model.Product.Gender"></label>
 						<div class="control">
-							<div class="select">
+							<div class="select is-fullwidth-select">
 								<select asp-for="@Model.Product.Gender"
 									asp-items="Html.GetEnumSelectList<ProductGender>()">
 									<option value="">-</option>
@@ -77,25 +88,23 @@
 						</div>
 						<span asp-validation-for="@Model.Product.Gender" class="has-text-danger"></span>
 					</div>
-					<div class="field column is-4">
+					<div class="field column">
 						<label class="label" asp-for="@Model.Product.SizeTypeId"></label>
 						<div class="control">
-							<input class="input" type="number" asp-for="@Model.Product.SizeTypeId">
-							<span asp-validation-for="@Model.Product.SizeTypeId" class="has-text-danger"></span>
+							<div class="select is-fullwidth-select">
+								<select asp-for="@Model.Product.SizeTypeId">
+									<option value="">-</option>
+									@foreach (var sizeType in Model.PossibleSizeTypes)
+									{
+										<option value="@sizeType.Id">@sizeType.Name</option>
+									}
+								</select>
+							</div>
 						</div>
+						<span asp-validation-for="@Model.Product.SizeTypeId" class="has-text-danger"></span>
 					</div>
 				</div>
 				<button id="submitProductButton" type="submit" class="button is-success">Submit</button>
-			</div>
-			<div class="column">
-				<aside class="menu">
-					<p class="title is-4 pb-0 mb-2">Category selection</p>
-					@{
-						int level = 0;
-						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == null).ToList(), level);
-					}
-				</aside>
-				<span asp-validation-for="@Model.Product.ProductCategoryId" class="has-text-danger"></span>
 			</div>
 		</div>
 	</form>

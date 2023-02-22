@@ -6,12 +6,7 @@
 <div class="is-hidden-mobile is-hidden-tablet-only is-flex">
   @if (SignInManager.IsSignedIn(User))
   {
-    @if (User.IsInRole("Admin"))
-    {
-      <a class="navbar-item" asp-page="/Products/Manage" asp-route-categoryUrl="clothes">
-        Manage products
-      </a>
-    }
+
     @* else
       { *@
     @await Component.InvokeAsync("ShoppingCardNavbarItem")
@@ -21,13 +16,22 @@
         Account
       </a>
 
-      <div class="navbar-dropdown">
+      <div class="navbar-dropdown is-right">
+        @if (User.IsInRole("Admin"))
+        {
+          <a class="navbar-item" asp-page="/Products/Manage" asp-route-categoryUrl="clothes">
+            Manage products
+          </a>
+          <a class="navbar-item" asp-page="/Products/ManageCategories">
+            Manage categories
+          </a>
+          <hr class="navbar-divider">
+        }
         <a class="navbar-item" asp-area="" asp-page="/Orders/List">
           My orders
         </a>
         <hr class="navbar-divider">
-        <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout"
-        asp-route-returnUrl="" method="post">
+        <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="" method="post">
           <a id="submit-logout" class="navbar-item">Logout</a>
         </form>
       </div>

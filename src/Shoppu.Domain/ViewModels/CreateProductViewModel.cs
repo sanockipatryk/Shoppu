@@ -26,6 +26,8 @@ namespace Shoppu.Domain.ViewModels
         [Required(ErrorMessage = "Select the product category.")]
         public int? ProductCategoryId { get; set; }
 
-        public int SizeTypeId { get; set; }
+        [Required(ErrorMessage = "Select size type for the product.")]
+        [Display(Name = "Size type")]
+        public int? SizeTypeId { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shoppu.Application.Products.Commands.CreateProduct;
 using Shoppu.Application.ProductTypes.Queries;
+using Shoppu.Application.Sizes.Queries;
 using Shoppu.Domain.Entities;
 using Shoppu.Domain.ViewModels;
 
@@ -19,11 +20,13 @@ namespace Shoppu.WebUI.Pages.Products
         [BindProperty]
         public CreateProductViewModel Product { get; set; }
         public List<ProductCategory> ProductCategories { get; set; }
+        public List<SizeType> PossibleSizeTypes { get; set; }
 
         public async Task OnGet()
         {
             Product = new CreateProductViewModel();
             ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery());
+            PossibleSizeTypes = await _mediator.Send(new GetAllSizeTypesQuery());
         }
 
         public async Task<IActionResult> OnPost()
@@ -34,6 +37,7 @@ namespace Shoppu.WebUI.Pages.Products
                 return RedirectToPage("Manage", new { categoryUrl = addedProduct.ProductCategory.UrlName, code = addedProduct.Code });
             }
             ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery());
+            PossibleSizeTypes = await _mediator.Send(new GetAllSizeTypesQuery());
             return Page();
         }
     }
