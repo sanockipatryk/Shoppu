@@ -1,0 +1,52 @@
+@page
+@model Shoppu.WebUI.Pages.Products.ManageColors
+@{
+    ViewData["Title"] = "ManageColors";
+}
+
+
+<div class="container manage-container">
+    @if (Model?.Notification != null)
+    {
+        <partial name="_Notification" model="@Model.Notification" />
+    }
+    <p class="subtitle is-grey">Add a color variant</p>
+    <form method="post" class="mb-6">
+        <div class="field">
+            <label class="label" asp-for="@Model.NewColorVariant.Name"></label>
+            <div class="control">
+                <input class="input color-name-input" type="text" asp-for="@Model.NewColorVariant.Name">
+                <span class="is-block has-text-danger" asp-validation-for="@Model.NewColorVariant.Name"></span>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" asp-for="@Model.NewColorVariant.HEXColor"></label>
+            <div class="control">
+                <input class="color-picker" type="text" asp-for="@Model.NewColorVariant.HEXColor" data-coloris>
+                <span class="is-block has-text-danger" asp-validation-for="@Model.NewColorVariant.HEXColor"></span>
+            </div>
+        </div>
+        <button class="button is-success">Add variant</button>
+    </form>
+
+    <p class="subtitle is-grey">Existing color variants:</p>
+
+    <div class="mx-0 is-flex is-flex-wrap-wrap variant-wrapper">
+        @foreach (var color in Model.ExistingVariants)
+        {
+            <div class="variant-color" style="background-color: @color.HEXColor;">
+                <p class="has-text-centered is-ff-nanum color">@color.Name</p>
+                <p class="has-text-centered is-ff-nanum hexcolor" style="">@color.HEXColor</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+<script>
+    Coloris({
+        alpha: false,
+    });
+</script>
+}

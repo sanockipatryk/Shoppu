@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shoppu.Application.Common.Interfaces;
 using Shoppu.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shoppu.Application.ProductTypes.Queries
 {
@@ -21,7 +16,7 @@ namespace Shoppu.Application.ProductTypes.Queries
         }
         public async Task<List<Variant>> Handle(GetVariantListQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Variants.ToListAsync(cancellationToken);
+            return await _context.Variants.OrderBy(v => v.Name).ToListAsync(cancellationToken);
         }
     }
 }

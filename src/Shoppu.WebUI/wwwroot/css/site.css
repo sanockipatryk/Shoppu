@@ -629,6 +629,65 @@ div.slider-navigation-next {
 	right: 10px;
 }
 
+div.variant-wrapper {
+	gap: 12px;
+}
+
+div.variant-color {
+	display: inline-block;
+	position: relative;
+	flex-basis: calc(1 / 6 * 100% - 10px);
+	height: 100px;
+	border-radius: 4px;
+}
+
+div.variant-color p {
+	position: absolute;
+	text-transform: uppercase;
+	left: 0;
+	right: 0;
+	margin: 10px;
+	padding: 2px;
+}
+
+div.variant-color p.color {
+	top: 10px;
+	background-color: #fff;
+	border-radius: 4px;
+	font-weight: bold;
+}
+
+div.variant-color p.hexcolor {
+	bottom: 0px;
+	color: white;
+	mix-blend-mode: difference;
+}
+
+.manage-container .color-name-input {
+	width: 225px;
+}
+
+input.color-picker {
+	display: inline-flex;
+	background-color: white;
+	border: 1px solid #dbdbdb;
+	border-radius: 4px;
+	color: #363636;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	align-items: center;
+	box-shadow: none;
+	font-size: 1rem;
+	height: 2.5em;
+	justify-content: flex-start;
+	line-height: 1.5;
+	padding-bottom: calc(0.5em - 1px);
+	padding-left: calc(0.75em - 1px);
+	padding-right: calc(0.75em - 1px);
+	padding-top: calc(0.5em - 1px);
+	vertical-align: top;
+}
+
 @media (max-width: 1600px) {
 	.offers {
 		max-width: 1280px;
@@ -781,6 +840,14 @@ div.slider-navigation-next {
 	.offers .slider-offer .offer-text .subtitle {
 		font-size: 18pt;
 	}
+
+	.manage-container {
+		padding: 0 10px;
+	}
+
+	div.variant-color {
+		flex-basis: calc(1 / 4 * 100% - 9px);
+	}
 }
 
 /* UNDER MOBILE WIDTH */
@@ -892,5 +959,9 @@ div.slider-navigation-next {
 	.block-offer .offer-text .title {
 		font-size: 36pt;
 		font-weight: bold;
+	}
+
+	div.variant-color {
+		flex-basis: calc(1 / 2 * 100% - 6px);
 	}
 }

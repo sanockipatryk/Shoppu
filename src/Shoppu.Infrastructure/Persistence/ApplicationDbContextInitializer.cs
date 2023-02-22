@@ -170,7 +170,6 @@ namespace Shoppu.Infrastructure.Persistence
             if (!_context.Sizes.Any())
             {
                 string[] sizesLetters = { "XS", "S", "M", "L", "XL", "XXL" };
-                string[] sizesPants = { "34", "36", "38", "40", "42", "44" };
 
                 _context.SizeTypes.Add(new SizeType
                 {
@@ -210,7 +209,7 @@ namespace Shoppu.Infrastructure.Persistence
                     });
                 }
 
-                var sizeTypeSocks = _context.SizeTypes.FirstOrDefault(st => st.Name == "Numbers");
+                var sizeTypeSocks = _context.SizeTypes.FirstOrDefault(st => st.Name == "Socks");
 
                 string[] sizesSocks = { "35-38", "39-42", "43-46" };
 

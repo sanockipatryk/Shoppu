@@ -71,7 +71,9 @@ namespace Shoppu.Application.Products.Queries.Shop
                 ColorName = pv.Variant.Name,
                 HEXColor = pv.Variant.HEXColor,
                 IsSelected = pv.Id == productData.Id
-            }).ToListAsync();
+            })
+            .OrderBy(pv => pv.ColorName)
+            .ToListAsync();
 
             shopProduct.ProductId = productData.Product.Id;
             shopProduct.ProductName = productData.Product.Name;

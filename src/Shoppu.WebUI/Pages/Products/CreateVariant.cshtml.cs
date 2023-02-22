@@ -61,7 +61,7 @@ namespace Shoppu.WebUI.Pages.Products
                 var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(newVariant.Id, imagePaths));
 
                 if (addImagesResult)
-                    return RedirectToPage("Manage", new { categoryUrl = newVariant.Product.ProductCategory.UrlName });
+                    return RedirectToPage("Manage", new { categoryUrl = newVariant.Product.ProductCategory.UrlName, code = newVariant.Product.Code });
             }
             Product = await _mediator.Send(new GetProductQuery(ProductVariant.ProductId));
             if (Product.Name != null)

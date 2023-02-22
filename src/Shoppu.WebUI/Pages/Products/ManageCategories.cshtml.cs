@@ -38,7 +38,7 @@ namespace Shoppu.WebUI.Pages.Products
         {
             if (ModelState.IsValid)
             {
-                Notification = await _mediator.Send(new CreateProductCategoryCommand(NewCategory));
+                Notification = await _mediator.Send(new CreateProductCategoryCommand(newCategory));
 
                 if (Notification.StatusType.Equals(StatusType.Success))
                 {
