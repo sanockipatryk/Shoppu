@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Shoppu.Application.Products.Commands.CreateProduct
 {
-    public record CreateProductCommand(CreateProductViewModel ProductViewModel) : IRequest<Product>;
+    public record CreateProductCommand(CreateProductViewModel ProductViewModel) : IRequest<NotificationWithUrlData>;
 
-    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Product>
+    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, NotificationWithUrlData>
     {
         private readonly IApplicationDbContext _context;
         public CreateProductCommandHandler(IApplicationDbContext context)
@@ -19,7 +19,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
             _context = context;
         }
 
-        public async Task<Product> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<NotificationWithUrlData> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var productName = request.ProductViewModel.Name;
             string baseSlug = productName.Slugify();
@@ -35,6 +35,22 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 }
             } while (true);
 
+            var productWithExactCodeExists = await _context.Products
+                    .AnyAsync(p => p.Code.ToLower()
+                    .Equals(request.ProductViewModel.Code.ToLower()));
+
+            if (productWithExactCodeExists)
+            {
+                return new NotificationWithUrlData
+                {
+                    Notification = new NotificationMessageViewModel
+                    {
+                        StatusType = StatusType.Danger,
+                        Message = "Product with the same Code already exists."
+                    }
+                };
+            }
+
             var product = new Product
             {
                 Name = request.ProductViewModel.Name,
@@ -42,7 +58,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 Description = request.ProductViewModel.Description,
                 Gender = (ProductGender)request.ProductViewModel.Gender,
                 ProductCategoryId = (int)request.ProductViewModel.ProductCategoryId,
-                Code = request.ProductViewModel.Code,
+                Code = request.ProductViewModel.Code.ToUpper(),
                 BaseSlug = baseSlug,
                 IsAccessible = false,
                 SizeTypeId = (int)request.ProductViewModel.SizeTypeId
@@ -54,23 +70,24 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                 .Where(p => p.Id == product.Id)
                 .Select(p => new Product
                 {
-                    Name = p.Name,
                     ProductCategory = new ProductCategory
                     {
                         Id = p.ProductCategory.Id,
-                        Name = p.ProductCategory.Name,
                         UrlName = p.ProductCategory.UrlName
                     },
-                    Price = p.Price,
-                    Gender = p.Gender,
-                    ProductCategoryId = p.ProductCategoryId,
                     Code = p.Code,
-                    BaseSlug = p.BaseSlug,
-                    IsAccessible = p.IsAccessible,
                 })
                 .FirstOrDefaultAsync();
 
-            return addedProduct;
+            return new NotificationWithUrlData
+            {
+                Notification = new NotificationMessageViewModel
+                {
+                    StatusType = StatusType.Success,
+                },
+                CategoryUrl = addedProduct.ProductCategory.UrlName,
+                ProductCode = addedProduct.Code
+            };
         }
     }
 }

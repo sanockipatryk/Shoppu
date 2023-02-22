@@ -22,6 +22,8 @@ namespace Shoppu.WebUI.Pages.Products
         public List<ProductCategory> ProductCategories { get; set; }
         public List<SizeType> PossibleSizeTypes { get; set; }
 
+        public NotificationMessageViewModel Notification { get; set; }
+
         public async Task OnGet()
         {
             Product = new CreateProductViewModel();
@@ -33,8 +35,19 @@ namespace Shoppu.WebUI.Pages.Products
         {
             if (ModelState.IsValid)
             {
-                var addedProduct = await _mediator.Send(new CreateProductCommand(Product));
-                return RedirectToPage("Manage", new { categoryUrl = addedProduct.ProductCategory.UrlName, code = addedProduct.Code });
+                var notificationWithUrlValues = await _mediator.Send(new CreateProductCommand(Product));
+                if (notificationWithUrlValues.Notification.StatusType == Domain.Enums.StatusType.Success)
+                {
+                    return RedirectToPage("Manage", new
+                    {
+                        categoryUrl = notificationWithUrlValues.CategoryUrl,
+                        code = notificationWithUrlValues.ProductCode
+                    });
+                }
+                else
+                {
+                    Notification = notificationWithUrlValues.Notification;
+                }
             }
             ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery());
             PossibleSizeTypes = await _mediator.Send(new GetAllSizeTypesQuery());

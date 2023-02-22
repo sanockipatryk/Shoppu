@@ -27,6 +27,9 @@ namespace Shoppu.WebUI.Pages.Products
         public Product Product { get; set; }
         public List<ProductVariant> ExistingVariants { get; set; }
         public List<Variant> PossibleVariants { get; set; }
+
+        public NotificationMessageViewModel Notification { get; set; }
+
         public async Task<IActionResult> OnGet(int id)
         {
             Product = await _mediator.Send(new GetProductQuery(id));
@@ -47,21 +50,26 @@ namespace Shoppu.WebUI.Pages.Products
             }
             if (ModelState.IsValid && Request.Form.Files.Count > 0)
             {
-                var newVariant = await _mediator.Send(new CreateProductVariantCommand(ProductVariant));
+                var notificationWithUrlValues = await _mediator.Send(new CreateProductVariantCommand(ProductVariant));
 
-                var imagePaths = UploadFilesToWebRoot.UploadManyFiles(
-                    _webHostEnvironment,
-                    HttpContext.Request,
-                    "productVariants",
-                    newVariant.Product.ProductCategory.Name,
-                    newVariant.Product.Code,
-                    newVariant.Code
-                    );
+                Notification = notificationWithUrlValues.Notification;
 
-                var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(newVariant.Id, imagePaths));
+                if (Notification.StatusType == Domain.Enums.StatusType.Success)
+                {
+                    var imagePaths = UploadFilesToWebRoot.UploadManyFiles(
+                        _webHostEnvironment,
+                        HttpContext.Request,
+                        "productVariants",
+                        notificationWithUrlValues.CategoryUrl,
+                        notificationWithUrlValues.ProductCode,
+                        notificationWithUrlValues.ProductVariantCode
+                        );
 
-                if (addImagesResult)
-                    return RedirectToPage("Manage", new { categoryUrl = newVariant.Product.ProductCategory.UrlName, code = newVariant.Product.Code });
+                    var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(notificationWithUrlValues.ProductVariantId, imagePaths));
+
+                    if (addImagesResult)
+                        return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
+                }
             }
             Product = await _mediator.Send(new GetProductQuery(ProductVariant.ProductId));
             if (Product.Name != null)

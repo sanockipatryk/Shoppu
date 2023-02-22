@@ -5,6 +5,10 @@
 }
 <img id="sampleImage" class="m-3 create-variant-upload-image" height="200" style="height: 500px">
 <div class="container">
+	@if (Model?.Notification != null)
+	{
+		<partial name="_Notification" model="@Model.Notification" />
+	}
 	<div class="has-text-centered">
 		<p class="title is-4 mb-5">Add new variant</p>
 	</div>

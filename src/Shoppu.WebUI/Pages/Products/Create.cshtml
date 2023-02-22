@@ -28,6 +28,10 @@
 	}
 }
 <div class="container">
+	@if (Model?.Notification != null)
+	{
+		<partial name="_Notification" model="@Model.Notification" />
+	}
 	<form id="productForm" method="post">
 		<input id="productCategoryIdInput" type="hidden" asp-for="@Model.Product.ProductCategoryId" />
 		<div class="columns">

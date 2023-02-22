@@ -31,17 +31,21 @@ namespace Shoppu.WebUI.Pages.Products
             AddVariantSizes = await _mediator.Send(new GetExistingSizesAndPossibleSizesForProductQuery(variantId));
         }
 
-        public async Task OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
-                Notification = await _mediator.Send(new AddExistingSizesAndPossibleSizesForProductCommand(VariantId, AddVariantSizes));
+                var notificationWithUrlValues = await _mediator.Send(new AddExistingSizesAndPossibleSizesForProductCommand(VariantId, AddVariantSizes));
+
+                Notification = notificationWithUrlValues.Notification;
+
                 if (Notification.StatusType == Domain.Enums.StatusType.Success)
                 {
-                    AddVariantSizes = await _mediator.Send(new GetExistingSizesAndPossibleSizesForProductQuery(VariantId));
+                    return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
                 }
             }
-
+            AddVariantSizes = await _mediator.Send(new GetExistingSizesAndPossibleSizesForProductQuery(VariantId));
+            return Page();
         }
     }
 }

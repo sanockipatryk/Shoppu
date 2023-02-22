@@ -200,7 +200,7 @@ namespace Shoppu.Infrastructure.Persistence
 
                 var sizeTypeNumbers = _context.SizeTypes.FirstOrDefault(st => st.Name == "Numbers");
 
-                for (int i = 30; i < 50; i++)
+                for (int i = 30; i <= 50; i++)
                 {
                     _context.Sizes.Add(new Size
                     {

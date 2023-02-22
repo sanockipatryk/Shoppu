@@ -21,6 +21,9 @@ namespace Shoppu.WebUI.Pages.Products
         public int ProductId { get; set; }
         [BindProperty]
         public int VariantId { get; set; }
+
+        public NotificationMessageViewModel Notification { get; set; }
+
         public async Task OnGet(int productId, int variantId)
         {
             ProductId = productId;
@@ -32,10 +35,12 @@ namespace Shoppu.WebUI.Pages.Products
         {
             if (ModelState.IsValid)
             {
-                var result = await _mediator.Send(new CreateProductVariantSizesCommand(VariantId, ProductVariantSizes));
+                var notificationWithUrlValues = await _mediator.Send(new CreateProductVariantSizesCommand(VariantId, ProductVariantSizes));
 
-                if (result)
-                    return RedirectToPage("Manage", new {categoryUrl = "clothes"});
+                Notification = notificationWithUrlValues.Notification;
+
+                if (Notification.StatusType == Domain.Enums.StatusType.Success)
+                    return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
             }
             return Page();
         }

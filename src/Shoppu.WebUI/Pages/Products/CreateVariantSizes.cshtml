@@ -5,6 +5,10 @@
 }
 
 <div class="container">
+	@if (Model?.Notification != null)
+	{
+		<partial name="_Notification" model="@Model.Notification" />
+	}
 	<form method="post">
 		<input type="hidden" asp-for="@Model.ProductId" />
 		<input type="hidden" asp-for="@Model.VariantId" />
