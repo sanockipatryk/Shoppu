@@ -5,106 +5,96 @@
     var location = new Uri($"{Request.Scheme}://{Request.Host}");
     var url = location.AbsoluteUri;
 }
-
-<section class="hero offers mb-6" style="">
-  <div id="slider" class="hero-body p-0">
-    <div class="slider-offer">
-        <img src="@url\images\shoes.jpg"/>
-         <div class="offer-text has-text-centered">
-            <p class="title has-text-white">Got a shoe-mergency?</p>
-            <p class="subtitle has-text-white">Find a pair for yourself</p>
+<div class="mx-3">
+    <section class="hero offers mb-6" style="">
+        <div id="slider" class="hero-body p-0">
+            <div class="slider-offer">
+                <img src="@url\images\shoes.jpg" />
+                <div class="offer-text has-text-centered">
+                    <p class="title has-text-white">Got a shoe-mergency?</p>
+                    <p class="subtitle has-text-white">Find a pair for yourself</p>
+                </div>
+                <div class="is-flex is-justify-content-center offer-buttons">
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman"
+                        asp-route-query="shoes" asp-route-categoryUrl="sneakers">Women's Sneakers
+                    </a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="shoes"
+                        asp-route-categoryUrl="winter">Women's Winter shoes
+                    </a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="shoes"
+                        asp-route-categoryUrl="winter">Men's Winter shoes
+                    </a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="shoes"
+                        asp-route-categoryUrl="sneakers">Men's Sneakers
+                    </a>
+                </div>
+            </div>
+            <div class="slider-offer">
+                <img src="@url\images\jackets.jpg" />
+                <div class="offer-text has-text-centered">
+                    <p class="title has-text-white">Winter jackets</p>
+                    <p class="subtitle has-text-white">Stay warm this season</p>
+                </div>
+                <div class="is-flex is-justify-content-center offer-buttons">
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman"
+                        asp-route-query="coats" asp-route-categoryUrl="winter">Woman</a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="coats"
+                        asp-route-categoryUrl="winter">Man</a>
+                </div>
+            </div>
+            <div class="slider-offer">
+                <img src="@url\images\pants.jpg" />
+                <div class="offer-text has-text-centered">
+                    <p class="title has-text-white">Stay in style</p>
+                    <p class="subtitle has-text-white">Newest in store</p>
+                </div>
+                <div class="is-flex is-justify-content-center offer-buttons">
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman"
+                        asp-route-query="clothes" asp-route-categoryUrl="pants">Pants
+                    </a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman"
+                        asp-route-query="clothes" asp-route-categoryUrl="tshirts">T-shirts
+                    </a>
+                    <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman"
+                        asp-route-query="accessories" asp-route-categoryUrl="hats">Hats
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="is-flex is-justify-content-center offer-buttons">
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Women's Sneakers
-        </a>
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Women's Winter shoes
-        </a>
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Men's Winter shoes
-        </a>
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Men's Sneakers
-        </a>
-        </div>
-    </div>
-    <div class="slider-offer">
-        <img src="@url\images\jackets.jpg"/>
-        <div class="offer-text has-text-centered">
-            <p class="title has-text-white">Winter jackets</p>
-            <p class="subtitle has-text-white">Stay warm this season</p>
-        </div>
-        <div class="is-flex is-justify-content-center offer-buttons">
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-        asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes">Woman</a>
-         <a class="button" asp-area="" asp-page="/Shop/Browse" 
-        asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes">Man</a>
-        </div>
-    </div>
-        <div class="slider-offer">
-        <img src="@url\images\pants.jpg"/>
-         <div class="offer-text has-text-centered">
-            <p class="title has-text-white">Stay in style</p>
-            <p class="subtitle has-text-white">Newest in store</p>
-        </div>
-        <div class="is-flex is-justify-content-center offer-buttons">
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Pants
-        </a>
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >T-shirts
-        </a>
-        <a class="button" asp-area="" asp-page="/Shop/Browse" 
-            asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-            >Accessories
-        </a>
-        </div>
-    </div>
-  </div>
-</section>
+    </section>
+</div>
 <section class="container">
-    <div class="columns is-multiline">
+    <div class="columns is-multiline mx-0">
         <div class="column is-half block-offer">
-            <img src="@url\images\woman.jpg"/>
+            <img src="@url\images\woman.jpg" />
             <div class="offer-text">
                 <p class="title has-text-white">For her</p>
-                <a class="button" asp-area="" asp-page="/Shop/Browse" 
-                asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="clothes"
-                >See more</a>
+                <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
+                    asp-route-categoryUrl="clothes">See more</a>
             </div>
         </div>
         <div class="column is-half block-offer">
-            <img src="@url\images\man.jpg"/>
+            <img src="@url\images\man.jpg" />
             <div class="offer-text">
                 <p class="title has-text-white">For him</p>
-                <a class="button" asp-area="" asp-page="/Shop/Browse" 
-                asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="clothes"
-                >See more</a>
+                <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
+                    asp-route-categoryUrl="clothes">See more</a>
             </div>
         </div>
         <div class="column is-half block-offer">
-            <img src="@url\images\jewelry.jpg"/>
+            <img src="@url\images\jewelry.jpg" />
             <div class="offer-text">
                 <p class="title has-text-white">Accessories for her</p>
-                <a class="button" asp-area="" asp-page="/Shop/Browse" 
-                asp-route-gender="woman" asp-route-query="all" asp-route-categoryUrl="accessories"
-                >See more</a>
+                <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
+                    asp-route-categoryUrl="accessories">See more</a>
             </div>
         </div>
         <div class="column is-half block-offer">
-            <img src="@url\images\tie.jpg"/>
+            <img src="@url\images\tie.jpg" />
             <div class="offer-text">
                 <p class="title has-text-white">Accessories for him</p>
-                <a class="button" asp-area="" asp-page="/Shop/Browse" 
-                asp-route-gender="man" asp-route-query="all" asp-route-categoryUrl="accessories"
-                >See more</a>
+                <a class="button" asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
+                    asp-route-categoryUrl="accessories">See more</a>
             </div>
         </div>
     </div>
@@ -113,20 +103,20 @@
 
 
 @section Scripts {
-    <script>
-        var carouselSettings = {
-                slidesToScroll: 1,
-                slidesToShow: 1,
-                infinite: true,
-                loop:true,
-                autoplay: true,
-                pagination: false,
-                navigationSwipe: true,
-                autoplaySpeed: 5000,
-                breakpoints:[]
-            };
+<script>
+    var carouselSettings = {
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        infinity: true,
+        loop: true,
+        autoplay: true,
+        pagination: false,
+        navigationSwipe: true,
+        autoplaySpeed: 5000,
+        breakpoints: []
+    };
 
-        bulmaCarousel.attach('#slider', carouselSettings);
+    bulmaCarousel.attach('#slider', carouselSettings);
 
-    </script>
+</script>
 }

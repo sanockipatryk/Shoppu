@@ -519,6 +519,7 @@ tr.border-bottom-3 {
 	max-width: 1480px;
 	margin-left: auto;
 	margin-right: auto;
+	border-radius: 30px;
 }
 
 .offers .slider-offer {
@@ -711,9 +712,6 @@ input.color-picker {
 		top: 30%;
 	}
 
-	.offers .slider-offer .offer-buttons {
-	}
-
 	.offers .slider-offer .offer-buttons .button {
 		padding: 14px 20px;
 		font-size: 14pt;
@@ -772,11 +770,15 @@ input.color-picker {
 		transform: unset;
 		padding-top: 20px;
 	}
+	nav.navbar {
+		position: absolute;
+	}
 
 	.navbar-menu-tablet {
 		max-width: 600px;
 		margin-left: auto;
 		margin-right: auto;
+		overflow-y: scroll;
 	}
 
 	.navbar-menu-tablet div.submenu {
@@ -963,5 +965,19 @@ input.color-picker {
 
 	div.variant-color {
 		flex-basis: calc(1 / 2 * 100% - 6px);
+	}
+
+	#testForm > * {
+		flex-basis: 49%;
+	}
+
+	#testForm .dropdown.filter-dropdown .dropdown-trigger,
+	#testForm .dropdown.filter-dropdown .dropdown-trigger .dropdown-button,
+	#testForm .submit-form-main {
+		width: 100%;
+	}
+	#testForm .dropdown.filter-dropdown .dropdown-trigger .dropdown-button,
+	#testForm .submit-form-main {
+		margin: 5px 0;
 	}
 }

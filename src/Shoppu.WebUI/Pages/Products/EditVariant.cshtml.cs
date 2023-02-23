@@ -33,6 +33,9 @@ namespace Shoppu.WebUI.Pages.Products
         public List<ProductVariant> ExistingVariants { get; set; }
         public List<Variant> PossibleVariants { get; set; }
 
+        public NotificationMessageViewModel Notification { get; set; }
+
+
         public async Task<IActionResult> OnGet(int productId, int variantId)
         {
             ProductVariant = await _mediator.Send(new GetProductVariantForEditQuery(productId, variantId));
@@ -49,26 +52,56 @@ namespace Shoppu.WebUI.Pages.Products
         {
             if (ModelState.IsValid)
             {
-                var editedVariant = await _mediator.Send(new EditProductVariantCommand(ProductVariant));
-                if (Request.Form.Files.Count > 0)
+                var notificationWithUrlValues = await _mediator.Send(new EditProductVariantCommand(ProductVariant));
+
+                Notification = notificationWithUrlValues.Notification;
+
+                if (Notification.StatusType == Domain.Enums.StatusType.Success
+                    || Notification.StatusType == Domain.Enums.StatusType.Info
+                )
                 {
-                    var existingProductVariantImagePath = await _mediator.Send(new GetSingleProductVariantImagePathQuery(ProductVariant.ProductVariantId));
-                    if (existingProductVariantImagePath != null)
+                    if (Request.Form.Files.Count > 0)
                     {
-                        UploadFilesToWebRoot.RemoveOldPath(_webHostEnvironment, existingProductVariantImagePath);
+                        var existingProductVariantImagePath = await _mediator.Send(new GetSingleProductVariantImagePathQuery(ProductVariant.ProductVariantId));
+                        if (existingProductVariantImagePath != null)
+                        {
+                            UploadFilesToWebRoot.RemoveOldPath(_webHostEnvironment, existingProductVariantImagePath);
+                        }
+
+                        var imagePaths = UploadFilesToWebRoot.UploadManyFiles(
+                            _webHostEnvironment,
+                            HttpContext.Request,
+                            "productVariants",
+                            notificationWithUrlValues.CategoryUrl,
+                            notificationWithUrlValues.ProductCode,
+                            notificationWithUrlValues.ProductVariantCode
+                            );
+
+                        var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(ProductVariant.ProductVariantId, imagePaths));
+
+                        if (addImagesResult && Notification.StatusType == Domain.Enums.StatusType.Info)
+                        {
+                            Notification.StatusType = Domain.Enums.StatusType.Success;
+                            Notification.Message = "Variant images updated.";
+                        }
+
+                        // commented options below allow redirecting to list of products after a succesful edit
+
+                        // if (addImagesResult || Notification.StatusType == Domain.Enums.StatusType.Success)
+                        // {
+                        //     return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
+                        // }
                     }
 
-                    var imagePaths = UploadFilesToWebRoot.UploadManyFiles(
-                        _webHostEnvironment,
-                        HttpContext.Request,
-                        "productVariants",
-                        editedVariant.Product.ProductCategory.Name,
-                        editedVariant.Code.ToString()
-                        );
-                    var addImagesResult = await _mediator.Send(new CreateProductVariantImagesCommand(editedVariant.Id, imagePaths));
+                    // if (Notification.StatusType == Domain.Enums.StatusType.Success)
+                    // {
+                    //     return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
+                    // }
+
                 }
-                return RedirectToPage("Manage", new { categoryUrl = "clothes" });
-                // return RedirectToPage("Manage", new { categoryUrl = newVariant.Product.ProductCategory.UrlName });
+                ExistingVariants = await _mediator.Send(new GetProductVariantListQuery(ProductVariant.ProductId));
+                PossibleVariants = await _mediator.Send(new GetVariantListQuery());
+                return Page();
             }
 
             ExistingVariants = await _mediator.Send(new GetProductVariantListQuery(ProductVariant.ProductId));

@@ -77,11 +77,19 @@
                                     {
                                         <li>
                                             <a class="navbar-item px-4 category-link" asp-area="" asp-page="/Shop/Browse"
-                                asp-route-gender="@gender" asp-route-categoryUrl="@subcategory.UrlName">
+                                asp-route-gender="@gender" asp-route-query="@mainCategory.UrlName"
+                                asp-route-categoryUrl="@subcategory.UrlName">
                                                 <span class="link-text">@subcategory.Name</span>
                                             </a>
                                         </li>
                                     }
+                                    <li>
+                                        <a class="navbar-item has-text-link px-4 category-link" asp-area="" asp-page="/Shop/Browse"
+                                asp-route-gender="@gender" asp-route-query="all"
+                                asp-route-categoryUrl="@mainCategory.UrlName">
+                                            <span class="link-text">See all</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -142,6 +150,11 @@
                             <li>
                                 <a class="navbar-item px-4 category-link" asp-page="/Products/ManageCategories">
                                     <span class="link-text">Manage categories</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navbar-item px-4 category-link" asp-page="/Products/ManageColors">
+                                    <span class="link-text">Manage colors</span>
                                 </a>
                             </li>
                         }

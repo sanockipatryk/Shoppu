@@ -14,7 +14,7 @@
                 <a class="subtitle is-6 has-text-info" asp-page="/Shop/Browse" asp-route-gender="woman"
                     asp-route-query="all" asp-route-categoryUrl="clothes">See more</a>
             </p>
-            <div id="slider" class="columns px-0 mx-0 column-latest">
+            <div id="slider2" class="columns px-0 mx-0 column-latest">
                 @foreach (var product in Model.LatestProducts.LatestWomanProducts)
                 {
                     <div class="column is-12 px-0 latest-product">
@@ -44,7 +44,7 @@
                 <a class="subtitle is-6 has-text-info" asp-page="/Shop/Browse" asp-route-gender="man"
                     asp-route-query="all" asp-route-categoryUrl="clothes">See more</a>
             </p>
-            <div id="slider2" class="columns px-0 mx-0 column-latest">
+            <div id="slider3" class="columns px-0 mx-0 column-latest">
                 @foreach (var product in Model.LatestProducts.LatestManProducts)
                 {
                     <div class="column is-12 px-0 latest-product">
@@ -74,12 +74,12 @@
 
 @section Scripts {
 <script>
-    var carouselSettings = {
+    var carouselSettingsLatest = {
         slidesToScroll: 1,
         slidesToShow: 2,
-        infinite: true,
+        infinity: true,
         loop: true,
-        autoplay: false,
+        autoplay: true,
         pagination: false,
         navigationSwipe: true,
         autoplaySpeed: 4000,
@@ -88,9 +88,9 @@
             { changePoint: 768, slidesToShow: 2, slidesToScroll: 2 }]
     };
 
-    bulmaCarousel.attach('#slider', carouselSettings);
+    bulmaCarousel.attach('#slider2', carouselSettingsLatest);
 
-    bulmaCarousel.attach('#slider2', carouselSettings);
+    bulmaCarousel.attach('#slider3', carouselSettingsLatest);
 
     var thumbnails = document.querySelectorAll('img.thumbnail');
     thumbnails.forEach(thumbnail => {

@@ -14,10 +14,15 @@
         @await Component.InvokeAsync("BrowseSideMenu", new {categoryUrl = Model.CategoryUrl, gender = Model.Gender})
     </div>
 
-    <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen px-6">
+    <div class="column is-12-mobile is-12 is-9-desktop is-10-widescreen">
+        <p class="subtitle is-4 is-grey">
+            @(gender.ToLower().Equals("woman") ? "Women's" : "Men's") @Model.BrowseData.CategoryName.ToLower()
+
+        </p>
         <div class="columns">
             <div class="column is-10 px-1">
-                <form id="testForm" method="get">
+                <form id="testForm" class="is-flex-mobile is-flex-wrap-wrap is-justify-content-space-between"
+                    method="get">
                     <div class="dropdown filter-dropdown">
                         <div class="dropdown-trigger">
                             <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
@@ -38,7 +43,7 @@
                                             asp-for="@Model.BrowseData.Filters.SortBy" name="sortBy"
                                             value="@((int)option)"
                                             checked="@Model.BrowseData?.Filters.SortBy.Equals(option)">
-                                            <span class=" option-name">@option.GetDisplayName()</span>
+                                            <span class="option-name">@option.GetDisplayName()</span>
                                         </label>
                                     }
                                 </div>
@@ -46,7 +51,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dropdown filter-dropdown">
+                    <div class="dropdown is-right filter-dropdown">
                         <div class="dropdown-trigger">
                             <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
                                 aria-controls="dropdown-menu2">
@@ -115,7 +120,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dropdown filter-dropdown">
+                    <div class="dropdown is-right filter-dropdown">
                         <div class="dropdown-trigger">
                             <button type="button" class="button is-light dropdown-button" aria-haspopup="true"
                                 aria-controls="dropdown-menu2">
@@ -173,7 +178,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="button is-primary"><strong>Search</strong></button>
+                    <button type="submit" class="button is-primary submit-form-main"><strong>Search</strong></button>
                 </form>
             </div>
             <div class="column is-2 px-1 has-text-right">
@@ -257,7 +262,6 @@
     })
 
     $("#testForm").on('submit', (e) => {
-        console.log(e.currentTarget);
         $("#testForm").find('input').each(function () {
             var input = $(this);
             if (!input.val()) {
@@ -299,44 +303,5 @@
             $maxPriceInput.attr('data-currentValue', $maxPriceInput.val())
         }
     })
-
-    @*
-
-            $($thumbnails).each((i, img) => {
-            $(img).on("mouseenter", (e) => {
-            var productId = $(e.currentTarget).attr("data-productId");
-            var $image1 = $(`img.thumbnail[data-productId="${productId}"]`);
-            var $image2 = $(`img.thumbnail2[data-productId="${productId}"]`);
-            console.log(productId)
-            console.log($($image1))
-            console.log($image2)
-
-            var tempSrc = $($image1).attr('src');
-            $($image1).attr('src', $($image2).attr('src'));
-            $($image2).attr('src', tempSrc);
-
-            console.log(productId)
-            $(img).attr("hidden", "");
-            $(`img.thumbnail[data-productId="${productId}"`).attr('src', "");
-            $(`img.thumbnail2[data-productId="${productId}"`).removeAttr('hidden');
-            })
-            $(img).on("mouseleave", (e) => {
-            var productId = $(e.currentTarget).attr("data-productId");
-            var $image1 = $(`img.thumbnail[data-productId="${productId}"]`);
-            var $image2 = $(`img.thumbnail2[data-productId="${productId}"]`);
-            console.log($image1)
-            console.log($image2)
-
-            var tempSrc = $($image1).attr('src');
-            $($image1).attr('src', $($image2).attr('src'));
-            $($image2).attr('src', tempSrc);
-
-            console.log(productId)
-            $(img).attr("hidden", "");
-            $(`img.thumbnail[data-productId="${productId}"`).attr('src', "");
-            $(`img.thumbnail2[data-productId="${productId}"`).removeAttr('hidden');
-            })
-        *@
-
 </script>
 }

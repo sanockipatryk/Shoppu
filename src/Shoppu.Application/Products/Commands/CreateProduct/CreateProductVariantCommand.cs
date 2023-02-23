@@ -78,7 +78,7 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
                     {
                         Notification = new NotificationMessageViewModel
                         {
-
+                            StatusType = Domain.Enums.StatusType.Success
                         },
                         CategoryUrl = createdProductVariant.Product.ProductCategory.UrlName,
                         ProductCode = createdProductVariant.Product.Code,

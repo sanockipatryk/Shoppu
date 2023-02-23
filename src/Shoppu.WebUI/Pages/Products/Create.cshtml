@@ -27,11 +27,15 @@
 		</ul>
 	}
 }
-<div class="container">
+<div class="container px-3">
 	@if (Model?.Notification != null)
 	{
 		<partial name="_Notification" model="@Model.Notification" />
 	}
+	<a class="button is-ghost px-0 mb-3" asp-page="/Products/Manage" asp-route-categoryUrl="clothes">
+		<i class="fa fa-arrow-left mr-2"></i>
+		Go back to managing products
+	</a>
 	<form id="productForm" method="post">
 		<input id="productCategoryIdInput" type="hidden" asp-for="@Model.Product.ProductCategoryId" />
 		<div class="columns">

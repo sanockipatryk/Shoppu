@@ -9,14 +9,30 @@
 
 
 <img id="sampleImage" class="m-3 create-variant-upload-image" style="height: 500px">
-<div class="container">
-    <div class="has-text-centered">
-        <p class="title is-4 mb-5">Edit variant</p>
-    </div>
+<div class="container px-3">
+    @if (Model?.Notification != null)
+    {
+        <partial name="_Notification" model="@Model.Notification" />
+    }
+    <a class="button is-ghost px-0 mb-3" asp-page="/Products/Manage"
+        asp-route-categoryUrl="@Model.ProductVariant.ProductCategoryUrl"
+        asp-route-code="@Model.ProductVariant.ProductCode">
+        <i class="fa fa-arrow-left mr-2"></i>
+        Go back to managing products
+    </a>
+    <p class="subtitle is-4 mb-5 is-grey">Edit variant</p>
     <form method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="@Model.ProductVariant.ProductId" />
         <input type="hidden" asp-for="@Model.ProductVariant.ProductVariantId" />
         <input type="hidden" asp-for="@Model.ProductVariant.ProductCode" />
+        @{
+            int i = 0;
+        }
+        @foreach (var imagePath in Model.ProductVariant.ImagePaths)
+        {
+            <input type="hidden" name="ProductVariant.ImagePaths[@i]" value="@imagePath" />
+            i++;
+        }
         <div class="columns mb-2">
             <div class="column is-2">
                 <label class="label" asp-for="@Model.ProductVariant.CodeAddition"></label>
@@ -105,17 +121,18 @@
                 }
             </div>
             <div class="column is-2">
-                <button class="button is-primary is-fullwidth" type="submit">Add variant</button>
+                <button class="button is-info is-fullwidth" type="submit">Edit variant</button>
             </div>
         </div>
     </form>
     <div>
-        <p id="imagesLoadedInfo" class="title is-4 mb-5">Add images to overwrite existing ones...</p>
+        <p id="imagesLoadedInfo" class="subtitle is-4 mb-5 is-grey">Add images to overwrite existing ones...</p>
         <div id="imagesContainer" class="has-text-centered">
         </div>
     </div>
     <div class="has-text-centered">
-        <p class="title is-4 mb-5">Current @Model.ProductVariant.ImagePaths.Count() images for this variant</p>
+        <p class="subtitle is-4 mb-5 is-grey">Current @Model.ProductVariant.ImagePaths.Count() images for this variant
+        </p>
         @foreach (var imgPath in Model.ProductVariant.ImagePaths)
         {
             <img class="m-3 create-variant-upload-image" src="@url\@imgPath">

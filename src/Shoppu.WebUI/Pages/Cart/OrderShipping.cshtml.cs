@@ -37,8 +37,6 @@ namespace Shoppu.WebUI.Pages.Cart
             if (ModelState.IsValid)
             {
                 Notification = await _mediator.Send(new CreateOrderCommand(User, ShippmentData));
-                // return RedirectToPage("ViewCart");
-                // return Page();
             }
 
             Cart = await _mediator.Send(new GetCartWithCartItemsQuery(User, false));

@@ -127,6 +127,7 @@ namespace Shoppu.Application.Products.Queries.Shop
             browseData.PossibleSizes = possibleSizes;
             browseData.PossibleVariants = possibleColors;
             browseData.Pagination = newPagination;
+            browseData.CategoryName = allCategories.FirstOrDefault(c => c.UrlName.ToLower().Equals(request.CategoryUrl)).Name;
 
             return browseData;
 

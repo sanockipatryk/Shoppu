@@ -8,9 +8,9 @@ using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.Application.Products.Commands.EditProduct
 {
-    public record EditProductVariantCommand(EditProductVariantViewModel ProductVariant) : IRequest<ProductVariant>;
+    public record EditProductVariantCommand(EditProductVariantViewModel ProductVariant) : IRequest<NotificationWithUrlAndProductVariantData>;
 
-    public class EditProductVariantCommandHandler : IRequestHandler<EditProductVariantCommand, ProductVariant>
+    public class EditProductVariantCommandHandler : IRequestHandler<EditProductVariantCommand, NotificationWithUrlAndProductVariantData>
     {
         private readonly IApplicationDbContext _context;
         public EditProductVariantCommandHandler(IApplicationDbContext context)
@@ -18,7 +18,7 @@ namespace Shoppu.Application.Products.Commands.EditProduct
             _context = context;
         }
 
-        public async Task<ProductVariant> Handle(EditProductVariantCommand request, CancellationToken cancellationToken)
+        public async Task<NotificationWithUrlAndProductVariantData> Handle(EditProductVariantCommand request, CancellationToken cancellationToken)
         {
             var productVariantFromDb = await _context.ProductVariants
                 .Where(pv => pv.Id == request.ProductVariant.ProductVariantId && !pv.IsAccessible)
@@ -31,19 +31,83 @@ namespace Shoppu.Application.Products.Commands.EditProduct
                 StringBuilder codeStringBuilder = new StringBuilder(productVariantFromDb.Product.Code);
                 codeStringBuilder.Append("/").Append(request.ProductVariant.CodeAddition);
 
-                productVariantFromDb.Name = request.ProductVariant.Name;
-                if (request.ProductVariant.Price != null)
+                var productVariantExistsWithSameCode = await _context.ProductVariants
+                    .AnyAsync(pv => pv.Id != productVariantFromDb.Id && pv.Code.Equals(codeStringBuilder.ToString().ToUpper()));
+
+                if (!productVariantExistsWithSameCode)
                 {
-                    productVariantFromDb.Price = Decimal.Parse(request.ProductVariant.Price, CultureInfo.InvariantCulture);
+                    if (
+                        ((productVariantFromDb.Name != null && request.ProductVariant.Name != null &&
+                        productVariantFromDb.Name.ToLower().Equals(request.ProductVariant.Name.ToLower()))
+                        || productVariantFromDb.Name == null && request.ProductVariant.Name == null)
+                        && productVariantFromDb.Price.Equals(request.ProductVariant.Price)
+                        && productVariantFromDb.VariantId.Equals(request.ProductVariant.VariantId)
+                        && productVariantFromDb.Code.Equals(codeStringBuilder.ToString().ToUpper())
+                    )
+                    {
+                        return new NotificationWithUrlAndProductVariantData
+                        {
+                            Notification = new NotificationMessageViewModel
+                            {
+                                StatusType = Domain.Enums.StatusType.Info,
+                                Message = "No changes were made."
+                            },
+                            CategoryUrl = productVariantFromDb.Product.ProductCategory.UrlName,
+                            ProductCode = productVariantFromDb.Product.Code,
+                            ProductVariantId = productVariantFromDb.Id,
+                            ProductVariantCode = productVariantFromDb.Code,
+                        };
+                    }
+
+                    productVariantFromDb.Name = request.ProductVariant.Name;
+                    if (request.ProductVariant.Price != null)
+                    {
+                        productVariantFromDb.Price = Decimal.Parse(request.ProductVariant.Price, CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        productVariantFromDb.Price = null;
+                    }
+
+                    productVariantFromDb.Code = codeStringBuilder.ToString().ToUpper();
+                    productVariantFromDb.VariantId = request.ProductVariant.VariantId;
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    return new NotificationWithUrlAndProductVariantData
+                    {
+                        Notification = new NotificationMessageViewModel
+                        {
+                            StatusType = Domain.Enums.StatusType.Success,
+                            Message = "Variant was updated."
+                        },
+                        CategoryUrl = productVariantFromDb.Product.ProductCategory.UrlName,
+                        ProductCode = productVariantFromDb.Product.Code,
+                        ProductVariantId = productVariantFromDb.Id,
+                        ProductVariantCode = productVariantFromDb.Code,
+                    };
                 }
-                productVariantFromDb.Code = codeStringBuilder.ToString();
-                productVariantFromDb.VariantId = request.ProductVariant.VariantId;
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return productVariantFromDb;
+                else
+                {
+                    return new NotificationWithUrlAndProductVariantData
+                    {
+                        Notification = new NotificationMessageViewModel
+                        {
+                            StatusType = Domain.Enums.StatusType.Danger,
+                            Message = "Variant of this product with the same code already exists."
+                        }
+                    };
+                }
             }
-            return null;
+
+            return new NotificationWithUrlAndProductVariantData
+            {
+                Notification = new NotificationMessageViewModel
+                {
+                    StatusType = Domain.Enums.StatusType.Warning,
+                    Message = "Something went wrong. Try again."
+                }
+            };
         }
     }
 }

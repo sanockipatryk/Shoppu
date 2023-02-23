@@ -4,11 +4,16 @@
 	int index = 0;
 }
 
-<div class="container">
+<div class="container px-3">
 	@if (Model?.Notification != null)
 	{
 		<partial name="_Notification" model="@Model.Notification" />
 	}
+	<a class="button is-ghost px-0 mb-3" asp-page="/Products/Manage"
+		asp-route-categoryUrl="@Model.Product.ProductCategory.UrlName" asp-route-code="@Model.Product.Code">
+		<i class="fa fa-arrow-left mr-2"></i>
+		Go back to managing products
+	</a>
 	<form method="post">
 		<input type="hidden" asp-for="@Model.ProductId" />
 		<input type="hidden" asp-for="@Model.VariantId" />
@@ -59,7 +64,6 @@
 		$(checkbox).on('change', (e) => {
 			var checkboxSizeId = $(checkbox).attr("data-sizeId")
 			if (checkbox.checked) {
-				console.log($(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`));
 				$(`.size-form-field[data-sizeId="${checkboxSizeId}"] .quantity-input`).removeAttr("disabled");
 			}
 			else {

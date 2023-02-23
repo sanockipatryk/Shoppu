@@ -184,12 +184,12 @@
     }
 </aside>
 <div class="is-flex is-hidden-desktop has-text-centered" style="overflow-x:scroll;">
-    @{
-    }
     @foreach (var subcategory in @Model.ProductCategories?.FirstOrDefault(pc =>
     pc.UrlName.Equals(Model.CurrentProductCategoryUrl))?.SubCategories)
     {
-        <button class="button mx-1 mb-4">@subcategory.Name</button>
+        <a class="button mx-1 mb-4" asp-route-categoryUrl="@subcategory.UrlName"
+        asp-route-query="@Model.ProductCategories?.FirstOrDefault(pc => pc.UrlName.Equals(Model.CurrentProductCategoryUrl))?.UrlName"
+        asp-route-gender="@Model.CurrentGenderSelected">@subcategory.Name</a>
     }
 
 </div>

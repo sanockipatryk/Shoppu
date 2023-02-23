@@ -22,17 +22,27 @@ namespace Shoppu.WebUI.Pages.Shop
         [BindProperty]
         public int ProductVariantSizeId { get; set; }
 
-        public async Task OnGet(string slug)
+        public async Task<IActionResult> OnGet(string slug)
         {
             ShopProduct = await _mediator.Send(new GetShopProductQuery(slug));
             Slug = slug;
+            return Page();
         }
 
-        public async Task OnPost(string slug)
+        public async Task<IActionResult> OnPost(string slug)
         {
-            Notification = await _mediator.Send(new AddItemToCartCommand(User, ProductVariantSizeId));
-            ShopProduct = await _mediator.Send(new GetShopProductQuery(slug));
-            Slug = slug;
+            if (User.Identity.IsAuthenticated)
+            {
+                Notification = await _mediator.Send(new AddItemToCartCommand(User, ProductVariantSizeId));
+                ShopProduct = await _mediator.Send(new GetShopProductQuery(slug));
+                Slug = slug;
+                return Page();
+            }
+            else
+            {
+                var returnUrl = Url.Page("Product", new { slug });
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl});
+            }
         }
     }
 }

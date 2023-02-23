@@ -1,11 +1,11 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+	ViewData["Title"] = "Register";
 }
 
 <div class="container">
-	<div class="columns is-centered">
+	<div class="columns is-centered mx-0">
 		<div class="column is-10-mobile is-offset-1-mobile is-half">
 			<div class="card">
 				<div class="card-content">
@@ -15,21 +15,24 @@
 						<div class="field">
 							<label class="label" asp-for="Input.Email"></label>
 							<div class="control">
-								<input asp-for="Input.Email" class="input" type="email" autocomplete="username" aria-required="true" placeholder="Enter username" />
+								<input asp-for="Input.Email" class="input" type="email" autocomplete="username"
+									aria-required="true" placeholder="Enter username" />
 								<span asp-validation-for="Input.Email" class="text-danger"></span>
 							</div>
 						</div>
 						<div class="field">
 							<label class="label" asp-for="Input.Password"></label>
 							<div class="control">
-								<input asp-for="Input.Password" class="input" type="password" aria-required="true" placeholder="Enter password" />
+								<input asp-for="Input.Password" class="input" type="password" aria-required="true"
+									placeholder="Enter password" />
 								<span asp-validation-for="Input.Password" class="text-danger"></span>
 							</div>
 						</div>
 						<div class="field">
 							<label class="label" asp-for="Input.ConfirmPassword"></label>
 							<div class="control">
-								<input asp-for="Input.ConfirmPassword" class="input" type="password" aria-required="true" placeholder="Confirm password" />
+								<input asp-for="Input.ConfirmPassword" class="input" type="password"
+									aria-required="true" placeholder="Confirm password" />
 								<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
 							</div>
 						</div>
@@ -46,5 +49,5 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }

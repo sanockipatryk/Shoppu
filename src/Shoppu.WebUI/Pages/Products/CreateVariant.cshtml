@@ -4,14 +4,17 @@
 @{
 }
 <img id="sampleImage" class="m-3 create-variant-upload-image" height="200" style="height: 500px">
-<div class="container">
+<div class="container px-3">
 	@if (Model?.Notification != null)
 	{
 		<partial name="_Notification" model="@Model.Notification" />
 	}
-	<div class="has-text-centered">
-		<p class="title is-4 mb-5">Add new variant</p>
-	</div>
+	<a class="button is-ghost px-0 mb-3" asp-page="/Products/Manage"
+		asp-route-categoryUrl="@Model.Product.ProductCategory.UrlName" asp-route-code="@Model.Product.Code">
+		<i class="fa fa-arrow-left mr-2"></i>
+		Go back to managing products
+	</a>
+	<p class="subtitle is-4 is-grey mb-5">Add new variant</p>
 	<form method="post" enctype="multipart/form-data">
 		<input type="hidden" asp-for="@Model.ProductVariant.ProductId" value="@Model.Product.Id" />
 		<div class="columns mb-2">
@@ -53,8 +56,6 @@
 					<label class="label" asp-for="@Model.ProductVariant.VariantId"></label>
 					<div class="select is-fullwidth">
 						<select id="variantSelect" asp-for="@Model.ProductVariant.VariantId">
-							@* asp-items="@Model.PossibleVariants.ToSelectListItem(Model.ProductVariant.VariantId,
-								"Select variant")" *@
 							<option value="-1">Select variant</option>
 							@foreach (var option in @Model.PossibleVariants)
 							{
@@ -102,7 +103,7 @@
 		</div>
 	</form>
 	<div>
-		<p id="imagesLoadedInfo" class="title is-4 mb-5">No images loaded...</p>
+		<p id="imagesLoadedInfo" class="subtitle is-4 is-grey mb-5">No images loaded...</p>
 		<div id="imagesContainer" class="has-text-centered">
 		</div>
 	</div>

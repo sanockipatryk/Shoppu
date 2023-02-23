@@ -32,7 +32,7 @@ namespace Shoppu.WebUI.Extensions
             var selectListGroups = new List<SelectListGroup>();
             foreach (var item in items)
             {
-                if(item.ParentCategoryId == null && selectListGroups.FirstOrDefault(g => g.Name == item.ParentCategory?.Name) == null)
+                if (item.ParentCategoryId == null && selectListGroups.FirstOrDefault(g => g.Name == item.ParentCategory?.Name) == null)
                 {
                     selectListGroups.Add(new SelectListGroup()
                     {
@@ -41,12 +41,6 @@ namespace Shoppu.WebUI.Extensions
                 }
             }
 
-            //var selectListGroups = from item in items
-            //                       where item.ParentCategoryId == null
-            //                       select new SelectListGroup
-            //                       {
-            //                           Name = item.Name,
-            //                       };
             var selectListItems = from item in items
                                   select new SelectListItem
                                   {

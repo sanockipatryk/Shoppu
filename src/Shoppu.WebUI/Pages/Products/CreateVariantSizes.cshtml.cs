@@ -1,8 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Shoppu.Application.Products.Queries;
 using Shoppu.Application.Sizes.Commads;
 using Shoppu.Application.Sizes.Queries;
+using Shoppu.Domain.Entities;
 using Shoppu.Domain.ViewModels;
 
 namespace Shoppu.WebUI.Pages.Products
@@ -22,12 +24,15 @@ namespace Shoppu.WebUI.Pages.Products
         [BindProperty]
         public int VariantId { get; set; }
 
+        public Product Product { get; set; }
+
         public NotificationMessageViewModel Notification { get; set; }
 
         public async Task OnGet(int productId, int variantId)
         {
             ProductId = productId;
             VariantId = variantId;
+            Product = await _mediator.Send(new GetProductUrlDataQuery(ProductId));
             await LoadPossibleVariantSizes(productId);
         }
 
@@ -42,6 +47,7 @@ namespace Shoppu.WebUI.Pages.Products
                 if (Notification.StatusType == Domain.Enums.StatusType.Success)
                     return RedirectToPage("Manage", new { categoryUrl = notificationWithUrlValues.CategoryUrl, code = notificationWithUrlValues.ProductCode });
             }
+            Product = await _mediator.Send(new GetProductUrlDataQuery(ProductId));
             return Page();
         }
 

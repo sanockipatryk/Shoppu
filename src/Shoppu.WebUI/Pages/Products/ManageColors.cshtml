@@ -10,7 +10,7 @@
     {
         <partial name="_Notification" model="@Model.Notification" />
     }
-    <p class="subtitle is-grey">Add a color variant</p>
+    <p class="subtitle is-4 is-grey">Add a color variant</p>
     <form method="post" class="mb-6">
         <div class="field">
             <label class="label" asp-for="@Model.NewColorVariant.Name"></label>
@@ -29,7 +29,7 @@
         <button class="button is-success">Add variant</button>
     </form>
 
-    <p class="subtitle is-grey">Existing color variants:</p>
+    <p class="subtitle is-4 is-grey">Existing color variants</p>
 
     <div class="mx-0 is-flex is-flex-wrap-wrap variant-wrapper">
         @foreach (var color in Model.ExistingVariants)

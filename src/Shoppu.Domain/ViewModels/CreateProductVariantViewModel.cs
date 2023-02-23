@@ -22,5 +22,6 @@ namespace Shoppu.Domain.ViewModels
         [StringLength(2, MinimumLength = 2, ErrorMessage = "Variation code should have a total of 2 characters.")]
         [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Variation code should consist of only letters and numbers.")]
         public string CodeAddition { get; set; }
+        public string? ProductCategoryUrl { get; set; }
     }
 }

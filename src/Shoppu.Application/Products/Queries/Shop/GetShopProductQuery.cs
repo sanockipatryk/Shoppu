@@ -64,7 +64,7 @@ namespace Shoppu.Application.Products.Queries.Shop
             }
 
             var productVariants = await _context.ProductVariants
-            .Where(pv => pv.ProductId == productData.Product.Id)
+            .Where(pv => pv.ProductId == productData.Product.Id && pv.IsAccessible)
             .Select(pv => new ColorVariantViewModel
             {
                 VariantSlug = pv.Slug,
