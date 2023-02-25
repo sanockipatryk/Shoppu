@@ -34,7 +34,7 @@ namespace Shoppu.WebUI.Pages.Products
             EditCategory = new EditProductCategoryViewModel();
         }
 
-        public async Task OnPostCreateCategory(CreateProductCategoryViewModel newCategory)
+        public async Task OnPostCreate(CreateProductCategoryViewModel newCategory)
         {
             if (ModelState.IsValid)
             {
@@ -60,21 +60,7 @@ namespace Shoppu.WebUI.Pages.Products
             EditCategory = new EditProductCategoryViewModel();
         }
 
-        public async Task OnPostDeleteCategory(int categoryId)
-        {
-            if (ModelState.IsValid)
-            {
-                Notification = await _mediator.Send(new DeleteProductCategoryCommand(categoryId));
-            }
-
-            DisplayAction = ProductCategoryDisplayAction.Create;
-            ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery(true));
-            NewCategory = new CreateProductCategoryViewModel();
-            EditCategory = new EditProductCategoryViewModel();
-
-        }
-
-        public async Task OnPostEditCategory(EditProductCategoryViewModel editCategory)
+        public async Task OnPostEdit(EditProductCategoryViewModel editCategory)
         {
             if (ModelState.IsValid)
             {
@@ -100,6 +86,19 @@ namespace Shoppu.WebUI.Pages.Products
 
             ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery(true));
             NewCategory = new CreateProductCategoryViewModel();
+        }
+        public async Task OnPostDelete(int categoryId)
+        {
+            if (ModelState.IsValid)
+            {
+                Notification = await _mediator.Send(new DeleteProductCategoryCommand(categoryId));
+            }
+
+            DisplayAction = ProductCategoryDisplayAction.Create;
+            ProductCategories = await _mediator.Send(new GetProductCategoriesListQuery(true));
+            NewCategory = new CreateProductCategoryViewModel();
+            EditCategory = new EditProductCategoryViewModel();
+
         }
     }
 }

@@ -63,7 +63,7 @@
                       {
                         @if (variant.Sizes.Count > 0)
                         {
-                        <form method="post" asp-page-handler="ChangeVariantVisibility">
+                        <form method="post" asp-page-handler="setAccessible">
                           <input type="hidden" name="variantId" asp-for="@variant.Id" />
                           <button type="submit" class="button is-warning">
                             <strong>Make accessible</strong>

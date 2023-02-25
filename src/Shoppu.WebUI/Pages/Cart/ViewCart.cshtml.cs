@@ -31,14 +31,14 @@ namespace Shoppu.WebUI.Pages.Cart
             ViewData["ImageUrlPrefix"] = location.AbsoluteUri;
         }
 
-        public async Task OnPostUpdateItem(int productVariantSizeId, CartItemAction action)
+        public async Task OnPostUpdate(int productVariantSizeId, CartItemAction action)
         {
             Notification = await _mediator.Send(new ChangeCartItemQuantityCommand(User, productVariantSizeId, action));
             Cart = await _mediator.Send(new GetCartWithCartItemsQuery(User, false));
             Cart.IsEditable = true;
         }
 
-        public async Task OnPostRemoveAllItems(CartItemAction action)
+        public async Task OnPostEmpty(CartItemAction action)
         {
             Notification = await _mediator.Send(new RemoveAllItemsFromCartCommand(User, action));
             Cart = await _mediator.Send(new GetCartWithCartItemsQuery(User, false));

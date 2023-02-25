@@ -1,4 +1,4 @@
-@page "/manage/categories"
+@page "/manage/categories/{handler?}"
 @model Shoppu.WebUI.Pages.Products.ManageCategoriesModel
 @{
     ViewData["Title"] = "ManageCategories";
@@ -90,7 +90,7 @@
         <div class="column is-4">
             <form id="newCategoryForm"
                 class="@(Model.DisplayAction == ProductCategoryDisplayAction.Create ? "" : "is-hidden")" method="post"
-                asp-page-handler="CreateCategory">
+                asp-page-handler="create">
                 <p class="subtitle is-4 is-grey">Adding subcategory</p>
                 <input id="parentCategoryIdField" type="hidden" asp-for="@Model.NewCategory.ParentCategoryId">
                 <div class="field">
@@ -123,7 +123,7 @@
 
             <form id="editCategoryForm"
                 class="@(Model.DisplayAction == ProductCategoryDisplayAction.Edit ? "" : "is-hidden")" method="post"
-                asp-page-handler="EditCategory">
+                asp-page-handler="edit">
                 <p class="subtitle is-4 is-grey">Updating category</p>
                 <input id="editCategoryIdField" type="hidden" asp-for="@Model.EditCategory.CategoryId">
                 <div class="field">
@@ -156,7 +156,7 @@
                 </div>
             </form>
 
-            <form id="deleteCategoryForm" class="is-hidden" method="post" asp-page-handler="DeleteCategory">
+            <form id="deleteCategoryForm" class="is-hidden" method="post" asp-page-handler="delete">
                 <p class="subtitle is-4 is-grey">Deleting category</p>
                 <p class="subtitle is-5">Are you sure you want to delete category <strong
                         class="deleted-category-name">Category</strong>?</p>

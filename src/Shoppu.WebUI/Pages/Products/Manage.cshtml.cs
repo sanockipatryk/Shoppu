@@ -30,7 +30,7 @@ namespace Shoppu.WebUI.Pages.Products
             ManageData = await _mediator.Send(new GetProductsListQuery(CategoryUrl, filters, pagination));
         }
 
-        public async Task OnPostChangeVariantVisibility(string? categoryUrl, int variantId)
+        public async Task OnPostSetAccessible(string? categoryUrl, int variantId)
         {
             var productCode = await _mediator.Send(new SetProductVariantAccessibleCommand(variantId));
             CategoryUrl = categoryUrl;

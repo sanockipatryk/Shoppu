@@ -7,7 +7,7 @@
     {
         <div class="has-text-right">
             <button class="button is-text mb-4 remove-all-button" type="button">Remove all items from cart</button>
-            <form id="removeAllItems" method="post" asp-page-handler="RemoveAllItems" class="mb-4 is-hidden">
+            <form id="removeAllItems" method="post" asp-page-handler="empty" class="mb-4 is-hidden">
                 <input type="hidden" name="action" value="@CartItemAction.RemoveAllItems" />
                 <p class="has-text-danger mb-3 is-ff-nanum">You are about to clear your cart.</p>
                 <button id="cancelRemoveAllItems" class="button is-dark mb-4" type="button">Cancel</button>
@@ -30,7 +30,7 @@
                     @if (Model.IsEditable)
                     {
 
-                        <form method="post" asp-page-handler="UpdateItem">
+                        <form method="post" asp-page-handler="update">
                             <p class="subtitle mb-1 is-flex is-justify-content-space-between is-ff-nanum">
                                 <span><strong>@(item.ProductVariantSize.ProductVariant.Name ??
                                 item.ProductVariantSize.ProductVariant.Product.Name)</strong></span>
@@ -69,7 +69,7 @@
                 @if (Model.IsEditable)
                 {
                     <div class="field has-addons control-amount-buttons">
-                        <form method="post" asp-page-handler="UpdateItem">
+                        <form method="post" asp-page-handler="update">
                             <p class="control">
                                 <button class="button" type="submit">-</button>
                                 <input type="hidden" name="productVariantSizeId" value="@item.ProductVariantSize.Id" />
@@ -79,7 +79,7 @@
                         <p class="control">
                             <input class="input has-text-centered" type="text" value="@item.Quantity" readonly>
                         </p>
-                        <form method="post" asp-page-handler="UpdateItem">
+                        <form method="post" asp-page-handler="update">
                             <p class="control">
                                 <button class="button" type="submit">+</button>
                                 <input type="hidden" name="productVariantSizeId" value="@item.ProductVariantSize.Id" />
