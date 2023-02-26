@@ -8,17 +8,29 @@ Application built using .NET 6 with code-first approach and the use of Razor Pag
 Application uses the MediatR Nuget package.
 
 Application is currently hosted using Azure. To access it, click the link below: 
+
 (Server might need a few seconds to get back up)
+
 [Hosted application](https://shoppu.azurewebsites.net/)
+
 Users are welcome to create their own accounts, or use one of already existing ones:
+
 **admin**: 
+
 login: admin@admin.com 
+
 password: !Q1w2e3r4
+
 **user**: 
+
 login: user@user.com
+
 password: !Q1w2e3r4
+
 **user2**
+
 login: user2@user.com
+
 password: !Q1w2e3r4
 
 Application was fully equipped to fully display the application ecosystem.
