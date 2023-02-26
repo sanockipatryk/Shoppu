@@ -2,8 +2,13 @@
 @model Shoppu.WebUI.Pages.Products.ManageModel
 
 @{
+  ViewData["Title"] = "Manage products";
   var location = new Uri($"{Request.Scheme}://{Request.Host}");
   var url = location.AbsoluteUri;
+
+  string IsSpecifiedGender(ProductCategory cat) => (@cat.SpecificGender == null ? "has-text-white" :
+  cat.SpecificGender.Equals("woman")
+  ? "category-woman" : "category-man");
 }
 
 <div class="columns mx-0">
@@ -38,9 +43,12 @@
             {
             <tr class="product-row">
               <td><strong class="has-text-light">@product.Code</strong></td>
-              <td><strong class="has-text-light">@product.Gender</strong></td>
+              <td><strong
+              class="@(product.Gender.Equals(ProductGender.Woman) ? "category-woman" : @product.Gender.Equals(ProductGender.Man) ? "category-man" : "has-text-light")">@product.Gender</strong>
+              </td>
               <td><strong class="has-text-light">@product.Name</strong></td>
-              <td><strong class="has-text-light">@product.ProductCategory.Name</strong></td>
+              <td><strong class="@IsSpecifiedGender(product.ProductCategory)">@product.ProductCategory.Name</strong>
+              </td>
               <td><strong class="has-text-light">@product.Price.ToString("0.00$")</strong></td>
               <td></td>
             </tr>

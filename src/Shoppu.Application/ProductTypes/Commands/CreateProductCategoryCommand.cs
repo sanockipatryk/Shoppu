@@ -25,6 +25,7 @@ namespace Shoppu.Application.ProductTypes.Commands
                  Id = pc.Id,
                  Name = pc.Name,
                  HasNoExistingProducts = !pc.Products.Any(),
+                 SpecificGender = pc.SpecificGender
              })
              .FirstOrDefaultAsync();
 
@@ -59,11 +60,21 @@ namespace Shoppu.Application.ProductTypes.Commands
                 };
             }
 
+            if (parentCategoryFromDb.SpecificGender != null && !parentCategoryFromDb.SpecificGender.Equals(request.NewCategory.SpecificGender))
+            {
+                return new NotificationMessageViewModel
+                {
+                    StatusType = Domain.Enums.StatusType.Warning,
+                    Message = $"Subcategory with this gender could not be added."
+                };
+            }
+
             await _context.ProductCategories.AddAsync(new ProductCategory
             {
                 Name = request.NewCategory.Name,
                 UrlName = request.NewCategory.UrlName.ToLower(),
-                ParentCategoryId = request.NewCategory.ParentCategoryId
+                ParentCategoryId = request.NewCategory.ParentCategoryId,
+                SpecificGender = request.NewCategory.SpecificGender
             });
 
             await _context.SaveChangesAsync(cancellationToken);

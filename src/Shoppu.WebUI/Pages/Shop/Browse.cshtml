@@ -4,7 +4,8 @@
 @using Shoppu.WebUI.Extensions
 @{
     var gender = Model.Gender[0].ToString().ToUpper() + Model.Gender.Substring(1);
-    ViewData["Title"] = @$"{gender} {Model.CategoryUrl}";
+    var genderDisplay = gender.Equals("Woman") ? "Women's" : "Men's";
+    ViewData["Title"] = @$"{genderDisplay} {Model.BrowseData.CategoryName.ToLower()}";
     var location = new Uri($"{Request.Scheme}://{Request.Host}");
     var url = location.AbsoluteUri;
 }

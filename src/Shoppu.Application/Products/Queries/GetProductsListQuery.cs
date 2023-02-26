@@ -66,6 +66,7 @@ namespace Shoppu.Application.Products.Queries
                        Id = p.ProductCategory.Id,
                        Name = p.ProductCategory.Name,
                        UrlName = p.ProductCategory.UrlName,
+                       SpecificGender = p.ProductCategory.SpecificGender
                    },
                    Variants = p.Variants
                         .Where(pv => request.Filters.WithoutSpecifiedSizes == false || pv != null && pv.Sizes.Count() == 0)

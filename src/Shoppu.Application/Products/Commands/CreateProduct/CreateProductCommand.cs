@@ -21,6 +21,39 @@ namespace Shoppu.Application.Products.Commands.CreateProduct
 
         public async Task<NotificationWithUrlData> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+
+            var selectedCategory = await _context.ProductCategories.FirstOrDefaultAsync(pc => pc.Id == request.ProductViewModel.ProductCategoryId);
+
+            if (selectedCategory != null)
+            {
+                var genderName = Enum.GetName(typeof(ProductGender), request.ProductViewModel.Gender).ToLower();
+                if (genderName != "unisex")
+                {
+                    if (selectedCategory.SpecificGender != null && !genderName.Equals(selectedCategory.SpecificGender))
+                    {
+                        return new NotificationWithUrlData
+                        {
+                            Notification = new NotificationMessageViewModel
+                            {
+                                StatusType = StatusType.Danger,
+                                Message = "Product gender did not match the selected category targeted gender."
+                            }
+                        };
+                    }
+                }
+            }
+            else
+            {
+                return new NotificationWithUrlData
+                {
+                    Notification = new NotificationMessageViewModel
+                    {
+                        StatusType = StatusType.Danger,
+                        Message = "Selected category was not found."
+                    }
+                };
+            }
+
             var productName = request.ProductViewModel.Name;
             string baseSlug = productName.Slugify();
 

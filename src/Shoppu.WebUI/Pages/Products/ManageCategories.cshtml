@@ -1,13 +1,23 @@
 @page "/manage/categories/{handler?}"
 @model Shoppu.WebUI.Pages.Products.ManageCategoriesModel
 @{
-    ViewData["Title"] = "ManageCategories";
+    ViewData["Title"] = "Manage categories";
+
+    bool CategoryIsEditable(ProductCategory cat)
+    {
+        return ((cat.SubCategories == null || cat.SubCategories.Count() == 0) && cat.ParentCategory != null &&
+        cat.HasNoExistingProducts &&
+        cat?.ParentCategory?.SpecificGender == null);
+    }
+
+    string IsSpecifiedGender(ProductCategory cat) => (@cat.SpecificGender == null ? "" : cat.SpecificGender.Equals("woman")
+    ? "category-woman" : "category-man");
 }
 @{
     void generateCategories(List<ProductCategory> categories, int currentLevel, int? parentCategoryId)
     {
         <ul id="list-collapse-@(parentCategoryId)" data-categoryId="@parentCategoryId"
-        class="@(currentLevel == 0 ? "menu-list" : "my-1 collapsed")">
+        class="@(currentLevel == 0 ? "menu-list" : "my-1 ml-5 collapsed")">
             @foreach (var cat in categories)
             {
                 var hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).Count() > 0;
@@ -16,10 +26,11 @@
                     {
                         <div class="is-relative">
                             <button id="collapse-@(cat.Id)" data-categoryId="@cat.Id"
-                    class="button button-collapse is-white has-text-link @(currentLevel == 0? "pl-0" : "")">
+                    class="button button-collapse is-white has-text-primary @(currentLevel == 0? "pl-0" : "") @IsSpecifiedGender(cat)">
                                 @cat.Name <i class="fa fa-caret-down ml-1"></i>
                             </button>
-                            <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
+                            <button data-gender="@cat.SpecificGender" data-genderEditable="@CategoryIsEditable(cat)"
+                    data-categoryId="@cat.Id" data-categoryName="@cat.Name"
                     class="button is-info manage-categories edit-btn"><i class="fas fa-edit"></i></button>
                         </div>
 
@@ -31,8 +42,9 @@
                         @if (cat.HasNoExistingProducts)
                         {
                         <li>
-                            <p class="has-text-link py-1 is-relative">@cat.Name
-                                <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
+                            <p class="has-text-primary py-1 pl-4 is-relative @IsSpecifiedGender(cat)">@cat.Name
+                                <button data-gender="@cat.SpecificGender" data-genderEditable="@CategoryIsEditable(cat)"
+                    data-categoryId="@cat.Id" data-categoryName="@cat.Name"
                     class="button is-info manage-categories edit-btn"><i class="fas fa-edit"></i></button>
                                 <button data-categoryId="@cat.Id" data-categoryName="@cat.Name"
                     class="button is-danger manage-categories delete-btn">
@@ -40,16 +52,19 @@
                                 </button>
                             </p>
                         </li>
-                        <ul class="my-1">
-                            <li>
-                                <button data-parentCategoryId="@cat.Id" data-parentCategory="@cat.Name"
-                    class="button is-primary is-outlined add-subcategory">Add subcategory to @cat.Name</button>
+                        <ul class="my-1 ml-5 pl-4">
+                            <li class="">
+                                <button data-gender="@cat.SpecificGender" data-parentCategoryId="@cat.Id" data-parentCategory="@cat.Name"
+                    class="button is-small is-dark is-outlined add-subcategory">Add subcategory to @cat.Name</button>
                             </li>
                         </ul>
                         }
                         else
                         {
-                        <button disabled class="button my-1 has-text-link productCategory">@cat.Name</button>
+                        <button disabled title="Category already contains products"
+            class="button my-1 has-text-primary productCategory @IsSpecifiedGender(cat)">
+                                @cat.Name
+                        </button>
                         }
                     }
                 </li>
@@ -61,8 +76,9 @@
             @if (parentCategoryId != null && parentCategory.HasNoExistingProducts)
             {
                 <li>
-                    <button data-parentCategoryId="@parentCategoryId" data-parentCategory="@parentCategory.Name"
-                class="button is-primary is-outlined add-subcategory my-1">Add
+                    <button data-gender="@parentCategory.SpecificGender" data-parentCategoryId="@parentCategoryId"
+                data-parentCategory="@parentCategory.Name"
+                class="button is-small is-dark is-outlined add-subcategory my-1">Add
                         subcategory to
                         @parentCategory.Name</button>
                 </li>
@@ -115,6 +131,26 @@
                         <span class="has-text-danger" asp-validation-for="@Model.NewCategory.UrlName"></span>
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label" asp-for="@Model.NewCategory.SpecificGender"></label>
+                    <div class="control">
+                        <div class="select is-fullwidth-select">
+                            @{
+                                ProductCategory? parentCategory = Model.ProductCategories.FirstOrDefault(pc => pc.Id ==
+            Model.NewCategory.ParentCategoryId);
+                                var disabled = (parentCategory?.SpecificGender != null ? "disabled" : null);
+                            }
+                            @* *@
+                            <select @(disabled) class="gender-select" name="NewCategory.SpecificGender">
+                                <option selected="@(parentCategory?.SpecificGender == null)" value="">Unisex</option>
+                                <option selected="@(parentCategory?.SpecificGender?.Equals("woman"))"
+                                    class="select-option-woman" value="woman">Woman</option>
+                                <option selected="@(parentCategory?.SpecificGender?.Equals("man"))"
+                                    class="select-option-man" value="man">Man</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="has-text-right">
                     <button id="submitCategoryButton" class="button is-success" type="submit">Add category</button>
                 </div>
@@ -149,6 +185,19 @@
                         <span class="has-text-danger" asp-validation-for="@Model.EditCategory.UrlName"></span>
                     </div>
                 </div>
+                <div
+                    class="field @((Model.EditCategory.CategoryId != null && CategoryIsEditable(Model.ProductCategories.FirstOrDefault(pc => pc.Id == Model.EditCategory.CategoryId))) ? "" : "is-hidden") gender-select-wrapper">
+                    <label class="label" asp-for="@Model.EditCategory.SpecificGender"></label>
+                    <div class="control">
+                        <div class="select is-fullwidth-select">
+                            <select class="gender-select" asp-for="@Model.EditCategory.SpecificGender">
+                                <option value="">Unisex</option>
+                                <option class="select-option-woman" value="woman">Woman</option>
+                                <option class="select-option-man" value="man">Man</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="is-flex is-justify-content-space-between">
                     <button id="cancelEditButton" class="button is-warning" type="button">Cancel</button>
                     <button id="submitEditCategoryButton" class="button is-info" type="submit">Update
@@ -179,6 +228,8 @@
     var $selectedCategoryNameField = $('.selected-category-name');
 
     var $newCategoryForm = $("#newCategoryForm");
+    var $newCategoryGenderField = $("#newCategoryForm .gender-select")
+
     var $editCategoryForm = $("#editCategoryForm");
 
 
@@ -213,12 +264,24 @@
             e.preventDefault();
             var $currentlySelectedCategory = $('.add-subcategory.selected')[0];
             deselectButtons("create");
+
             if ($currentlySelectedCategory !== undefined) {
                 setCategoryDeselected($currentlySelectedCategory)
                 setCategorySelected(category)
             }
             else {
                 setCategorySelected(category)
+            }
+
+            if ($(category).attr('data-gender').length > 0) {
+                $newCategoryGenderField.val($(category).attr('data-gender'));
+                $newCategoryGenderField.attr('disabled', "")
+            }
+            else {
+                if ($newCategoryGenderField.attr("disabled") !== undefined) {
+                    $newCategoryGenderField.removeAttr("disabled");
+                    $newCategoryGenderField.val("");
+                }
             }
         })
     });
@@ -241,6 +304,8 @@
             $('#parentCategoryIdField').val(parseInt(parentCategoryId));
         else
             $('#parentCategoryIdField').val(null);
+        if ($newCategoryGenderField.attr("disabled") !== undefined)
+            $newCategoryGenderField.removeAttr("disabled");
         $newCategoryForm.submit();
     });
 
@@ -264,6 +329,8 @@
     var $editCategoryButtons = $(".manage-categories.edit-btn");
     var $editCategoryIdField = $("#editCategoryIdField");
     var $editCategoryNameField = $(".edited-category-name");
+    var $editCategoryGenderFieldWrapper = $('#editCategoryForm .gender-select-wrapper');
+    var $editCategoryGenderField = $("#editCategoryForm .gender-select");
 
     $editCategoryButtons.each((index, button) => {
         $(button).on('click', e => {
@@ -278,6 +345,20 @@
             var editedId = $(button).attr('data-categoryId');
             $("#editCategoryIdField").val(parseInt(editedId))
             $editCategoryNameField.text($(button).attr("data-categoryName"))
+            $editCategoryGenderField.val($(button).attr('data-gender'));
+
+            var genderEditable = $(button).attr('data-genderEditable').toLowerCase();
+
+            if (genderEditable === 'true') {
+                if ($editCategoryGenderFieldWrapper.hasClass('is-hidden'))
+                    $editCategoryGenderFieldWrapper.removeClass('is-hidden');
+            }
+            else {
+                if (!$editCategoryGenderFieldWrapper.hasClass('is-hidden'))
+                    $editCategoryGenderFieldWrapper.addClass('is-hidden');
+            }
+
+
         });
     });
 

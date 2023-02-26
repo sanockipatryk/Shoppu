@@ -126,21 +126,7 @@ namespace Shoppu.Infrastructure.Persistence
                 });
 
                 await _context.SaveChangesAsync();
-
-                _context.ProductCategories.Add(new ProductCategory
-                {
-                    Name = "Shorts",
-                    UrlName = "shorts",
-                    ParentCategoryId = pants.Entity.Id,
-                });
-                _context.ProductCategories.Add(new ProductCategory
-                {
-                    Name = "Joggers",
-                    UrlName = "joggers",
-                    ParentCategoryId = pants.Entity.Id,
-                });
             }
-
             await _context.SaveChangesAsync();
 
             if (!_context.Variants.Any())
@@ -186,6 +172,11 @@ namespace Shoppu.Infrastructure.Persistence
                     Name = "Socks",
                 });
 
+                _context.SizeTypes.Add(new SizeType
+                {
+                    Name = "OneSize",
+                });
+
                 await _context.SaveChangesAsync();
 
                 var sizeTypeLetters = _context.SizeTypes.FirstOrDefault(st => st.Name == "Letters");
@@ -221,6 +212,14 @@ namespace Shoppu.Infrastructure.Persistence
                         SizeTypeId = sizeTypeSocks.Id
                     });
                 }
+
+                var sizeTypeOneSize = _context.SizeTypes.FirstOrDefault(st => st.Name == "OneSize");
+
+                _context.Sizes.Add(new Size
+                {
+                    Name = "One size",
+                    SizeTypeId = sizeTypeOneSize.Id
+                });
             }
 
             await _context.SaveChangesAsync();

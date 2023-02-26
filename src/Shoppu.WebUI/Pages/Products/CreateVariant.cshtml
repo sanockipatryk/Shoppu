@@ -1,7 +1,8 @@
-﻿@page "{id:int}"
+﻿@page "/manage/createvariant/{id:int}"
 @model Shoppu.WebUI.Pages.Products.CreateVariantModel
 @using Shoppu.WebUI.Extensions
 @{
+	ViewData["Title"] = "Create product variant";
 }
 <img id="sampleImage" class="m-3 create-variant-upload-image" height="200" style="height: 500px">
 <div class="container px-3">
@@ -15,6 +16,13 @@
 		Go back to managing products
 	</a>
 	<p class="subtitle is-4 is-grey mb-5">Add new variant</p>
+	<div>
+		<p class="subtitle is-5 mb-1">Product Name<strong>: @Model.Product.Name</strong></p>
+		<p class="subtitle is-5 mb-1">Product price<strong>: @Model.Product.Price$</strong></p>
+		<p class="subtitle is-5 mb-5">Category<strong>:</strong> <span
+				class="category-woman">@Model.Product.ProductCategory.Name</span>
+		</p>
+	</div>
 	<form method="post" enctype="multipart/form-data">
 		<input type="hidden" asp-for="@Model.ProductVariant.ProductId" value="@Model.Product.Id" />
 		<div class="columns mb-2">

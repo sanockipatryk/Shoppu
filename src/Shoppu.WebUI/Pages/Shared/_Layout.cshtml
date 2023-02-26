@@ -73,7 +73,7 @@
 				</p>
 			</div>
 			<div class="columns page-links mx-0 px-4">
-				<div class="column is-3 is-flex is-flex-direction-column">
+				<div class="column is-2 is-offset-2 is-flex is-flex-direction-column">
 					<p class="link-title">Check this out</p>
 					<a asp-area="" asp-page="/Index">
 						Offers
@@ -82,35 +82,47 @@
 						Latest
 					</a>
 				</div>
-				<div class="column is-3 is-flex is-flex-direction-column">
+				<div class="column is-2 is-flex is-flex-direction-column">
 					<p class="link-title">Woman</p>
 					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
 						asp-route-categoryUrl="clothes">
-						Women clothes
+						Women's clothes
 					</a>
 					<a asp-area="" asp-area="" asp-page="/Shop/Browse" asp-route-gender="woman" asp-route-query="all"
 						asp-route-categoryUrl="accessories">
-						Women accessories
+						Women's accessories
 					</a>
 				</div>
-				<div class="column is-3 is-flex is-flex-direction-column">
+				<div class="column is-2 is-flex is-flex-direction-column">
 					<p class="link-title">Man</p>
 					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
 						asp-route-categoryUrl="clothes">
-						Men clothes
+						Men's clothes
 					</a>
 					<a asp-area="" asp-page="/Shop/Browse" asp-route-gender="man" asp-route-query="all"
 						asp-route-categoryUrl="accessories">
-						Men accessories
+						Men's accessories
 					</a>
 				</div>
-				<div class="column is-3 is-flex is-flex-direction-column">
+				<div class="column is-2 is-flex is-flex-direction-column">
 					<p class="link-title">Account</p>
 					@if (User.Identity.IsAuthenticated)
 					{
 						<a asp-area="" asp-page="/Orders/List">
 							My orders
 						</a>
+						@if (User.IsInRole("Admin"))
+						{
+							<a asp-page="/Products/Manage">
+								Manage products
+							</a>
+							<a asp-page="/Products/ManageCategories">
+								Manage categories
+							</a>
+							<a asp-page="/Products/ManageColors">
+								Manage colors
+							</a>
+						}
 					}
 					else
 					{

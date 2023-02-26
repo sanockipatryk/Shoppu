@@ -365,3 +365,7 @@ FodyWeavers.xsd
 # Custom
 
 **/wwwroot/productVariants
+src/Shoppu.WebUI/Properties/ServiceDependencies/
+src/Shoppu.WebUI/Properties/
+.vscode/
+src/Shoppu.WebUI/.config/dotnet-tools.json

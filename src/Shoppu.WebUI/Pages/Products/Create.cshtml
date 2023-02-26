@@ -1,10 +1,13 @@
-﻿@page
+﻿@page "/manage/createproduct"
 @model Shoppu.WebUI.Pages.Products.CreateModel
 @using Shoppu.Domain.Entities
 @{
+	ViewData["Title"] = "Create product";
+}
+@{
 	void generateCategories(List<ProductCategory> categories, int currentLevel)
 	{
-		<ul class="@(currentLevel == 0 ? "menu-list" : "my-0 collapsed")">
+		<ul class="@(currentLevel == 0 ? "menu-list" : "my-0 ml-5 collapsed")">
 			@foreach (var cat in categories)
 			{
 				var hasSubcategories = Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).Count() > 0;
@@ -12,7 +15,7 @@
 					@if (hasSubcategories)
 					{
 						<button id="collapse-@(cat.Id)"
-				class="button button-collapse is-white has-text-primary @(currentLevel == 0? "px-0" : "")">
+				class="button button-collapse is-white has-text-primary @(currentLevel == 0? "px-0" : "") @(currentLevel == 0? "pl-0" : "") @(@cat.SpecificGender == null ? "" : cat.SpecificGender.Equals("woman") ? "category-woman" : "category-man")">
 							@cat.Name <i class="fa fa-caret-down ml-1"></i>
 						</button>
 						generateCategories(Model.ProductCategories.Where(c => c.ParentCategoryId == cat.Id).ToList(),
@@ -20,7 +23,8 @@
 					}
 					else
 					{
-						<button data-productCategoryId="@cat.Id" class="button is-white productCategory">@cat.Name</button>
+						<button data-productCategoryId="@cat.Id" data-gender="@cat.SpecificGender"
+				class="button is-white productCategory @(currentLevel == 0? "pl-0" : "") @(@cat.SpecificGender == null ? "" : cat.SpecificGender.Equals("woman") ? "category-woman" : "category-man")">@cat.Name</button>
 					}
 				</li>
 			}
@@ -88,9 +92,13 @@
 						<label class="label" asp-for="@Model.Product.Gender"></label>
 						<div class="control">
 							<div class="select is-fullwidth-select">
-								<select asp-for="@Model.Product.Gender"
+								@* <select class="gender-select" asp-for="@Model.Product.Gender"
 									asp-items="Html.GetEnumSelectList<ProductGender>()">
-									<option value="">-</option>
+									</select> *@
+								<select class="gender-select" asp-for="@Model.Product.Gender">
+									<option value="0">Unisex</option>
+									<option class="select-option-woman" value="1">Woman</option>
+									<option class="select-option-man" value="2">Man</option>
 								</select>
 							</div>
 						</div>
@@ -122,6 +130,8 @@
 	var $submitProductButton = $('#submitProductButton');
 	var $clickableCategories = $('.button.productCategory');
 
+	var $productFormGenderField = $('#productForm .gender-select');
+
 	// if category selected - expand categories leading to selected category and mark it as active
 	var selectedCategoryId = "@Model.Product.ProductCategoryId";
 	if (selectedCategoryId.length > 0) {
@@ -133,16 +143,43 @@
 
 	}
 
+	function getGenderAsNumber(gender) {
+		switch (gender) {
+			case '':
+				return 0;
+			case 'woman':
+				return 1;
+			case 'man':
+				return 2;
+			default:
+				return 0;
+		}
+	}
+
 	$clickableCategories.each((i, category) => {
 		$(category).on('click', e => {
 			e.preventDefault();
 			var $currentlyActiveCategory = $('.button.productCategory.is-active')[0];
+
 			if ($currentlyActiveCategory !== undefined) {
 				setCategoryInActive($currentlyActiveCategory)
 				setCategoryActive(category)
 			}
 			else {
 				setCategoryActive(category)
+			}
+
+			if ($(category).attr('data-gender').length > 0) {
+				var selectedGender = $(category).attr('data-gender');
+
+				$productFormGenderField.val(getGenderAsNumber(selectedGender));
+				$productFormGenderField.attr('disabled', "")
+			}
+			else {
+				if ($productFormGenderField.attr("disabled") !== undefined) {
+					$productFormGenderField.removeAttr("disabled");
+					$productFormGenderField.val(getGenderAsNumber(""));
+				}
 			}
 		})
 	});
@@ -162,6 +199,11 @@
 			$('#productCategoryIdInput').val(parseInt(selectedCategoryId));
 		else
 			$('#productCategoryIdInput').val(null);
+
+		if ($productFormGenderField.attr("disabled") !== undefined) {
+			$productFormGenderField.removeAttr("disabled");
+		}
+
 		$('#productForm').submit();
 	});
 

@@ -1,12 +1,12 @@
-@page "{productId:int}/{variantId:int}"
+@page "/manage/editvariant/{productId:int}/{variantId:int}"
 @model Shoppu.WebUI.Pages.Products.EditVariantModel
 @using Shoppu.WebUI.Extensions
 
 @{
+    ViewData["Title"] = "Edit product variant";
     var location = new Uri($"{Request.Scheme}://{Request.Host}");
     var url = location.AbsoluteUri;
 }
-
 
 <img id="sampleImage" class="m-3 create-variant-upload-image" style="height: 500px">
 <div class="container px-3">

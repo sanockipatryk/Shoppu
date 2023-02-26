@@ -15,5 +15,8 @@ namespace Shoppu.Domain.ViewModels
         [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Category Url name should be a single word that uses only letters.")]
         [Display(Name = "New category Url name")]
         public string UrlName { get; set; }
+
+        [Display(Name = "Gender target of Category")]
+        public string? SpecificGender { get; set; }
     }
 }
