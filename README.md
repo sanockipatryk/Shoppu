@@ -101,4 +101,4 @@ If any of items in cart run out while ordering, the user, the order will not go 
 User has access to his past orders, where he can find details about bought products, their quantity and cost, and the address and payment information that he provided.
 
 
-Just for the sake of setting up the test website, products and their variants, as well as the source of images was inspired by online shop Reserved.
+> Just for the sake of setting up the test website, products and their variants, as well as the source of images was inspired by online shop Reserved.
