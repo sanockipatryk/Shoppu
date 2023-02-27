@@ -1,7 +1,7 @@
 @page "/Shop/{slug}"
 @model Shoppu.WebUI.Pages.Shop.Product
 @{
-	ViewData["Title"] = "Product";
+	ViewData["Title"] = @Model.ShopProduct.ProductName;
 	var location = new Uri($"{Request.Scheme}://{Request.Host}");
 	var url = location.AbsoluteUri;
 }

@@ -6,7 +6,7 @@ namespace Shoppu.Domain.ViewModels
     {
         public ProductSortBy? SortBy { get; set; } = ProductSortBy.MostRecent;
 
-        public ItemsPerPage? ItemsPerPage { get; set; } = Enums.ItemsPerPage.Four;
+        public ItemsPerPage? ItemsPerPage { get; set; } = Enums.ItemsPerPage.Eight;
 
         public string? MinPrice { get; set; }
         public string? MaxPrice { get; set; }

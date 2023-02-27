@@ -350,6 +350,16 @@ button.scroll-button:focus:not(:active) {
 	box-shadow: none;
 }
 
+.card.product-information div.card-content p.information {
+	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+	white-space: -pre-wrap; /* Opera 4-6 */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	white-space: pre-wrap; /* css-3 */
+	word-wrap: break-word; /* Internet Explorer 5.5+ */
+	white-space: -webkit-pre-wrap; /* Newer versions of Chrome/Safari*/
+	word-break: break-all;
+}
+
 .card.product-information header.card-header:hover {
 	cursor: pointer;
 }
@@ -472,7 +482,8 @@ select .select-option-man,
 }
 
 .order-list-box.box {
-	background-color: #f2f2f2;
+	background-color: white;
+	border: 1px solid #888;
 }
 
 div.order-details .control input:disabled {
@@ -772,7 +783,7 @@ input.color-picker {
 /* UNDER TABLET WIDTH */
 @media (max-width: 1023px) {
 	nav.navbar a.navbar-item.site-name {
-		z-index: -1;
+		z-index: 0;
 	}
 
 	.columns.images-columns {
@@ -805,6 +816,7 @@ input.color-picker {
 	}
 
 	.navbar-menu-tablet {
+		z-index: 1;
 		max-width: 600px;
 		margin-left: auto;
 		margin-right: auto;
@@ -885,7 +897,7 @@ input.color-picker {
 /* UNDER MOBILE WIDTH */
 @media (max-width: 768px) {
 	nav.navbar a.navbar-item.site-name {
-		position: fixed;
+		position: unset;
 	}
 
 	.columns.images-columns {

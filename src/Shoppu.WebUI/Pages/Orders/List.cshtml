@@ -8,27 +8,29 @@
     ViewData["Title"] = "My orders";
 }
 
-<div class="container">
+<div class="container my-4">
     @if (@Model.Orders.OrderList.Count() > 0)
     {
         @foreach (var order in @Model.Orders.OrderList)
         {
-            <div class="box order-list-box">
-                <p class="subtitle is-7 is-flex is-justify-content-space-between is-grey">
-                    <span>#@order.OrderNumber</span>
-                    <span>@order.DateOrdered.ToLocalTime()</span>
-                </p>
-                <p class="subtitle is-5 is-flex is-justify-content-space-between">
-                    <span>Total: <strong>@order.TotalPrice$</strong></span>
-                    <span><strong
-                    class="has-text-success">@(order.PaymentMethod.GetAttribute<DisplayAttribute>().Name)</strong></span>
-                </p>
-                <div class="is-flex is-justify-content-end my-1">
+            <a asp-page="/Orders/Details" asp-route-orderNumber="@order.OrderNumber">
+                <div class="box order-list-box mb-4">
+                    <p class="subtitle is-6 mb-2 is-flex is-justify-content-space-between is-grey">
+                        <span>#@order.OrderNumber</span>
+                        <span>@order.DateOrdered.ToLocalTime()</span>
+                    </p>
+                    <p class="subtitle is-3 mb-1">
+                        <span>Total: <strong>@order.TotalPrice$</strong></span>
 
-                    <a asp-page="/Orders/Details" asp-route-orderNumber="@order.OrderNumber"><strong>View details</strong></a>
+                    </p>
+                    <p class="subtitle is-6"><span>Paid with
+                            <strong class="has-text-success">
+                                @(order.PaymentMethod.GetAttribute<DisplayAttribute>().Name)
+                            </strong>
+                        </span>
+                    </p>
                 </div>
-
-            </div>
+            </a>
         }
         <partial name="_ListPagination" model="@Model.Orders.Pagination" />
     }

@@ -132,7 +132,7 @@ namespace Shoppu.Application.Helpers
                 DateSetAsAccessible = pv.DateSetAsAccessible
 
             })
-                .OrderBy(pv => pv.DateSetAsAccessible)
+                .OrderByDescending(pv => pv.DateSetAsAccessible)
                 .Take(8);
         }
 

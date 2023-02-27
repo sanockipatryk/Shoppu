@@ -46,7 +46,6 @@ namespace Shoppu.Application.Products.Queries.Shop
                 .FilterVariants(request.Filters.Variants)
                 .FilterPrices(request.Filters.MinPrice, request.Filters.MaxPrice)
                 .Where(pv => belongingCategoriesIds.Contains(pv.Product.ProductCategory.Id))
-                .ApplyPagination(ref newPagination)
                 .Select(pv => new ProductVariant
                 {
                     Id = pv.Id,
@@ -68,6 +67,7 @@ namespace Shoppu.Application.Products.Queries.Shop
                     Images = pv.Images,
                 })
                 .SortProducts(request.Filters.SortBy)
+                .ApplyPagination(ref newPagination)
                 .ToListAsync();
 
             var possibleColors = await _context.ProductVariants
